@@ -55,7 +55,13 @@ th{background:#eee}
 
 <hr>
 
-<h3>Attendance Report</h3>
+<hr>
+
+<h3>Employee Management</h3>
+
+<button onclick="loadEmployeeList()">Refresh Employee List</button>
+
+<div id="employeeList"></div>
 <input id="reportDate" type="date">
 
 <select id="reportEmployee">
@@ -397,7 +403,104 @@ select.appendChild(option);
 
 }
 
+/* EMPLOYEE MANAGEMENT */
 
+async function loadEmployeeList() {
+
+  const list =
+    document.getElementById("employeeList");
+
+  list.innerHTML = "Loading...";
+
+  const { data, error } =
+    await supabaseClient
+      .from("employees")
+      .select("id,employee_id,name")
+      .order("employee_id");
+
+  if (error) {
+
+    list.innerHTML =
+      "Employee list load nahi hui: " +
+      error.message;
+
+    return;
+  }
+
+  if (!data || data.length === 0) {
+
+    list.innerHTML =
+      "<p>No employees found.</p>";
+
+    return;
+  }
+
+  let html = "<table>";
+
+  html +=
+    "<tr>" +
+    "<th>ID</th>" +
+    "<th>Name</th>" +
+    "<th>Action</th>" +
+    "</tr>";
+
+  data.forEach(function(employee) {
+
+    html +=
+      "<tr>" +
+      "<td>" + employee.employee_id + "</td>" +
+      "<td>" + employee.name + "</td>" +
+      "<td>" +
+      "<button class='red' onclick=\"deleteEmployee('" +
+      employee.id +
+      "','" +
+      employee.employee_id +
+      "')\">Delete</button>" +
+      "</td>" +
+      "</tr>";
+
+  });
+
+  html += "</table>";
+
+  list.innerHTML = html;
+}
+
+
+async function deleteEmployee(id, employeeId) {
+
+  const confirmDelete =
+    confirm(
+      "Kya aap " +
+      employeeId +
+      " ko delete karna chahte hain?"
+    );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  const { error } =
+    await supabaseClient
+      .from("employees")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Employee delete nahi hua: " +
+      error.message
+    );
+
+    return;
+  }
+
+  alert("Employee delete ho gaya.");
+
+  loadEmployeeList();
+  loadEmployeesForReport();
+}
 /* REPORT */
 
 async function loadReport(){
