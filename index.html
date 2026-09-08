@@ -110,7 +110,158 @@ th,td{
 
 <h2>👨‍💼 Admin Panel</h2>
 
-<button onclick="loadAttendance()">
+async function loadAttendance(){
+
+  const response = await fetch(
+    SUPABASE_URL +
+    "/rest/v1/attendance?select=*&order=created_at.desc",
+    {
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer "+SUPABASE_KEY
+      }
+    }
+  );
+
+  if(!response.ok){
+    document.getElementById("attendanceTable").innerHTML =
+      "❌ Attendance load nahi hui";
+    return;
+  }
+
+  const data = await response.json();
+
+  let html =
+    "<h3>📋 Attendance Records</h3>" +
+
+    "<input type='date' id='reportDate' onchange='filterReport()'>" +
+
+    "<select id='reportEmployee' onchange='filterReport()'>" +
+    "<option value=''>All Employees</option>" +
+    "</select>" +
+
+    "<div id='reportResult'></div>";
+
+  document.getElementById("attendanceTable").innerHTML = html;
+
+  const employees = [...new Set(
+    data.map(row => row.employee_id)
+  )];
+
+  const select = document.getElementById("reportEmployee");
+
+  employees.forEach(id => {
+
+    const option = document.createElement("option");
+
+    option.value = id;
+    option.textContent = id;
+
+    select.appendChild(option);
+
+  });
+
+  window.allAttendance = data;
+
+  showReport(data);
+}
+
+
+function filterReport(){
+
+  const date =
+    document.getElementById("reportDate").value;
+
+  const employee =
+    document.getElementById("reportEmployee").value;
+
+  let filtered = window.allAttendance || [];
+
+  if(date){
+
+    filtered = filtered.filter(row => {
+
+      const rowDate =
+        new Date(row.created_at)
+        .toLocaleDateString("en-CA");
+
+      return rowDate === date;
+
+    });
+
+  }
+
+  if(employee){
+
+    filtered = filtered.filter(row =>
+      row.employee_id === employee
+    );
+
+  }
+
+  showReport(filtered);
+}
+
+
+function showReport(data){
+
+  let html =
+
+    "<table>" +
+
+    "<tr>" +
+    "<th>Employee ID</th>" +
+    "<th>Employee Name</th>" +
+    "<th>Type</th>" +
+    "<th>Distance</th>" +
+    "<th>Date & Time</th>" +
+    "</tr>";
+
+  if(data.length === 0){
+
+    html +=
+      "<tr><td colspan='5'>No attendance found</td></tr>";
+
+  }else{
+
+    data.forEach(row => {
+
+      html +=
+
+        "<tr>" +
+
+        "<td>" +
+        row.employee_id +
+        "</td>" +
+
+        "<td>" +
+        row.employee_name +
+        "</td>" +
+
+        "<td>" +
+        row.attendance_type +
+        "</td>" +
+
+        "<td>" +
+        row.distance_meters +
+        " m</td>" +
+
+        "<td>" +
+        new Date(row.created_at)
+        .toLocaleString("en-IN") +
+        "</td>" +
+
+        "</tr>";
+
+    });
+
+  }
+
+  html += "</table>";
+
+  document.getElementById("reportResult").innerHTML =
+    html;
+}
 📋 View Attendance
 </button>
 
