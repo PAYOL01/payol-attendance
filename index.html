@@ -505,6 +505,121 @@ async function deleteEmployee(id, employeeId) {
 
 async function loadReport(){
 
+  const report = document.getElementById("report");
+  const date = document.getElementById("reportDate").value;
+
+  report.innerHTML = "Loading...";
+
+  const { data: employees, error: empError } =
+    await supabaseClient
+      .from("employees")
+      .select("employee_id,name")
+      .order("employee_id");
+
+  if(empError){
+    report.innerHTML =
+      "Employee load nahi hua: " + empError.message;
+    return;
+  }
+
+  const { data: attendance, error: attError } =
+    await supabaseClient
+      .from("attendance")
+      .select("*")
+      .eq("attendance_date", date)
+      .order("created_at",{ascending:true});
+
+  if(attError){
+    report.innerHTML =
+      "Attendance load nahi hui: " + attError.message;
+    return;
+  }
+
+  let records = {};
+
+  attendance.forEach(function(row){
+
+    if(!records[row.employee_id]){
+      records[row.employee_id] = {
+        name: row.employee_name,
+        IN: null,
+        OUT: null
+      };
+    }
+
+    if(row.attendance_type === "IN"){
+      records[row.employee_id].IN = row.created_at;
+    }
+
+    if(row.attendance_type === "OUT"){
+      records[row.employee_id].OUT = row.created_at;
+    }
+
+  });
+
+  let html =
+    "<table>" +
+    "<tr>" +
+    "<th>Employee</th>" +
+    "<th>IN Time</th>" +
+    "<th>OUT Time</th>" +
+    "<th>Status</th>" +
+    "</tr>";
+
+  employees.forEach(function(emp){
+
+    const r = records[emp.employee_id];
+
+    let inTime = "-";
+    let outTime = "-";
+    let status = "Absent";
+
+    if(r){
+
+      if(r.IN){
+        inTime =
+          new Date(r.IN).toLocaleTimeString(
+            [],
+            {hour:"2-digit",minute:"2-digit"}
+          );
+      }
+
+      if(r.OUT){
+        outTime =
+          new Date(r.OUT).toLocaleTimeString(
+            [],
+            {hour:"2-digit",minute:"2-digit"}
+          );
+      }
+
+      if(r.IN && r.OUT){
+        status = "Present";
+      }
+      else if(r.IN){
+        status = "IN Only";
+      }
+
+    }
+
+    html +=
+      "<tr>" +
+      "<td>" +
+      emp.employee_id +
+      "<br>" +
+      emp.name +
+      "</td>" +
+      "<td>" + inTime + "</td>" +
+      "<td>" + outTime + "</td>" +
+      "<td>" + status + "</td>" +
+      "</tr>";
+
+  });
+
+  html += "</table>";
+
+  report.innerHTML = html;
+}
+
 const report=document.getElementById("report");
 
 const date=document.getElementById("reportDate").value;
