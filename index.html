@@ -3,233 +3,488 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Payol Attendance</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
-  margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(135deg,#eef5ff,#f8fbff);
-  color:#172033;
+  background:#090909;
+  color:#fff;
+  min-height:100vh;
 }
 
-.container{
-  width:94%;
-  max-width:1050px;
-  margin:auto;
+:root{
+  --red:#e50914;
+  --red2:#ff1e2d;
+  --black:#090909;
+  --card:#151515;
+  --border:#2b2b2b;
+  --text:#fff;
+  --muted:#999;
 }
 
-.header{
-  padding:28px 0 18px;
-  text-align:center;
+/* HEADER */
+
+header{
+  background:#0d0d0d;
+  border-bottom:1px solid #292929;
+  padding:18px 25px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
 
 .logo{
-  width:64px;
-  height:64px;
-  margin:auto;
-  border-radius:18px;
-  background:linear-gradient(135deg,#0866ff,#00a8ff);
-  color:white;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-box{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#ff1825,#a50008);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:25px;
+  font-size:22px;
   font-weight:bold;
-  box-shadow:0 10px 25px #9dbbe8;
+  box-shadow:0 0 20px rgba(229,9,20,.35);
 }
 
-.header h1{
-  margin:12px 0 4px;
-  font-size:28px;
+.logo-text{
+  font-size:21px;
+  font-weight:bold;
 }
 
-.header p{
-  margin:0;
-  color:#718096;
+.logo-text span{
+  color:var(--red2);
 }
 
-.card{
-  background:rgba(255,255,255,.96);
-  border-radius:20px;
-  padding:24px;
-  margin:18px 0;
-  box-shadow:0 12px 35px rgba(38,75,120,.10);
-  border:1px solid #e5edf8;
+.header-title{
+  color:#aaa;
+  font-size:13px;
 }
 
-.login-card{
-  max-width:430px;
+/* MAIN */
+
+.container{
+  width:94%;
+  max-width:1100px;
   margin:30px auto;
 }
 
-.card-title{
-  font-size:21px;
+/* LOGIN */
+
+#loginPage{
+  min-height:calc(100vh - 85px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-card{
+  width:100%;
+  max-width:430px;
+  background:linear-gradient(145deg,#181818,#0f0f0f);
+  border:1px solid #303030;
+  border-radius:22px;
+  padding:35px;
+  box-shadow:0 25px 70px rgba(0,0,0,.6);
+}
+
+.login-logo{
+  width:70px;
+  height:70px;
+  background:linear-gradient(135deg,#ff1825,#a50008);
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
   font-weight:bold;
-  margin-bottom:18px;
+  margin:0 auto 18px;
+  box-shadow:0 0 30px rgba(229,9,20,.35);
+}
+
+.login-card h1{
+  text-align:center;
+  font-size:27px;
+}
+
+.login-card .sub{
+  text-align:center;
+  color:#888;
+  margin:8px 0 28px;
+  font-size:14px;
+}
+
+label{
+  display:block;
+  margin:15px 0 7px;
+  color:#bbb;
+  font-size:13px;
 }
 
 input,select{
   width:100%;
-  padding:14px;
-  border:1px solid #d7e1ef;
-  border-radius:12px;
-  margin:7px 0;
+  padding:14px 15px;
+  background:#0b0b0b;
+  border:1px solid #333;
+  border-radius:11px;
+  color:#fff;
   outline:none;
   font-size:15px;
-  background:white;
 }
 
 input:focus,select:focus{
-  border-color:#1683ff;
-  box-shadow:0 0 0 3px #1683ff18;
+  border-color:var(--red);
+  box-shadow:0 0 0 3px rgba(229,9,20,.12);
 }
 
 button{
-  width:100%;
-  padding:14px;
   border:0;
-  border-radius:12px;
-  background:linear-gradient(135deg,#0866ff,#168cff);
-  color:white;
-  font-size:15px;
-  font-weight:bold;
   cursor:pointer;
-  margin:7px 0;
-  box-shadow:0 7px 18px #1683ff30;
+  color:white;
+  font-weight:bold;
+  border-radius:11px;
+  padding:13px 18px;
+  font-size:14px;
+  transition:.2s;
 }
 
 button:hover{
   transform:translateY(-1px);
 }
 
-.green{
-  background:linear-gradient(135deg,#0ca678,#20c997);
+.primary{
+  width:100%;
+  margin-top:22px;
+  background:linear-gradient(135deg,#ff1b29,#b50009);
+  box-shadow:0 8px 25px rgba(229,9,20,.25);
 }
 
-.red{
-  background:linear-gradient(135deg,#e03131,#fa5252);
+.secondary{
+  background:#242424;
+  border:1px solid #3a3a3a;
 }
 
-.logout{
-  background:#263445;
+.danger{
+  background:#8d0007;
+}
+
+.status{
+  margin-top:15px;
+  padding:12px;
+  border-radius:10px;
+  background:#171717;
+  border:1px solid #303030;
+  color:#ddd;
+  font-size:14px;
+}
+
+.status.success{
+  border-color:#176b32;
+  background:#0d2114;
+  color:#7ff0a0;
+}
+
+.status.error{
+  border-color:#7d1218;
+  background:#250d0f;
+  color:#ff8c91;
+}
+
+/* PANELS */
+
+.panel{
+  background:linear-gradient(145deg,#171717,#101010);
+  border:1px solid #292929;
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:22px;
+  box-shadow:0 12px 35px rgba(0,0,0,.35);
+}
+
+.panel h2{
+  font-size:22px;
+  margin-bottom:5px;
+}
+
+.panel h3{
+  font-size:18px;
+  margin-bottom:15px;
+}
+
+.panel-sub{
+  color:#888;
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+/* DASHBOARD */
+
+.dashboard-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:22px;
+}
+
+.dashboard-head h1{
+  font-size:28px;
+}
+
+.dashboard-head p{
+  color:#888;
+  margin-top:5px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:22px;
+}
+
+.card{
+  background:#151515;
+  border:1px solid #292929;
+  border-radius:16px;
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+}
+
+.card:after{
+  content:"";
+  position:absolute;
+  width:80px;
+  height:80px;
+  right:-30px;
+  bottom:-30px;
+  background:rgba(229,9,20,.12);
+  border-radius:50%;
+}
+
+.card .icon{
+  font-size:25px;
+  margin-bottom:10px;
+}
+
+.card .number{
+  font-size:28px;
+  font-weight:bold;
+}
+
+.card .label{
+  color:#888;
+  font-size:13px;
+  margin-top:5px;
+}
+
+/* EMPLOYEE */
+
+.employee-name{
+  font-size:24px;
+  font-weight:bold;
+  margin-bottom:4px;
+}
+
+.employee-id{
+  color:#888;
+  font-size:13px;
 }
 
 .attendance-buttons{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:14px;
+  gap:18px;
+  margin-top:25px;
 }
 
-.attendance-buttons button{
-  height:100px;
-  font-size:19px;
+.att-btn{
+  padding:28px 15px;
+  font-size:20px;
+  border-radius:16px;
+}
+
+.in-btn{
+  background:linear-gradient(135deg,#e50914,#a60008);
+  box-shadow:0 10px 30px rgba(229,9,20,.22);
+}
+
+.out-btn{
+  background:#202020;
+  border:1px solid #444;
 }
 
 .gps-box{
+  margin-top:20px;
   padding:15px;
-  background:#eef7ff;
-  border-radius:14px;
-  color:#1769aa;
-  margin:15px 0;
+  border-radius:13px;
+  background:#0b0b0b;
+  border:1px solid #292929;
+  color:#bbb;
 }
 
-.status{
-  margin-top:12px;
-  padding:12px;
-  border-radius:10px;
-  font-size:14px;
+/* ADMIN */
+
+.admin-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:15px;
 }
 
-.success{
-  color:#087f5b;
-  background:#e6fcf5;
+.admin-actions button{
+  background:#202020;
+  border:1px solid #3a3a3a;
 }
 
-.error{
-  color:#c92a2a;
-  background:#fff5f5;
+.admin-actions button:hover{
+  border-color:var(--red);
 }
 
-hr{
-  border:0;
-  border-top:1px solid #e7edf5;
-  margin:28px 0;
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.form-grid .full{
+  grid-column:1/-1;
+}
+
+/* TABLE */
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:15px;
-  overflow:hidden;
-  border-radius:12px;
+  min-width:550px;
 }
 
 th{
-  background:#edf4ff;
-  color:#31527a;
-}
-
-th,td{
-  padding:11px;
-  border-bottom:1px solid #e9eef5;
+  background:#8f0008;
+  color:#fff;
+  padding:13px 10px;
   text-align:left;
-  font-size:14px;
-}
-
-.hidden{
-  display:none;
-}
-
-.admin-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-}
-
-.section-icon{
-  font-size:25px;
-  margin-bottom:7px;
-}
-
-.footer{
-  text-align:center;
-  color:#8a97a8;
-  padding:25px;
   font-size:13px;
 }
 
-@media(max-width:650px){
-  .admin-grid{
+td{
+  padding:13px 10px;
+  border-bottom:1px solid #292929;
+  color:#ddd;
+  font-size:13px;
+}
+
+tr:hover td{
+  background:#191919;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.badge-in{
+  background:#142b1b;
+  color:#72ee93;
+}
+
+.badge-out{
+  background:#301214;
+  color:#ff8b91;
+}
+
+/* SECTION */
+
+hr{
+  border:0;
+  border-top:1px solid #292929;
+  margin:28px 0;
+}
+
+/* HIDE */
+
+.hidden{
+  display:none!important;
+}
+
+/* MOBILE */
+
+@media(max-width:750px){
+
+  header{
+    padding:14px 15px;
+  }
+
+  .header-title{
+    display:none;
+  }
+
+  .container{
+    width:94%;
+    margin:20px auto;
+  }
+
+  .login-card{
+    padding:25px 20px;
+  }
+
+  .cards{
     grid-template-columns:1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .dashboard-head{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .dashboard-head h1{
+    font-size:23px;
   }
 
   .attendance-buttons{
-    grid-template-columns:1fr;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
   }
 
-  .attendance-buttons button{
-    height:75px;
+  .att-btn{
+    padding:23px 8px;
+    font-size:17px;
   }
 
-  .card{
+  .panel{
     padding:18px;
-  }
-
-  .header h1{
-    font-size:24px;
-  }
-
-  table{
-    font-size:12px;
-  }
-
-  th,td{
-    padding:8px;
   }
 }
 </style>
@@ -237,181 +492,335 @@ th,td{
 
 <body>
 
-<div class="container">
-
-<div class="header">
-  <div class="logo">PA</div>
-  <h1>Payol Attendance</h1>
-  <p>Smart GPS Based Employee Attendance</p>
-</div>
-
-
-<!-- LOGIN -->
-
-<div class="card login-card" id="loginBox">
-
-  <div class="card-title">🔐 Login</div>
-
-  <input id="loginId"
-         placeholder="Employee ID / Admin Username">
-
-  <input id="loginPassword"
-         type="password"
-         placeholder="Password">
-
-  <button onclick="login()">Login</button>
-
-  <p id="loginMessage"></p>
-
-</div>
-
-
-<!-- EMPLOYEE -->
-
-<div class="card hidden" id="employeePanel">
-
-  <div class="card-title">
-    👋 Welcome, <span id="employeeName"></span>
+<header>
+  <div class="logo">
+    <div class="logo-box">PA</div>
+    <div class="logo-text">Payol <span>Attendance</span></div>
   </div>
 
-  <div class="gps-box">
-    📍 <b>GPS Attendance</b><br>
-    Office ke 100 meter ke andar se attendance mark karein.
+  <div class="header-title">
+    GPS Attendance • 100 Meter Security
   </div>
-
-  <div class="attendance-buttons">
-
-    <button class="green"
-            onclick="markAttendance('IN')">
-      🟢<br>MARK IN
-    </button>
-
-    <button class="red"
-            onclick="markAttendance('OUT')">
-      🔴<br>MARK OUT
-    </button>
-
-  </div>
-
-  <p id="attendanceMessage"></p>
-
-  <button class="logout"
-          onclick="logout()">
-    Logout
-  </button>
-
-</div>
+</header>
 
 
-<!-- ADMIN -->
+<!-- LOGIN PAGE -->
 
-<div class="card hidden" id="adminPanel">
+<div id="loginPage">
 
-  <div class="card-title">
-    👨‍💼 Admin Dashboard
-  </div>
+  <div class="login-card">
 
+    <div class="login-logo">PA</div>
 
-  <div class="admin-grid">
-
-    <div>
-
-      <div class="section-icon">📍</div>
-      <h3>Office Location</h3>
-
-      <p>
-        Current location ko office location ke रूप में save karein.
-      </p>
-
-      <button onclick="saveOfficeLocation()">
-        Save Office Location
-      </button>
-
-      <p id="locationMessage"></p>
-
+    <h1>Payol Attendance</h1>
+    <div class="sub">
+      Secure Employee Attendance System
     </div>
 
+    <label>Login Type</label>
 
-    <div>
-
-      <div class="section-icon">➕</div>
-      <h3>Add Employee</h3>
-
-      <input id="newEmployeeId"
-             placeholder="Employee ID">
-
-      <input id="newEmployeeName"
-             placeholder="Employee Name">
-
-      <input id="newEmployeePassword"
-             placeholder="Password">
-
-      <button onclick="addEmployee()">
-        Add Employee
-      </button>
-
-      <p id="employeeMessage"></p>
-
-    </div>
-
-  </div>
-
-
-  <hr>
-
-
-  <div>
-    <div class="section-icon">👥</div>
-    <h3>Employee Management</h3>
-
-    <button onclick="loadEmployeeList()">
-      🔄 Refresh Employee List
-    </button>
-
-    <div id="employeeList"></div>
-  </div>
-
-
-  <hr>
-
-
-  <div>
-    <div class="section-icon">📊</div>
-    <h3>Attendance Report</h3>
-
-    <input type="date"
-           id="reportDate">
-
-    <select id="reportEmployee">
-      <option value="">
-        All Employees
-      </option>
+    <select id="loginType" onchange="changeLoginType()">
+      <option value="employee">Employee Login</option>
+      <option value="admin">Admin Login</option>
     </select>
 
-    <button onclick="loadReport()">
-      🔎 Load Attendance Report
+    <label id="usernameLabel">Employee ID</label>
+
+    <input
+      id="username"
+      type="text"
+      placeholder="Enter Employee ID"
+    >
+
+    <label>Password</label>
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter Password"
+    >
+
+    <button class="primary" onclick="login()">
+      LOGIN
+    </button>
+
+    <div id="loginStatus"></div>
+
+  </div>
+
+</div>
+
+
+<!-- EMPLOYEE PAGE -->
+
+<div id="employeePage" class="container hidden">
+
+  <div class="dashboard-head">
+
+    <div>
+      <h1>Employee Dashboard</h1>
+      <p>Attendance mark karne ke liye office location ke 100 meter ke andar hona zaroori hai.</p>
+    </div>
+
+    <button class="secondary" onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="icon">👤</div>
+      <div class="number" id="empNameCard">-</div>
+      <div class="label">Employee</div>
+    </div>
+
+    <div class="card">
+      <div class="icon">📍</div>
+      <div class="number">100m</div>
+      <div class="label">Allowed GPS Radius</div>
+    </div>
+
+    <div class="card">
+      <div class="icon">🔐</div>
+      <div class="number">Secure</div>
+      <div class="label">GPS Attendance</div>
+    </div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <div class="employee-name" id="employeeName">
+      Employee
+    </div>
+
+    <div class="employee-id" id="employeeId">
+      EMP000
+    </div>
+
+
+    <div class="attendance-buttons">
+
+      <button
+        class="att-btn in-btn"
+        onclick="markAttendance('IN')"
+      >
+        🟢<br>
+        MARK IN
+      </button>
+
+      <button
+        class="att-btn out-btn"
+        onclick="markAttendance('OUT')"
+      >
+        🔴<br>
+        MARK OUT
+      </button>
+
+    </div>
+
+
+    <div id="gpsStatus" class="gps-box">
+      📍 GPS status: Ready
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADMIN PAGE -->
+
+<div id="adminPage" class="container hidden">
+
+  <div class="dashboard-head">
+
+    <div>
+      <h1>Admin Dashboard</h1>
+      <p>Employee aur attendance management</p>
+    </div>
+
+    <button class="secondary" onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+
+  <!-- OFFICE LOCATION -->
+
+  <div class="panel">
+
+    <h2>📍 Office Location</h2>
+
+    <div class="panel-sub">
+      Current location ko office location ke roop mein save karein.
+    </div>
+
+    <button class="primary" onclick="saveOfficeLocation()">
+      📍 Save Current Office Location
+    </button>
+
+    <div id="officeStatus"></div>
+
+  </div>
+
+
+  <!-- ADD EMPLOYEE -->
+
+  <div class="panel">
+
+    <h2>👥 Add Employee</h2>
+
+    <div class="panel-sub">
+      Naya employee create karein.
+    </div>
+
+    <div class="form-grid">
+
+      <div>
+        <label>Employee ID</label>
+        <input
+          id="newEmployeeId"
+          placeholder="EMP004"
+        >
+      </div>
+
+      <div>
+        <label>Employee Name</label>
+        <input
+          id="newEmployeeName"
+          placeholder="Employee Name"
+        >
+      </div>
+
+      <div>
+        <label>Password</label>
+        <input
+          id="newEmployeePassword"
+          placeholder="Password"
+        >
+      </div>
+
+    </div>
+
+    <button
+      class="primary"
+      onclick="addEmployee()"
+    >
+      ➕ Add Employee
+    </button>
+
+    <div id="employeeAddStatus"></div>
+
+  </div>
+
+
+  <!-- EMPLOYEE MANAGEMENT -->
+
+  <div class="panel">
+
+    <h2>👤 Employee Management</h2>
+
+    <div class="admin-actions">
+
+      <button onclick="loadEmployeeList()">
+        🔄 Refresh Employee List
+      </button>
+
+    </div>
+
+    <div id="employeeList">
+      Loading...
+    </div>
+
+  </div>
+
+
+  <!-- MONTHLY SUMMARY -->
+
+  <div class="panel">
+
+    <h2>📅 Monthly Attendance Summary</h2>
+
+    <div class="panel-sub">
+      IN + OUT dono hone par hi ek din Present count hoga.
+      Same din ki duplicate entries ek hi din count hongi.
+    </div>
+
+    <div class="form-grid">
+
+      <div>
+        <label>Select Month</label>
+
+        <input
+          type="month"
+          id="summaryMonth"
+        >
+      </div>
+
+    </div>
+
+    <button
+      class="primary"
+      onclick="loadMonthlySummary()"
+    >
+      📊 Check Present Days
+    </button>
+
+    <div id="monthlySummary"></div>
+
+  </div>
+
+
+  <!-- ATTENDANCE REPORT -->
+
+  <div class="panel">
+
+    <h2>📊 Attendance Report</h2>
+
+    <div class="form-grid">
+
+      <div>
+        <label>Date</label>
+
+        <input
+          type="date"
+          id="reportDate"
+        >
+      </div>
+
+      <div>
+        <label>Employee</label>
+
+        <select id="reportEmployee">
+          <option value="">All Employees</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button
+      class="primary"
+      onclick="loadReport()"
+    >
+      🔎 View Attendance
     </button>
 
     <div id="report"></div>
+
   </div>
-
-
-  <button class="logout"
-          onclick="logout()">
-    Logout
-  </button>
-
-</div>
-
-
-<div class="footer">
-  © Payol Attendance • GPS Enabled
-</div>
 
 </div>
 
 
 <script>
+
+/* SUPABASE */
 
 const SUPABASE_URL =
 "https://nkbbcygtuaejcuquwhpi.supabase.co";
@@ -425,81 +834,149 @@ supabase.createClient(
   SUPABASE_KEY
 );
 
-let currentEmployee=null;
+
+/* VARIABLES */
+
+let currentEmployee = null;
+
+
+/* LOGIN TYPE */
+
+function changeLoginType(){
+
+  const type =
+    document.getElementById("loginType").value;
+
+  const label =
+    document.getElementById("usernameLabel");
+
+  const input =
+    document.getElementById("username");
+
+  if(type === "admin"){
+
+    label.innerText = "Admin Username";
+
+    input.placeholder =
+      "Enter Admin Username";
+
+  }else{
+
+    label.innerText = "Employee ID";
+
+    input.placeholder =
+      "Enter Employee ID";
+
+  }
+
+}
 
 
 /* LOGIN */
 
 async function login(){
 
-  const loginId=
-    document.getElementById("loginId").value.trim();
+  const type =
+    document.getElementById("loginType").value;
 
-  const password=
-    document.getElementById("loginPassword").value;
+  const username =
+    document.getElementById("username").value.trim();
 
-  const message=
-    document.getElementById("loginMessage");
+  const password =
+    document.getElementById("password").value.trim();
 
+  const status =
+    document.getElementById("loginStatus");
 
-  if(!loginId || !password){
+  status.innerHTML = "";
 
-    message.innerHTML=
-      "<div class='status error'>ID aur password bhariye.</div>";
+  if(!username || !password){
 
-    return;
-  }
-
-
-  if(
-    loginId==="Baijnathpayol" &&
-    password==="123456789"
-  ){
-
-    document.getElementById("loginBox")
-      .classList.add("hidden");
-
-    document.getElementById("adminPanel")
-      .classList.remove("hidden");
-
-    document.getElementById("reportDate").value=
-      new Date().toISOString().split("T")[0];
-
-    loadEmployeesForReport();
-    loadEmployeeList();
+    status.innerHTML =
+      "<div class='status error'>Username aur password enter karo.</div>";
 
     return;
   }
 
 
-  const {data,error}=
+  /* ADMIN */
+
+  if(type === "admin"){
+
+    if(
+      username === "Baijnathpayol" &&
+      password === "123456789"
+    ){
+
+      document
+        .getElementById("loginPage")
+        .classList.add("hidden");
+
+      document
+        .getElementById("adminPage")
+        .classList.remove("hidden");
+
+      loadEmployeeList();
+      loadEmployeesForReport();
+
+      return;
+
+    }else{
+
+      status.innerHTML =
+        "<div class='status error'>Admin username ya password galat hai.</div>";
+
+      return;
+    }
+
+  }
+
+
+  /* EMPLOYEE */
+
+  const {data,error} =
     await supabaseClient
       .from("employees")
       .select("*")
-      .eq("employee_id",loginId)
+      .eq("employee_id",username)
       .eq("password",password)
       .single();
 
 
   if(error || !data){
 
-    message.innerHTML=
-      "<div class='status error'>Invalid ID ya password.</div>";
+    status.innerHTML =
+      "<div class='status error'>Employee ID ya password galat hai.</div>";
 
     return;
   }
 
 
-  currentEmployee=data;
+  currentEmployee = data;
 
-  document.getElementById("loginBox")
+  document
+    .getElementById("loginPage")
     .classList.add("hidden");
 
-  document.getElementById("employeePanel")
+  document
+    .getElementById("employeePage")
     .classList.remove("hidden");
 
-  document.getElementById("employeeName")
-    .innerText=data.name;
+
+  document
+    .getElementById("employeeName")
+    .innerText =
+      data.name;
+
+  document
+    .getElementById("employeeId")
+    .innerText =
+      data.employee_id;
+
+  document
+    .getElementById("empNameCard")
+    .innerText =
+      data.name;
 
 }
 
@@ -508,75 +985,103 @@ async function login(){
 
 function logout(){
 
-  currentEmployee=null;
+  currentEmployee = null;
 
-  document.getElementById("loginBox")
+  document
+    .getElementById("employeePage")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminPage")
+    .classList.add("hidden");
+
+  document
+    .getElementById("loginPage")
     .classList.remove("hidden");
 
-  document.getElementById("employeePanel")
-    .classList.add("hidden");
+  document
+    .getElementById("username")
+    .value="";
 
-  document.getElementById("adminPanel")
-    .classList.add("hidden");
+  document
+    .getElementById("password")
+    .value="";
 
-  document.getElementById("loginId").value="";
-  document.getElementById("loginPassword").value="";
 }
 
 
 /* DISTANCE */
 
 function calculateDistance(
-  lat1,lon1,lat2,lon2
+  lat1,
+  lon1,
+  lat2,
+  lon2
 ){
 
-  const R=6371000;
+  const R = 6371000;
 
-  const dLat=
-    (lat2-lat1)*Math.PI/180;
+  const dLat =
+    (lat2-lat1) *
+    Math.PI/180;
 
-  const dLon=
-    (lon2-lon1)*Math.PI/180;
+  const dLon =
+    (lon2-lon1) *
+    Math.PI/180;
 
-  const a=
-    Math.sin(dLat/2)**2+
-    Math.cos(lat1*Math.PI/180)*
-    Math.cos(lat2*Math.PI/180)*
-    Math.sin(dLon/2)**2;
+  const a =
+    Math.sin(dLat/2) *
+    Math.sin(dLat/2) +
 
-  const c=
-    2*Math.atan2(
+    Math.cos(lat1*Math.PI/180) *
+    Math.cos(lat2*Math.PI/180) *
+
+    Math.sin(dLon/2) *
+    Math.sin(dLon/2);
+
+  const c =
+    2 *
+    Math.atan2(
       Math.sqrt(a),
       Math.sqrt(1-a)
     );
 
   return R*c;
+
 }
 
 
-/* ATTENDANCE */
+/* MARK ATTENDANCE */
 
 async function markAttendance(type){
 
-  const message=
-    document.getElementById("attendanceMessage");
+  const gps =
+    document.getElementById("gpsStatus");
 
-  message.innerHTML=
-    "<div class='status'>📍 Location checking...</div>";
+  gps.innerHTML =
+    "📍 GPS location checking...";
+
+  if(!navigator.geolocation){
+
+    gps.innerHTML =
+      "<div class='status error'>GPS supported nahi hai.</div>";
+
+    return;
+  }
 
 
   navigator.geolocation.getCurrentPosition(
 
     async function(position){
 
-      const latitude=
+      const lat =
         position.coords.latitude;
 
-      const longitude=
+      const lon =
         position.coords.longitude;
 
 
-      const {data:office,error:officeError}=
+      const {data:office,error} =
         await supabaseClient
           .from("office_settings")
           .select("*")
@@ -584,53 +1089,44 @@ async function markAttendance(type){
           .single();
 
 
-      if(
-        officeError ||
-        !office ||
-        office.latitude===null ||
-        office.longitude===null
-      ){
+      if(error || !office ||
+         office.latitude === null ||
+         office.longitude === null){
 
-        message.innerHTML=
+        gps.innerHTML =
           "<div class='status error'>Office location set nahi hai.</div>";
 
         return;
       }
 
 
-      const distance=
+      const distance =
         calculateDistance(
-          latitude,
-          longitude,
+          lat,
+          lon,
           office.latitude,
           office.longitude
         );
 
 
-      const radius=
-        office.radius_meters || 100;
+      if(distance > 100){
 
-
-      if(distance>radius){
-
-        message.innerHTML=
-          "<div class='status error'>" +
-          "❌ Aap office se "+
+        gps.innerHTML =
+          "<div class='status error'>❌ Aap office ke 100 meter ke andar nahi hain.<br>Distance: "+
           Math.round(distance)+
-          " meter door hain.<br>" +
-          radius+
-          " meter ke andar hona zaroori hai."+
-          "</div>";
+          " meter</div>";
 
         return;
       }
 
 
-      const today=
-        new Date().toISOString().split("T")[0];
+      const today =
+        new Date()
+          .toISOString()
+          .split("T")[0];
 
 
-      const {error}=
+      const {error:insertError} =
         await supabaseClient
           .from("attendance")
           .insert({
@@ -641,33 +1137,38 @@ async function markAttendance(type){
             employee_name:
               currentEmployee.name,
 
-            attendance_type:type,
+            attendance_type:
+              type,
 
-            latitude:latitude,
+            latitude:
+              lat,
 
-            longitude:longitude,
+            longitude:
+              lon,
 
-            distance_meters:distance,
+            distance_meters:
+              distance,
 
-            attendance_date:today
+            attendance_date:
+              today
+
           });
 
 
-      if(error){
+      if(insertError){
 
-        message.innerHTML=
+        gps.innerHTML =
           "<div class='status error'>"+
-          error.message+
+          insertError.message+
           "</div>";
 
         return;
       }
 
 
-      message.innerHTML=
+      gps.innerHTML =
         "<div class='status success'>"+
-        "✅ "+type+
-        " Attendance Successfully Marked<br>"+
+        "✅ "+type+" attendance successfully marked.<br>"+
         "Distance: "+
         Math.round(distance)+
         " meter"+
@@ -675,12 +1176,10 @@ async function markAttendance(type){
 
     },
 
-    function(){
+    function(error){
 
-      message.innerHTML=
-        "<div class='status error'>"+
-        "❌ GPS permission allow karo."+
-        "</div>";
+      gps.innerHTML =
+        "<div class='status error'>GPS permission allow karo aur dobara try karo.</div>";
 
     },
 
@@ -695,42 +1194,53 @@ async function markAttendance(type){
 }
 
 
-/* OFFICE LOCATION */
+/* SAVE OFFICE LOCATION */
 
 function saveOfficeLocation(){
 
-  const message=
-    document.getElementById("locationMessage");
+  const box =
+    document.getElementById("officeStatus");
 
-  message.innerHTML=
-    "📍 Location mil rahi hai...";
+  box.innerHTML =
+    "📍 Current GPS location checking...";
+
+
+  if(!navigator.geolocation){
+
+    box.innerHTML =
+      "<div class='status error'>GPS supported nahi hai.</div>";
+
+    return;
+  }
 
 
   navigator.geolocation.getCurrentPosition(
 
     async function(position){
 
-      const {error}=
+      const lat =
+        position.coords.latitude;
+
+      const lon =
+        position.coords.longitude;
+
+
+      const {error} =
         await supabaseClient
           .from("office_settings")
-          .upsert({
+          .update({
 
-            id:1,
-
-            latitude:
-              position.coords.latitude,
-
-            longitude:
-              position.coords.longitude,
-
+            latitude:lat,
+            longitude:lon,
             radius_meters:100
 
-          });
+          })
+          .eq("id",1);
 
 
       if(error){
 
-        message.innerHTML=
+        box.innerHTML =
           "<div class='status error'>"+
           error.message+
           "</div>";
@@ -739,20 +1249,18 @@ function saveOfficeLocation(){
       }
 
 
-      message.innerHTML=
+      box.innerHTML =
         "<div class='status success'>"+
-        "✅ Office Location Saved<br>"+
-        "GPS Radius: 100 meter"+
+        "✅ Office location successfully saved.<br>"+
+        "Radius: 100 meters"+
         "</div>";
 
     },
 
     function(){
 
-      message.innerHTML=
-        "<div class='status error'>"+
-        "Location permission allow karo."+
-        "</div>";
+      box.innerHTML =
+        "<div class='status error'>GPS permission allow karo.</div>";
 
     },
 
@@ -771,46 +1279,52 @@ function saveOfficeLocation(){
 
 async function addEmployee(){
 
-  const id=
-    document.getElementById("newEmployeeId")
-      .value.trim();
+  const id =
+    document
+      .getElementById("newEmployeeId")
+      .value
+      .trim();
 
-  const name=
-    document.getElementById("newEmployeeName")
-      .value.trim();
+  const name =
+    document
+      .getElementById("newEmployeeName")
+      .value
+      .trim();
 
-  const password=
-    document.getElementById("newEmployeePassword")
-      .value;
+  const password =
+    document
+      .getElementById("newEmployeePassword")
+      .value
+      .trim();
 
-  const message=
-    document.getElementById("employeeMessage");
+  const box =
+    document.getElementById("employeeAddStatus");
 
 
   if(!id || !name || !password){
 
-    message.innerHTML=
-      "<div class='status error'>"+
-      "Sabhi fields bhariye."+
-      "</div>";
+    box.innerHTML =
+      "<div class='status error'>Sabhi details fill karo.</div>";
 
     return;
   }
 
 
-  const {error}=
+  const {error} =
     await supabaseClient
       .from("employees")
       .insert({
+
         employee_id:id,
         name:name,
         password:password
+
       });
 
 
   if(error){
 
-    message.innerHTML=
+    box.innerHTML =
       "<div class='status error'>"+
       error.message+
       "</div>";
@@ -819,15 +1333,23 @@ async function addEmployee(){
   }
 
 
-  message.innerHTML=
+  box.innerHTML =
     "<div class='status success'>"+
-    "✅ Employee successfully add ho gaya."+
+    "✅ Employee successfully added."+
     "</div>";
 
 
-  document.getElementById("newEmployeeId").value="";
-  document.getElementById("newEmployeeName").value="";
-  document.getElementById("newEmployeePassword").value="";
+  document
+    .getElementById("newEmployeeId")
+    .value="";
+
+  document
+    .getElementById("newEmployeeName")
+    .value="";
+
+  document
+    .getElementById("newEmployeePassword")
+    .value="";
 
 
   loadEmployeeList();
@@ -840,22 +1362,23 @@ async function addEmployee(){
 
 async function loadEmployeeList(){
 
-  const list=
+  const box =
     document.getElementById("employeeList");
 
-  list.innerHTML="Loading...";
+  box.innerHTML =
+    "Loading...";
 
 
-  const {data,error}=
+  const {data,error} =
     await supabaseClient
       .from("employees")
-      .select("id,employee_id,name")
+      .select("*")
       .order("employee_id");
 
 
   if(error){
 
-    list.innerHTML=
+    box.innerHTML =
       "<div class='status error'>"+
       error.message+
       "</div>";
@@ -864,54 +1387,77 @@ async function loadEmployeeList(){
   }
 
 
-  let html=
-    "<table>"+
+  if(!data || data.length===0){
+
+    box.innerHTML =
+      "<p>No employees found.</p>";
+
+    return;
+  }
+
+
+  let html =
+    "<div class='table-wrap'><table>"+
     "<tr>"+
-    "<th>ID</th>"+
+    "<th>Employee ID</th>"+
     "<th>Name</th>"+
     "<th>Action</th>"+
     "</tr>";
 
 
-  data.forEach(function(employee){
+  data.forEach(function(emp){
 
-    html+=
+    html +=
       "<tr>"+
-      "<td>"+employee.employee_id+"</td>"+
-      "<td>"+employee.name+"</td>"+
+
+      "<td><b>"+
+      emp.employee_id+
+      "</b></td>"+
+
       "<td>"+
-      "<button class='red' "+
-      "onclick=\"deleteEmployee('"+
-      employee.id+"','"+
-      employee.employee_id+
-      "')\">Delete</button>"+
+      emp.name+
       "</td>"+
+
+      "<td>"+
+      "<button class='danger' onclick=\"deleteEmployee('"+
+      emp.id+
+      "','"+
+      emp.employee_id+
+      "')\">"+
+      "Delete"+
+      "</button>"+
+      "</td>"+
+
       "</tr>";
 
   });
 
 
-  html+="</table>";
+  html +=
+    "</table></div>";
 
-  list.innerHTML=html;
+
+  box.innerHTML =
+    html;
 
 }
 
 
-/* DELETE */
+/* DELETE EMPLOYEE */
 
-async function deleteEmployee(id,employeeId){
+async function deleteEmployee(
+  id,
+  employeeId
+){
 
   if(!confirm(
-    "Kya aap "+
+    "Employee "+
     employeeId+
-    " ko delete karna chahte hain?"
-  )){
-    return;
-  }
+    " ko delete karna hai?"
+  )) return;
 
 
-  const {error}=
+  const {error} =
     await supabaseClient
       .from("employees")
       .delete()
@@ -926,53 +1472,44 @@ async function deleteEmployee(id,employeeId){
   }
 
 
-  alert(
-    "Employee delete ho gaya."
-  );
-
-
   loadEmployeeList();
   loadEmployeesForReport();
 
 }
 
 
-/* DROPDOWN */
+/* REPORT EMPLOYEE DROPDOWN */
 
 async function loadEmployeesForReport(){
 
-  const select=
+  const select =
     document.getElementById("reportEmployee");
 
 
-  const {data,error}=
+  const {data,error} =
     await supabaseClient
       .from("employees")
       .select("employee_id,name")
       .order("employee_id");
 
 
-  if(error)return;
+  if(error) return;
 
 
-  select.innerHTML=
+  select.innerHTML =
     "<option value=''>All Employees</option>";
 
 
-  data.forEach(function(employee){
+  data.forEach(function(emp){
 
-    const option=
-      document.createElement("option");
-
-    option.value=
-      employee.employee_id;
-
-    option.textContent=
-      employee.employee_id+
+    select.innerHTML +=
+      "<option value='"+
+      emp.employee_id+
+      "'>"+
+      emp.employee_id+
       " - "+
-      employee.name;
-
-    select.appendChild(option);
+      emp.name+
+      "</option>";
 
   });
 
@@ -983,20 +1520,30 @@ async function loadEmployeesForReport(){
 
 async function loadReport(){
 
-  const report=
+  const report =
     document.getElementById("report");
 
-  const date=
+  const date =
     document.getElementById("reportDate").value;
 
-  const employee=
+  const employee =
     document.getElementById("reportEmployee").value;
 
 
-  report.innerHTML="Loading...";
+  if(!date){
+
+    report.innerHTML =
+      "<div class='status error'>Date select karo.</div>";
+
+    return;
+  }
 
 
-  let query=
+  report.innerHTML =
+    "Loading...";
+
+
+  let query =
     supabaseClient
       .from("attendance")
       .select("*")
@@ -1006,7 +1553,7 @@ async function loadReport(){
 
   if(employee){
 
-    query=
+    query =
       query.eq(
         "employee_id",
         employee
@@ -1015,13 +1562,13 @@ async function loadReport(){
   }
 
 
-  const {data,error}=
+  const {data,error} =
     await query;
 
 
   if(error){
 
-    report.innerHTML=
+    report.innerHTML =
       "<div class='status error'>"+
       error.message+
       "</div>";
@@ -1032,15 +1579,16 @@ async function loadReport(){
 
   if(!data || data.length===0){
 
-    report.innerHTML=
+    report.innerHTML =
       "<p>No attendance found.</p>";
 
     return;
   }
 
 
-  let html=
-    "<table>"+
+  let html =
+    "<div class='table-wrap'><table>"+
+
     "<tr>"+
     "<th>Employee</th>"+
     "<th>Type</th>"+
@@ -1051,37 +1599,288 @@ async function loadReport(){
 
   data.forEach(function(row){
 
-    html+=
+    const badge =
+      row.attendance_type === "IN"
+      ? "badge badge-in"
+      : "badge badge-out";
+
+
+    html +=
       "<tr>"+
+
       "<td>"+
       row.employee_id+
       "<br>"+
       row.employee_name+
       "</td>"+
-      "<td>"+
+
+      "<td><span class='"+
+      badge+
+      "'>"+
       row.attendance_type+
-      "</td>"+
+      "</span></td>"+
+
       "<td>"+
       new Date(
         row.created_at
       ).toLocaleTimeString()+
       "</td>"+
+
       "<td>"+
       Math.round(
         row.distance_meters
       )+
       " m"+
       "</td>"+
+
       "</tr>";
 
   });
 
 
-  html+="</table>";
+  html +=
+    "</table></div>";
 
-  report.innerHTML=html;
+
+  report.innerHTML =
+    html;
 
 }
+
+
+/* MONTHLY ATTENDANCE SUMMARY */
+
+async function loadMonthlySummary(){
+
+  const month =
+    document.getElementById("summaryMonth").value;
+
+  const box =
+    document.getElementById("monthlySummary");
+
+
+  if(!month){
+
+    box.innerHTML =
+      "<div class='status error'>Pehle month select karo.</div>";
+
+    return;
+  }
+
+
+  box.innerHTML =
+    "Loading...";
+
+
+  const startDate =
+    month+"-01";
+
+
+  const nextMonth =
+    new Date(
+      new Date(startDate).getFullYear(),
+      new Date(startDate).getMonth()+1,
+      1
+    );
+
+
+  const endDate =
+    nextMonth
+      .toISOString()
+      .split("T")[0];
+
+
+  const {
+    data:employees,
+    error:empError
+  } =
+    await supabaseClient
+      .from("employees")
+      .select("employee_id,name")
+      .order("employee_id");
+
+
+  if(empError){
+
+    box.innerHTML =
+      "<div class='status error'>"+
+      empError.message+
+      "</div>";
+
+    return;
+  }
+
+
+  const {
+    data:attendance,
+    error:attError
+  } =
+    await supabaseClient
+      .from("attendance")
+      .select("*")
+      .gte("attendance_date",startDate)
+      .lt("attendance_date",endDate);
+
+
+  if(attError){
+
+    box.innerHTML =
+      "<div class='status error'>"+
+      attError.message+
+      "</div>";
+
+    return;
+  }
+
+
+  let result = {};
+
+
+  employees.forEach(function(emp){
+
+    result[emp.employee_id] = {
+
+      name:emp.name,
+      days:{}
+
+    };
+
+  });
+
+
+  attendance.forEach(function(row){
+
+    if(!result[row.employee_id]){
+      return;
+    }
+
+
+    const day =
+      row.attendance_date;
+
+
+    if(!result[row.employee_id].days[day]){
+
+      result[row.employee_id].days[day] = {
+
+        IN:false,
+        OUT:false
+
+      };
+
+    }
+
+
+    if(
+      row.attendance_type === "IN"
+    ){
+
+      result[row.employee_id]
+        .days[day]
+        .IN = true;
+
+    }
+
+
+    if(
+      row.attendance_type === "OUT"
+    ){
+
+      result[row.employee_id]
+        .days[day]
+        .OUT = true;
+
+    }
+
+  });
+
+
+  let html =
+    "<div class='table-wrap'><table>"+
+
+    "<tr>"+
+    "<th>Employee</th>"+
+    "<th>Present Days</th>"+
+    "</tr>";
+
+
+  employees.forEach(function(emp){
+
+    let presentDays = 0;
+
+
+    const days =
+      result[emp.employee_id].days;
+
+
+    Object.keys(days).forEach(function(day){
+
+      if(
+        days[day].IN &&
+        days[day].OUT
+      ){
+
+        presentDays++;
+
+      }
+
+    });
+
+
+    html +=
+      "<tr>"+
+
+      "<td>"+
+      emp.employee_id+
+      "<br>"+
+      emp.name+
+      "</td>"+
+
+      "<td>"+
+      "<span class='badge badge-in'>"+
+      presentDays+
+      " Days Present"+
+      "</span>"+
+      "</td>"+
+
+      "</tr>";
+
+  });
+
+
+  html +=
+    "</table></div>";
+
+
+  box.innerHTML =
+    html;
+
+}
+
+
+/* DEFAULT DATE */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    const today =
+      new Date()
+        .toISOString()
+        .split("T")[0];
+
+    const reportDate =
+      document.getElementById("reportDate");
+
+    if(reportDate){
+
+      reportDate.value =
+        today;
+
+    }
+
+  }
+);
 
 </script>
 
