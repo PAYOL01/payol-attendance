@@ -1,1120 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payol Attendance</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f4f7;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .box {
-      max-width: 500px;
-      margin: 30px auto;
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 3px 15px rgba(0,0,0,0.12);
-    }
-
-    h1, h2 {
-      text-align: center;
-    }
-
-    input, select, button {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 7px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-    }
-
-    button {
-      background: #1769aa;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0d4f82;
-    }
-
-    .green {
-      background: #168a45;
-    }
-
-    .red {
-      background: #c62828;
-    }
-
-    .gray {
-      background: #555;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .message {
-      text-align: center;
-      margin: 12px 0;
-      font-weight: bold;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-      font-size: 13px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 7px;
-      text-align: center;
-    }
-
-    th {
-      background: #eee;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Payol Attendance</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:Arial;background:#f2f4f7;margin:0;padding:20px}
+.box{max-width:500px;margin:30px auto;background:white;padding:25px;border-radius:12px;box-shadow:0 3px 15px #ccc}
+h1,h2{text-align:center}
+input,select,button{width:100%;box-sizing:border-box;padding:12px;margin:8px 0;border-radius:7px;border:1px solid #ccc;font-size:15px}
+button{background:#1769aa;color:white;border:0;cursor:pointer}
+.green{background:#168a45}.red{background:#c62828}.gray{background:#555}
+.hidden{display:none}.message{text-align:center;margin:12px 0;font-weight:bold}
+table{width:100%;border-collapse:collapse;margin-top:15px;font-size:13px}
+th,td{border:1px solid #ddd;padding:7px;text-align:center}
+th{background:#eee}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
 <div class="box" id="loginBox">
-  <h1>Payol Attendance</h1>
-
-  <input id="loginId" placeholder="Employee ID / Admin Username">
-  <input id="loginPassword" type="password" placeholder="Password">
-
-  <button onclick="login()">Login</button>
-
-  <div class="message" id="loginMessage"></div>
+<h1>Payol Attendance</h1>
+<input id="loginId" placeholder="Employee ID / Admin Username">
+<input id="loginPassword" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<div class="message" id="loginMessage"></div>
 </div>
 
-
-<!-- EMPLOYEE PANEL -->
 <div class="box hidden" id="employeePanel">
-  <h2>Employee Attendance</h2>
-
-  <p>
-    Welcome, <b id="employeeName"></b>
-  </p>
-
-  <button class="green" onclick="markAttendance('IN')">
-    Mark IN
-  </button>
-
-  <button class="red" onclick="markAttendance('OUT')">
-    Mark OUT
-  </button>
-
-  <div class="message" id="attendanceMessage"></div>
-
-  <button class="gray" onclick="logout()">Logout</button>
+<h2>Employee Attendance</h2>
+<p>Welcome, <b id="employeeName"></b></p>
+<button class="green" onclick="markAttendance('IN')">Mark IN</button>
+<button class="red" onclick="markAttendance('OUT')">Mark OUT</button>
+<div class="message" id="attendanceMessage"></div>
+<button class="gray" onclick="logout()">Logout</button>
 </div>
 
-
-<!-- ADMIN PANEL -->
 <div class="box hidden" id="adminPanel">
-  <h2>Admin Panel</h2>
+<h2>Admin Panel</h2>
 
-  <button onclick="saveOfficeLocation()">
-    Save Current Office Location
-  </button>
+<button onclick="saveOfficeLocation()">Save Current Office Location</button>
+<div class="message" id="officeMessage"></div>
 
-  <div class="message" id="officeMessage"></div>
+<hr>
 
-  <hr>
+<h3>Add Employee</h3>
+<input id="newEmployeeId" placeholder="Employee ID">
+<input id="newEmployeeName" placeholder="Employee Name">
+<input id="newEmployeePassword" placeholder="Password">
+<button onclick="addEmployee()">Add Employee</button>
+<div class="message" id="employeeMessage"></div>
 
-  <h3>Add Employee</h3>
+<hr>
 
-  <input id="newEmployeeId" placeholder="Employee ID">
-  <input id="newEmployeeName" placeholder="Employee Name">
-  <input id="newEmployeePassword" placeholder="Password">
+<h3>Attendance Report</h3>
+<input id="reportDate" type="date">
 
-  <button onclick="addEmployee()">Add Employee</button>
+<select id="reportEmployee">
+<option value="">All Employees</option>
+</select>
 
-  <div class="message" id="employeeMessage"></div>
+<button onclick="loadReport()">Show Report</button>
+<div id="report"></div>
 
-  <hr>
-
-  <h3>Attendance Report</h3>
-
-  <input id="reportDate" type="date">
-
-  <select id="reportEmployee">
-    <option value="">All Employees</option>
-  </select>
-
-  <button onclick="loadReport()">Show Report</button>
-
-  <div id="report"></div>
-
-  <button class="gray" onclick="logout()">Logout</button>
+<button class="gray" onclick="logout()">Logout</button>
 </div>
-
 
 <script>
 
-  /* ==============================
-     SUPABASE
-  ============================== */
+const SUPABASE_URL =
+"https://nkbbcygtuaejcuquwhpi.supabase.co";
 
-  const SUPABASE_URL =
-    "https://nkbbcygtuaejcuquwhpi.supabase.co";
+/* APNI PURANI PUBLISHABLE KEY YAHAN RAKHO */
+const SUPABASE_KEY =
+"sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
 
-  /*
-    IMPORTANT:
-    Yahan apni pehle wali Supabase Publishable Key paste karo.
-    Key mujhe mat bhejna.
-  */
+const supabaseClient =
+supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-  const SUPABASE_KEY = "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
+let currentEmployee=null;
 
-  const supabaseClient =
-    supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+/* LOGIN */
 
-  /* ==============================
-     VARIABLES
-  ============================== */
+async function login(){
 
-  let currentEmployee = null;
+const loginId=document.getElementById("loginId").value.trim();
+const password=document.getElementById("loginPassword").value.trim();
+const message=document.getElementById("loginMessage");
 
+message.innerText="";
 
-  /* ==============================
-     LOGIN
-  ============================== */
+if(!loginId || !password){
+message.innerText="ID aur Password dono bhariye.";
+return;
+}
 
-  async function login() {
+/* ADMIN */
 
-    const loginId =
-      document.getElementById("loginId").value.trim();
+if(loginId==="Baijnathpayol" && password==="123456789"){
 
-    const password =
-      document.getElementById("loginPassword").value.trim();
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("adminPanel").classList.remove("hidden");
 
-    const message =
-      document.getElementById("loginMessage");
+document.getElementById("reportDate").value=
+new Date().toISOString().split("T")[0];
 
-    message.innerText = "";
+loadEmployeesForReport();
+return;
+}
 
-    if (!loginId || !password) {
-      message.innerText = "ID aur Password dono bhariye.";
-      return;
-    }
+/* EMPLOYEE */
 
+const {data,error}=await supabaseClient
+.from("employees")
+.select("*")
+.eq("employee_id",loginId)
+.eq("password",password)
+.maybeSingle();
 
-    /* ADMIN LOGIN */
+if(error){
+message.innerText="Login error: "+error.message;
+return;
+}
 
-    if (
-      loginId === "Baijnathpayol" &&
-      password === "123456789"
-    ) {
+if(!data){
+message.innerText="Employee ID ya Password galat hai.";
+return;
+}
 
-      document.getElementById("loginBox")
-        .classList.add("hidden");
+currentEmployee=data;
 
-      document.getElementById("adminPanel")
-        .classList.remove("hidden");
-
-      document.getElementById("reportDate").value =
-        new Date().toISOString().split("T")[0];
-
-      loadEmployeesForReport();
-
-      return;
-    }
-
-
-    /* EMPLOYEE LOGIN */
-
-    const { data, error } =
-      await supabaseClient
-        .from("employees")
-        .select("*")
-        .eq("employee_id", loginId)
-        .eq("password", password)
-        .maybeSingle();
-
-
-    if (error) {
-
-      console.error(error);
-
-      message.innerText =
-        "Login error: " + error.message;
-
-      return;
-    }
-
-
-    if (!data) {
-
-      message.innerText =
-        "Employee ID ya Password galat hai.";
-
-      return;
-    }
-
-
-    currentEmployee = data;
-
-    document.getElementById("loginBox")
-      .classList.add("hidden");
-
-    document.getElementById("employeePanel")
-      .classList.remove("hidden");
-
-    document.getElementById("employeeName").innerText =
-      data.name;
-
-  }
-
-
-  /* ==============================
-     LOGOUT
-  ============================== */
-
-  function logout() {
-
-    currentEmployee = null;
-
-    document.getElementById("loginBox")
-      .classList.remove("hidden");
-
-    document.getElementById("employeePanel")
-      .classList.add("hidden");
-
-    document.getElementById("adminPanel")
-      .classList.add("hidden");
-
-    document.getElementById("loginId").value = "";
-    document.getElementById("loginPassword").value = "";
-
-    document.getElementById("loginMessage").innerText = "";
-  }
-
-
-  /* ==============================
-     DISTANCE CALCULATION
-  ============================== */
-
-  function calculateDistance(lat1, lon1, lat2, lon2) {
-
-    const R = 6371000;
-
-    const dLat =
-      (lat2 - lat1) * Math.PI / 180;
-
-    const dLon =
-      (lon2 - lon1) * Math.PI / 180;
-
-    const a =
-      Math.sin(dLat / 2) *
-      Math.sin(dLat / 2) +
-      Math.cos(lat1 * Math.PI / 180) *
-      Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-
-    const c =
-      2 * Math.atan2(
-        Math.sqrt(a),
-        Math.sqrt(1 - a)
-      );
-
-    return R * c;
-  }
-
-
-  /* ==============================
-     MARK ATTENDANCE
-  ============================== */
-
-  async function markAttendance(type) {
-
-  const message =
-    document.getElementById("attendanceMessage");
-
-  message.innerText =
-    "Location check ho raha hai...";
-
-  if (!navigator.geolocation) {
-    message.innerText =
-      "Aapke browser me GPS available nahi hai.";
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    async function(position) {
-
-      try {
-
-        const latitude =
-          position.coords.latitude;
-
-        const longitude =
-          position.coords.longitude;
-
-        const today =
-          new Date().toISOString().split("T")[0];
-
-
-        // Check today's attendance
-        const { data: existing, error: checkError } =
-          await supabaseClient
-            .from("attendance")
-            .select("id,attendance_type")
-            .eq("employee_id", currentEmployee.employee_id)
-            .eq("attendance_date", today);
-
-        if (checkError) {
-          message.innerText =
-            "Attendance check error: " +
-            checkError.message;
-          return;
-        }
-
-
-        // Same type already marked
-        if (
-          existing &&
-          existing.some(row =>
-            row.attendance_type === type
-          )
-        ) {
-
-          message.innerText =
-            "Aaj ka " + type +
-            " attendance pehle hi mark ho chuka hai.";
-
-          return;
-        }
-
-
-        // Office location
-        const { data: office, error: officeError } =
-          await supabaseClient
-            .from("office_settings")
-            .select("*")
-            .eq("id", 1)
-            .single();
-
-        if (officeError || !office) {
-          message.innerText =
-            "Office location nahi mili.";
-          return;
-        }
-
-        if (
-          office.latitude === null ||
-          office.longitude === null
-        ) {
-          message.innerText =
-            "Admin ne office location save nahi ki hai.";
-          return;
-        }
-
-
-        // Distance
-        const distance =
-          calculateDistance(
-            latitude,
-            longitude,
-            office.latitude,
-            office.longitude
-          );
-
-        const radius =
-          office.radius_meters || 100;
-
-
-        if (distance > radius) {
-          message.innerText =
-            "Aap office se " +
-            Math.round(distance) +
-            " meter door hain. 100 meter ke andar hona zaroori hai.";
-          return;
-        }
-
-
-        // Save attendance
-        const { error } =
-          await supabaseClient
-            .from("attendance")
-            .insert([{
-
-              employee_id:
-                currentEmployee.employee_id,
-
-              employee_name:
-                currentEmployee.name,
-
-              attendance_type:
-                type,
-
-              latitude:
-                latitude,
-
-              longitude:
-                longitude,
-
-              distance_meters:
-                distance,
-
-              attendance_date:
-                today
-
-            }]);
-
-
-        if (error) {
-
-          message.innerText =
-            "Attendance save nahi hui: " +
-            error.message;
-
-          return;
-        }
-
-
-        message.innerText =
-          type +
-          " Attendance Successfully Marked. Distance: " +
-          Math.round(distance) +
-          " meter";
-
-      }
-
-      catch (err) {
-
-        console.error(err);
-
-        message.innerText =
-          "Kuch error hua.";
-
-      }
-
-    },
-
-    function(error) {
-
-      if (error.code === 1) {
-
-        message.innerText =
-          "Location permission Allow karo.";
-
-      } else {
-
-        message.innerText =
-          "Location nahi mil pa rahi hai.";
-
-      }
-
-    },
-
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
-    }
-  );
+document.getElementById("loginBox").classList.add("hidden");
+document.getElementById("employeePanel").classList.remove("hidden");
+document.getElementById("employeeName").innerText=data.name;
 
 }
 
-    const message =
-      document.getElementById("attendanceMessage");
 
-    message.innerText =
-      "Location check ho raha hai...";
+/* LOGOUT */
 
+function logout(){
 
-    if (!navigator.geolocation) {
+currentEmployee=null;
 
-      message.innerText =
-        "Aapke browser me GPS available nahi hai.";
+document.getElementById("loginBox").classList.remove("hidden");
+document.getElementById("employeePanel").classList.add("hidden");
+document.getElementById("adminPanel").classList.add("hidden");
 
-      return;
-    }
-
-
-    navigator.geolocation.getCurrentPosition(
-      async function(position) {
-
-        try {
-
-          const latitude =
-            position.coords.latitude;
-
-          const longitude =
-            position.coords.longitude;
-
-
-          /* GET OFFICE LOCATION */
-
-          const { data: office, error: officeError } =
-            await supabaseClient
-              .from("office_settings")
-              .select("*")
-              .eq("id", 1)
-              .single();
-
-
-          if (officeError || !office) {
-
-            message.innerText =
-              "Office location nahi mili.";
-
-            return;
-          }
-
-
-          if (
-            office.latitude === null ||
-            office.longitude === null
-          ) {
-
-            message.innerText =
-              "Admin ne office location save nahi ki hai.";
-
-            return;
-          }
-
-
-          const distance =
-            calculateDistance(
-              latitude,
-              longitude,
-              office.latitude,
-              office.longitude
-            );
-
-
-          const radius =
-            office.radius_meters || 100;
-
-
-          if (distance > radius) {
-
-            message.innerText =
-              "Aap office se " +
-              Math.round(distance) +
-              " meter door hain. 100 meter ke andar hona zaroori hai.";
-
-            return;
-          }
-
-
-          /* TODAY DATE */
-
-          const today =
-            new Date().toISOString().split("T")[0];
-
-
-          /* SAVE ATTENDANCE */
-
-          const { error } =
-            await supabaseClient
-              .from("attendance")
-              .insert([{
-
-                employee_id:
-                  currentEmployee.employee_id,
-
-                employee_name:
-                  currentEmployee.name,
-
-                attendance_type:
-                  type,
-
-                latitude:
-                  latitude,
-
-                longitude:
-                  longitude,
-
-                distance_meters:
-                  distance,
-
-                attendance_date:
-                  today
-
-              }]);
-
-
-          if (error) {
-
-            console.error(error);
-
-            message.innerText =
-              "Attendance save nahi hui: " +
-              error.message;
-
-            return;
-          }
-
-
-          message.innerText =
-            type +
-            " Attendance Successfully Marked. Distance: " +
-            Math.round(distance) +
-            " meter";
-
-        }
-
-        catch (err) {
-
-          console.error(err);
-
-          message.innerText =
-            "Kuch error hua.";
-
-        }
-
-      },
-
-      function(error) {
-
-        if (error.code === 1) {
-
-          message.innerText =
-            "Location permission Allow karo.";
-
-        } else {
-
-          message.innerText =
-            "Location nahi mil pa rahi hai.";
-
-        }
-
-      },
-
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0
-      }
-    );
-
-  }
-
-
-  /* ==============================
-     SAVE OFFICE LOCATION
-  ============================== */
-
-  function saveOfficeLocation() {
-
-    const message =
-      document.getElementById("officeMessage");
-
-    message.innerText =
-      "Current location li ja rahi hai...";
-
-
-    if (!navigator.geolocation) {
-
-      message.innerText =
-        "GPS available nahi hai.";
-
-      return;
-    }
-
-
-    navigator.geolocation.getCurrentPosition(
-      async function(position) {
-
-        const latitude =
-          position.coords.latitude;
-
-        const longitude =
-          position.coords.longitude;
-
-
-        const { error } =
-          await supabaseClient
-            .from("office_settings")
-            .update({
-              latitude: latitude,
-              longitude: longitude,
-              radius_meters: 100
-            })
-            .eq("id", 1);
-
-
-        if (error) {
-
-          console.error(error);
-
-          message.innerText =
-            "Location save nahi hui: " +
-            error.message;
-
-          return;
-        }
-
-
-        message.innerText =
-          "Office location successfully save ho gayi. Radius: 100 meter";
-
-      },
-
-      function() {
-
-        message.innerText =
-          "Location permission Allow karo.";
-
-      },
-
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0
-      }
-    );
-
-  }
-
-
-  /* ==============================
-     ADD EMPLOYEE
-  ============================== */
-
-  async function addEmployee() {
-
-    const id =
-      document.getElementById("newEmployeeId")
-        .value.trim();
-
-    const name =
-      document.getElementById("newEmployeeName")
-        .value.trim();
-
-    const password =
-      document.getElementById("newEmployeePassword")
-        .value.trim();
-
-    const message =
-      document.getElementById("employeeMessage");
-
-
-    if (!id || !name || !password) {
-
-      message.innerText =
-        "Sabhi details bhariye.";
-
-      return;
-    }
-
-
-    const { error } =
-      await supabaseClient
-        .from("employees")
-        .insert([{
-
-          employee_id: id,
-          name: name,
-          password: password
-
-        }]);
-
-
-    if (error) {
-
-      console.error(error);
-
-      message.innerText =
-        "Employee add nahi hua: " +
-        error.message;
-
-      return;
-    }
-
-
-    message.innerText =
-      "Employee successfully add ho gaya.";
-
-
-    document.getElementById("newEmployeeId").value = "";
-    document.getElementById("newEmployeeName").value = "";
-    document.getElementById("newEmployeePassword").value = "";
-
-
-    loadEmployeesForReport();
-
-  }
-
-
-  /* ==============================
-     LOAD EMPLOYEES
-  ============================== */
-
-  async function loadEmployeesForReport() {
-
-    const select =
-      document.getElementById("reportEmployee");
-
-
-    const { data, error } =
-      await supabaseClient
-        .from("employees")
-        .select("employee_id,name")
-        .order("employee_id");
-
-
-    if (error) {
-
-      console.error(error);
-      return;
-    }
-
-
-    select.innerHTML =
-      '<option value="">All Employees</option>';
-
-
-    data.forEach(function(employee) {
-
-      const option =
-        document.createElement("option");
-
-      option.value =
-        employee.employee_id;
-
-      option.textContent =
-        employee.employee_id +
-        " - " +
-        employee.name;
-
-      select.appendChild(option);
-
-    });
-
-  }
-
-
-  /* ==============================
-     ATTENDANCE REPORT
-  ============================== */
-
-  async function loadReport() {
-
-  const report = document.getElementById("report");
-
-  const date = document.getElementById("reportDate").value;
-
-  const employee =
-    document.getElementById("reportEmployee").value;
-
-  report.innerHTML = "Loading...";
-
-  let query = supabaseClient
-    .from("attendance")
-    .select("*")
-    .eq("attendance_date", date)
-    .order("created_at", { ascending: true });
-
-  if (employee) {
-    query = query.eq("employee_id", employee);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    report.innerHTML =
-      "Report load nahi hui: " + error.message;
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    report.innerHTML =
-      "<p>No attendance found.</p>";
-    return;
-  }
-
-  let html = `
-    <table>
-      <tr>
-        <th>Employee ID</th>
-        <th>Name</th>
-        <th>Date</th>
-        <th>IN Time</th>
-        <th>OUT Time</th>
-        <th>Distance</th>
-      </tr>
-  `;
-
-  const employees = {};
-
-  data.forEach(function(row) {
-
-    if (!employees[row.employee_id]) {
-      employees[row.employee_id] = {
-        id: row.employee_id,
-        name: row.employee_name,
-        date: row.attendance_date,
-        inTime: "-",
-        outTime: "-",
-        distance: "-"
-      };
-    }
-
-    if (row.attendance_type === "IN") {
-      employees[row.employee_id].inTime =
-        new Date(row.created_at).toLocaleTimeString();
-      employees[row.employee_id].distance =
-        Math.round(row.distance_meters) + " m";
-    }
-
-    if (row.attendance_type === "OUT") {
-      employees[row.employee_id].outTime =
-        new Date(row.created_at).toLocaleTimeString();
-    }
-
-  });
-
-
-  Object.values(employees).forEach(function(emp) {
-
-    html += `
-      <tr>
-        <td>${emp.id}</td>
-        <td>${emp.name}</td>
-        <td>${emp.date}</td>
-        <td>${emp.inTime}</td>
-        <td>${emp.outTime}</td>
-        <td>${emp.distance}</td>
-      </tr>
-    `;
-
-  });
-
-
-  html += "</table>";
-
-  report.innerHTML = html;
+document.getElementById("loginId").value="";
+document.getElementById("loginPassword").value="";
 }
 
-    const report =
-      document.getElementById("report");
 
-    const date =
-      document.getElementById("reportDate").value;
+/* DISTANCE */
 
-    const employee =
-      document.getElementById("reportEmployee").value;
+function calculateDistance(lat1,lon1,lat2,lon2){
 
+const R=6371000;
 
-    report.innerHTML =
-      "Loading...";
+const dLat=(lat2-lat1)*Math.PI/180;
+const dLon=(lon2-lon1)*Math.PI/180;
 
+const a=
+Math.sin(dLat/2)*Math.sin(dLat/2)+
+Math.cos(lat1*Math.PI/180)*
+Math.cos(lat2*Math.PI/180)*
+Math.sin(dLon/2)*Math.sin(dLon/2);
 
-    let query =
-      supabaseClient
-        .from("attendance")
-        .select("*")
-        .eq("attendance_date", date)
-        .order("created_at", {
-          ascending: false
-        });
+const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+
+return R*c;
+}
 
 
-    if (employee) {
+/* ATTENDANCE */
 
-      query =
-        query.eq("employee_id", employee);
+async function markAttendance(type){
 
-    }
+const message=document.getElementById("attendanceMessage");
+
+message.innerText="Location check ho raha hai...";
+
+if(!navigator.geolocation){
+message.innerText="GPS available nahi hai.";
+return;
+}
+
+navigator.geolocation.getCurrentPosition(async function(position){
+
+try{
+
+const latitude=position.coords.latitude;
+const longitude=position.coords.longitude;
+
+const {data:office,error:officeError}=await supabaseClient
+.from("office_settings")
+.select("*")
+.eq("id",1)
+.single();
+
+if(officeError || !office){
+message.innerText="Office location nahi mili.";
+return;
+}
+
+if(office.latitude===null || office.longitude===null){
+message.innerText="Office location save nahi hai.";
+return;
+}
+
+const distance=calculateDistance(
+latitude,
+longitude,
+office.latitude,
+office.longitude
+);
+
+const radius=office.radius_meters || 100;
+
+if(distance>radius){
+
+message.innerText=
+"Aap office se "+Math.round(distance)+
+" meter door hain. 100 meter ke andar hona zaroori hai.";
+
+return;
+}
+
+const today=new Date().toISOString().split("T")[0];
+
+const {error}=await supabaseClient
+.from("attendance")
+.insert([{
+employee_id:currentEmployee.employee_id,
+employee_name:currentEmployee.name,
+attendance_type:type,
+latitude:latitude,
+longitude:longitude,
+distance_meters:distance,
+attendance_date:today
+}]);
+
+if(error){
+
+message.innerText=
+"Attendance save nahi hui: "+error.message;
+
+return;
+}
+
+message.innerText=
+type+" Attendance Successfully Marked. Distance: "+
+Math.round(distance)+" meter";
+
+}catch(err){
+
+console.error(err);
+message.innerText="Kuch error hua.";
+
+}
+
+},function(error){
+
+if(error.code===1){
+message.innerText="Location permission Allow karo.";
+}else{
+message.innerText="Location nahi mil pa rahi hai.";
+}
+
+},{
+enableHighAccuracy:true,
+timeout:15000,
+maximumAge:0
+});
+
+}
 
 
-    const { data, error } =
-      await query;
+/* OFFICE LOCATION */
+
+function saveOfficeLocation(){
+
+const message=document.getElementById("officeMessage");
+
+message.innerText="Current location li ja rahi hai...";
+
+navigator.geolocation.getCurrentPosition(async function(position){
+
+const latitude=position.coords.latitude;
+const longitude=position.coords.longitude;
+
+const {error}=await supabaseClient
+.from("office_settings")
+.update({
+latitude:latitude,
+longitude:longitude,
+radius_meters:100
+})
+.eq("id",1);
+
+if(error){
+
+message.innerText=
+"Location save nahi hui: "+error.message;
+
+return;
+}
+
+message.innerText=
+"Office location successfully save ho gayi. Radius: 100 meter";
+
+},function(){
+
+message.innerText="Location permission Allow karo.";
+
+},{
+enableHighAccuracy:true,
+timeout:15000,
+maximumAge:0
+});
+
+}
 
 
-    if (error) {
+/* ADD EMPLOYEE */
 
-      console.error(error);
+async function addEmployee(){
 
-      report.innerHTML =
-        "Report load nahi hui: " +
-        error.message;
+const id=document.getElementById("newEmployeeId").value.trim();
+const name=document.getElementById("newEmployeeName").value.trim();
+const password=document.getElementById("newEmployeePassword").value.trim();
+const message=document.getElementById("employeeMessage");
 
-      return;
-    }
+if(!id || !name || !password){
 
+message.innerText="Sabhi details bhariye.";
+return;
+}
 
-    if (!data || data.length === 0) {
+const {error}=await supabaseClient
+.from("employees")
+.insert([{
+employee_id:id,
+name:name,
+password:password
+}]);
 
-      report.innerHTML =
-        "<p>No attendance found.</p>";
+if(error){
 
-      return;
-    }
+message.innerText=
+"Employee add nahi hua: "+error.message;
 
+return;
+}
 
-    let html =
-      "<table>" +
-      "<tr>" +
-      "<th>Employee</th>" +
-      "<th>Type</th>" +
-      "<th>Time</th>" +
-      "<th>Distance</th>" +
-      "</tr>";
+message.innerText="Employee successfully add ho gaya.";
 
+document.getElementById("newEmployeeId").value="";
+document.getElementById("newEmployeeName").value="";
+document.getElementById("newEmployeePassword").value="";
 
-    data.forEach(function(row) {
+loadEmployeesForReport();
 
-      const time =
-        new Date(row.created_at)
-          .toLocaleTimeString();
-
-
-      html +=
-        "<tr>" +
-        "<td>" +
-        row.employee_id +
-        "<br>" +
-        row.employee_name +
-        "</td>" +
-
-        "<td>" +
-        row.attendance_type +
-        "</td>" +
-
-        "<td>" +
-        time +
-        "</td>" +
-
-        "<td>" +
-        Math.round(row.distance_meters) +
-        " m" +
-        "</td>" +
-
-        "</tr>";
-
-    });
+}
 
 
-    html += "</table>";
+/* EMPLOYEE LIST */
+
+async function loadEmployeesForReport(){
+
+const select=document.getElementById("reportEmployee");
+
+const {data,error}=await supabaseClient
+.from("employees")
+.select("employee_id,name")
+.order("employee_id");
+
+if(error)return;
+
+select.innerHTML='<option value="">All Employees</option>';
+
+data.forEach(function(employee){
+
+const option=document.createElement("option");
+
+option.value=employee.employee_id;
+option.textContent=
+employee.employee_id+" - "+employee.name;
+
+select.appendChild(option);
+
+});
+
+}
 
 
-    report.innerHTML = html;
+/* REPORT */
 
-  }
+async function loadReport(){
+
+const report=document.getElementById("report");
+
+const date=document.getElementById("reportDate").value;
+const employee=document.getElementById("reportEmployee").value;
+
+report.innerHTML="Loading...";
+
+let query=supabaseClient
+.from("attendance")
+.select("*")
+.eq("attendance_date",date)
+.order("created_at",{ascending:false});
+
+if(employee){
+query=query.eq("employee_id",employee);
+}
+
+const {data,error}=await query;
+
+if(error){
+
+report.innerHTML=
+"Report load nahi hui: "+error.message;
+
+return;
+}
+
+if(!data || data.length===0){
+
+report.innerHTML="<p>No attendance found.</p>";
+return;
+}
+
+let html=
+"<table>"+
+"<tr>"+
+"<th>Employee</th>"+
+"<th>Type</th>"+
+"<th>Time</th>"+
+"<th>Distance</th>"+
+"</tr>";
+
+data.forEach(function(row){
+
+const time=new Date(row.created_at)
+.toLocaleTimeString();
+
+html+=
+"<tr>"+
+"<td>"+row.employee_id+"<br>"+row.employee_name+"</td>"+
+"<td>"+row.attendance_type+"</td>"+
+"<td>"+time+"</td>"+
+"<td>"+Math.round(row.distance_meters)+" m</td>"+
+"</tr>";
+
+});
+
+html+="</table>";
+
+report.innerHTML=html;
+
+}
 
 </script>
 
