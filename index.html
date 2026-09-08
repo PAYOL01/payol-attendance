@@ -347,6 +347,195 @@
 
   async function markAttendance(type) {
 
+  const message =
+    document.getElementById("attendanceMessage");
+
+  message.innerText =
+    "Location check ho raha hai...";
+
+  if (!navigator.geolocation) {
+    message.innerText =
+      "Aapke browser me GPS available nahi hai.";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async function(position) {
+
+      try {
+
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+        const today =
+          new Date().toISOString().split("T")[0];
+
+
+        // Check today's attendance
+        const { data: existing, error: checkError } =
+          await supabaseClient
+            .from("attendance")
+            .select("id,attendance_type")
+            .eq("employee_id", currentEmployee.employee_id)
+            .eq("attendance_date", today);
+
+        if (checkError) {
+          message.innerText =
+            "Attendance check error: " +
+            checkError.message;
+          return;
+        }
+
+
+        // Same type already marked
+        if (
+          existing &&
+          existing.some(row =>
+            row.attendance_type === type
+          )
+        ) {
+
+          message.innerText =
+            "Aaj ka " + type +
+            " attendance pehle hi mark ho chuka hai.";
+
+          return;
+        }
+
+
+        // Office location
+        const { data: office, error: officeError } =
+          await supabaseClient
+            .from("office_settings")
+            .select("*")
+            .eq("id", 1)
+            .single();
+
+        if (officeError || !office) {
+          message.innerText =
+            "Office location nahi mili.";
+          return;
+        }
+
+        if (
+          office.latitude === null ||
+          office.longitude === null
+        ) {
+          message.innerText =
+            "Admin ne office location save nahi ki hai.";
+          return;
+        }
+
+
+        // Distance
+        const distance =
+          calculateDistance(
+            latitude,
+            longitude,
+            office.latitude,
+            office.longitude
+          );
+
+        const radius =
+          office.radius_meters || 100;
+
+
+        if (distance > radius) {
+          message.innerText =
+            "Aap office se " +
+            Math.round(distance) +
+            " meter door hain. 100 meter ke andar hona zaroori hai.";
+          return;
+        }
+
+
+        // Save attendance
+        const { error } =
+          await supabaseClient
+            .from("attendance")
+            .insert([{
+
+              employee_id:
+                currentEmployee.employee_id,
+
+              employee_name:
+                currentEmployee.name,
+
+              attendance_type:
+                type,
+
+              latitude:
+                latitude,
+
+              longitude:
+                longitude,
+
+              distance_meters:
+                distance,
+
+              attendance_date:
+                today
+
+            }]);
+
+
+        if (error) {
+
+          message.innerText =
+            "Attendance save nahi hui: " +
+            error.message;
+
+          return;
+        }
+
+
+        message.innerText =
+          type +
+          " Attendance Successfully Marked. Distance: " +
+          Math.round(distance) +
+          " meter";
+
+      }
+
+      catch (err) {
+
+        console.error(err);
+
+        message.innerText =
+          "Kuch error hua.";
+
+      }
+
+    },
+
+    function(error) {
+
+      if (error.code === 1) {
+
+        message.innerText =
+          "Location permission Allow karo.";
+
+      } else {
+
+        message.innerText =
+          "Location nahi mil pa rahi hai.";
+
+      }
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+
+}
+
     const message =
       document.getElementById("attendanceMessage");
 
