@@ -8,73 +8,229 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+*{box-sizing:border-box}
+
 body{
-  font-family:Arial,sans-serif;
-  background:#f4f6f8;
   margin:0;
-  padding:20px;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#eef5ff,#f8fbff);
+  color:#172033;
 }
+
 .container{
-  max-width:900px;
+  width:94%;
+  max-width:1050px;
   margin:auto;
 }
-.card{
-  background:white;
-  padding:20px;
-  margin-bottom:20px;
-  border-radius:12px;
-  box-shadow:0 2px 10px #ddd;
+
+.header{
+  padding:28px 0 18px;
+  text-align:center;
 }
-h1,h2,h3{
-  color:#222;
-}
-input,select,button{
-  width:100%;
-  padding:12px;
-  margin:7px 0;
-  box-sizing:border-box;
-  border-radius:7px;
-  border:1px solid #ccc;
-}
-button{
-  background:#1976d2;
+
+.logo{
+  width:64px;
+  height:64px;
+  margin:auto;
+  border-radius:18px;
+  background:linear-gradient(135deg,#0866ff,#00a8ff);
   color:white;
-  border:none;
-  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
   font-weight:bold;
+  box-shadow:0 10px 25px #9dbbe8;
 }
+
+.header h1{
+  margin:12px 0 4px;
+  font-size:28px;
+}
+
+.header p{
+  margin:0;
+  color:#718096;
+}
+
+.card{
+  background:rgba(255,255,255,.96);
+  border-radius:20px;
+  padding:24px;
+  margin:18px 0;
+  box-shadow:0 12px 35px rgba(38,75,120,.10);
+  border:1px solid #e5edf8;
+}
+
+.login-card{
+  max-width:430px;
+  margin:30px auto;
+}
+
+.card-title{
+  font-size:21px;
+  font-weight:bold;
+  margin-bottom:18px;
+}
+
+input,select{
+  width:100%;
+  padding:14px;
+  border:1px solid #d7e1ef;
+  border-radius:12px;
+  margin:7px 0;
+  outline:none;
+  font-size:15px;
+  background:white;
+}
+
+input:focus,select:focus{
+  border-color:#1683ff;
+  box-shadow:0 0 0 3px #1683ff18;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,#0866ff,#168cff);
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  margin:7px 0;
+  box-shadow:0 7px 18px #1683ff30;
+}
+
 button:hover{
-  opacity:.9;
+  transform:translateY(-1px);
 }
+
 .green{
-  background:#198754;
+  background:linear-gradient(135deg,#0ca678,#20c997);
 }
+
 .red{
-  background:#dc3545;
+  background:linear-gradient(135deg,#e03131,#fa5252);
 }
-.hidden{
-  display:none;
+
+.logout{
+  background:#263445;
 }
+
+.attendance-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.attendance-buttons button{
+  height:100px;
+  font-size:19px;
+}
+
+.gps-box{
+  padding:15px;
+  background:#eef7ff;
+  border-radius:14px;
+  color:#1769aa;
+  margin:15px 0;
+}
+
+.status{
+  margin-top:12px;
+  padding:12px;
+  border-radius:10px;
+  font-size:14px;
+}
+
+.success{
+  color:#087f5b;
+  background:#e6fcf5;
+}
+
+.error{
+  color:#c92a2a;
+  background:#fff5f5;
+}
+
+hr{
+  border:0;
+  border-top:1px solid #e7edf5;
+  margin:28px 0;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:15px;
+  overflow:hidden;
+  border-radius:12px;
 }
-th,td{
-  border:1px solid #ddd;
-  padding:9px;
-  text-align:left;
-}
+
 th{
-  background:#eee;
+  background:#edf4ff;
+  color:#31527a;
 }
-.success{
-  color:green;
-  font-weight:bold;
+
+th,td{
+  padding:11px;
+  border-bottom:1px solid #e9eef5;
+  text-align:left;
+  font-size:14px;
 }
-.error{
-  color:red;
-  font-weight:bold;
+
+.hidden{
+  display:none;
+}
+
+.admin-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.section-icon{
+  font-size:25px;
+  margin-bottom:7px;
+}
+
+.footer{
+  text-align:center;
+  color:#8a97a8;
+  padding:25px;
+  font-size:13px;
+}
+
+@media(max-width:650px){
+  .admin-grid{
+    grid-template-columns:1fr;
+  }
+
+  .attendance-buttons{
+    grid-template-columns:1fr;
+  }
+
+  .attendance-buttons button{
+    height:75px;
+  }
+
+  .card{
+    padding:18px;
+  }
+
+  .header h1{
+    font-size:24px;
+  }
+
+  table{
+    font-size:12px;
+  }
+
+  th,td{
+    padding:8px;
+  }
 }
 </style>
 </head>
@@ -83,99 +239,173 @@ th{
 
 <div class="container">
 
-<div class="card" id="loginBox">
+<div class="header">
+  <div class="logo">PA</div>
   <h1>Payol Attendance</h1>
+  <p>Smart GPS Based Employee Attendance</p>
+</div>
 
-  <input id="loginId" placeholder="Employee ID / Admin Username">
-  <input id="loginPassword" type="password" placeholder="Password">
+
+<!-- LOGIN -->
+
+<div class="card login-card" id="loginBox">
+
+  <div class="card-title">🔐 Login</div>
+
+  <input id="loginId"
+         placeholder="Employee ID / Admin Username">
+
+  <input id="loginPassword"
+         type="password"
+         placeholder="Password">
 
   <button onclick="login()">Login</button>
 
   <p id="loginMessage"></p>
+
 </div>
 
 
-<!-- EMPLOYEE PANEL -->
+<!-- EMPLOYEE -->
 
 <div class="card hidden" id="employeePanel">
 
-  <h2>Employee Attendance</h2>
+  <div class="card-title">
+    👋 Welcome, <span id="employeeName"></span>
+  </div>
 
-  <p>
-    Welcome, <b id="employeeName"></b>
-  </p>
+  <div class="gps-box">
+    📍 <b>GPS Attendance</b><br>
+    Office ke 100 meter ke andar se attendance mark karein.
+  </div>
 
-  <button class="green" onclick="markAttendance('IN')">
-    Mark IN
-  </button>
+  <div class="attendance-buttons">
 
-  <button class="red" onclick="markAttendance('OUT')">
-    Mark OUT
-  </button>
+    <button class="green"
+            onclick="markAttendance('IN')">
+      🟢<br>MARK IN
+    </button>
+
+    <button class="red"
+            onclick="markAttendance('OUT')">
+      🔴<br>MARK OUT
+    </button>
+
+  </div>
 
   <p id="attendanceMessage"></p>
 
-  <button onclick="logout()">Logout</button>
+  <button class="logout"
+          onclick="logout()">
+    Logout
+  </button>
 
 </div>
 
 
-<!-- ADMIN PANEL -->
+<!-- ADMIN -->
 
 <div class="card hidden" id="adminPanel">
 
-  <h2>Admin Panel</h2>
+  <div class="card-title">
+    👨‍💼 Admin Dashboard
+  </div>
 
-  <h3>Office Location</h3>
 
-  <button onclick="saveOfficeLocation()">
-    Save Current Office Location
-  </button>
+  <div class="admin-grid">
 
-  <p id="locationMessage"></p>
+    <div>
+
+      <div class="section-icon">📍</div>
+      <h3>Office Location</h3>
+
+      <p>
+        Current location ko office location ke रूप में save karein.
+      </p>
+
+      <button onclick="saveOfficeLocation()">
+        Save Office Location
+      </button>
+
+      <p id="locationMessage"></p>
+
+    </div>
+
+
+    <div>
+
+      <div class="section-icon">➕</div>
+      <h3>Add Employee</h3>
+
+      <input id="newEmployeeId"
+             placeholder="Employee ID">
+
+      <input id="newEmployeeName"
+             placeholder="Employee Name">
+
+      <input id="newEmployeePassword"
+             placeholder="Password">
+
+      <button onclick="addEmployee()">
+        Add Employee
+      </button>
+
+      <p id="employeeMessage"></p>
+
+    </div>
+
+  </div>
+
 
   <hr>
 
-  <h3>Add Employee</h3>
 
-  <input id="newEmployeeId" placeholder="Employee ID">
-  <input id="newEmployeeName" placeholder="Employee Name">
-  <input id="newEmployeePassword" placeholder="Password">
+  <div>
+    <div class="section-icon">👥</div>
+    <h3>Employee Management</h3>
 
-  <button onclick="addEmployee()">
-    Add Employee
-  </button>
+    <button onclick="loadEmployeeList()">
+      🔄 Refresh Employee List
+    </button>
 
-  <p id="employeeMessage"></p>
+    <div id="employeeList"></div>
+  </div>
 
-  <hr>
-
-  <h3>Employee Management</h3>
-
-  <button onclick="loadEmployeeList()">
-    Refresh Employee List
-  </button>
-
-  <div id="employeeList"></div>
 
   <hr>
 
-  <h3>Attendance Report</h3>
 
-  <input type="date" id="reportDate">
+  <div>
+    <div class="section-icon">📊</div>
+    <h3>Attendance Report</h3>
 
-  <select id="reportEmployee">
-    <option value="">All Employees</option>
-  </select>
+    <input type="date"
+           id="reportDate">
 
-  <button onclick="loadReport()">
-    Load Report
+    <select id="reportEmployee">
+      <option value="">
+        All Employees
+      </option>
+    </select>
+
+    <button onclick="loadReport()">
+      🔎 Load Attendance Report
+    </button>
+
+    <div id="report"></div>
+  </div>
+
+
+  <button class="logout"
+          onclick="logout()">
+    Logout
   </button>
 
-  <div id="report"></div>
+</div>
 
-  <button onclick="logout()">Logout</button>
 
+<div class="footer">
+  © Payol Attendance • GPS Enabled
 </div>
 
 </div>
@@ -186,11 +416,6 @@ th{
 const SUPABASE_URL =
 "https://nkbbcygtuaejcuquwhpi.supabase.co";
 
-/*
-  IMPORTANT:
-  Yahan apni existing Supabase Publishable Key paste karo.
-*/
-
 const SUPABASE_KEY =
 "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
 
@@ -200,38 +425,35 @@ supabase.createClient(
   SUPABASE_KEY
 );
 
-
-let currentEmployee = null;
+let currentEmployee=null;
 
 
 /* LOGIN */
 
 async function login(){
 
-  const loginId =
+  const loginId=
     document.getElementById("loginId").value.trim();
 
-  const password =
+  const password=
     document.getElementById("loginPassword").value;
 
-  const message =
+  const message=
     document.getElementById("loginMessage");
 
 
   if(!loginId || !password){
 
-    message.innerHTML =
-      "<span class='error'>ID aur password bhariye.</span>";
+    message.innerHTML=
+      "<div class='status error'>ID aur password bhariye.</div>";
 
     return;
   }
 
 
-  /* ADMIN LOGIN */
-
   if(
-    loginId === "Baijnathpayol" &&
-    password === "123456789"
+    loginId==="Baijnathpayol" &&
+    password==="123456789"
   ){
 
     document.getElementById("loginBox")
@@ -240,7 +462,7 @@ async function login(){
     document.getElementById("adminPanel")
       .classList.remove("hidden");
 
-    document.getElementById("reportDate").value =
+    document.getElementById("reportDate").value=
       new Date().toISOString().split("T")[0];
 
     loadEmployeesForReport();
@@ -250,9 +472,7 @@ async function login(){
   }
 
 
-  /* EMPLOYEE LOGIN */
-
-  const {data,error} =
+  const {data,error}=
     await supabaseClient
       .from("employees")
       .select("*")
@@ -263,14 +483,14 @@ async function login(){
 
   if(error || !data){
 
-    message.innerHTML =
-      "<span class='error'>Invalid ID ya password.</span>";
+    message.innerHTML=
+      "<div class='status error'>Invalid ID ya password.</div>";
 
     return;
   }
 
 
-  currentEmployee = data;
+  currentEmployee=data;
 
   document.getElementById("loginBox")
     .classList.add("hidden");
@@ -279,7 +499,7 @@ async function login(){
     .classList.remove("hidden");
 
   document.getElementById("employeeName")
-    .innerText = data.name;
+    .innerText=data.name;
 
 }
 
@@ -288,7 +508,7 @@ async function login(){
 
 function logout(){
 
-  currentEmployee = null;
+  currentEmployee=null;
 
   document.getElementById("loginBox")
     .classList.remove("hidden");
@@ -301,38 +521,31 @@ function logout(){
 
   document.getElementById("loginId").value="";
   document.getElementById("loginPassword").value="";
-
 }
 
 
-/* DISTANCE CALCULATION */
+/* DISTANCE */
 
 function calculateDistance(
-  lat1,
-  lon1,
-  lat2,
-  lon2
+  lat1,lon1,lat2,lon2
 ){
 
-  const R = 6371000;
+  const R=6371000;
 
-  const dLat =
-    (lat2-lat1) * Math.PI/180;
+  const dLat=
+    (lat2-lat1)*Math.PI/180;
 
-  const dLon =
-    (lon2-lon1) * Math.PI/180;
+  const dLon=
+    (lon2-lon1)*Math.PI/180;
 
-  const a =
-    Math.sin(dLat/2) *
-    Math.sin(dLat/2) +
+  const a=
+    Math.sin(dLat/2)**2+
+    Math.cos(lat1*Math.PI/180)*
+    Math.cos(lat2*Math.PI/180)*
+    Math.sin(dLon/2)**2;
 
-    Math.cos(lat1*Math.PI/180) *
-    Math.cos(lat2*Math.PI/180) *
-    Math.sin(dLon/2) *
-    Math.sin(dLon/2);
-
-  const c =
-    2 * Math.atan2(
+  const c=
+    2*Math.atan2(
       Math.sqrt(a),
       Math.sqrt(1-a)
     );
@@ -341,38 +554,29 @@ function calculateDistance(
 }
 
 
-/* EMPLOYEE ATTENDANCE */
+/* ATTENDANCE */
 
 async function markAttendance(type){
 
-  const message =
+  const message=
     document.getElementById("attendanceMessage");
 
-  message.innerHTML =
-    "Location check ho raha hai...";
-
-
-  if(!navigator.geolocation){
-
-    message.innerHTML =
-      "<span class='error'>GPS supported nahi hai.</span>";
-
-    return;
-  }
+  message.innerHTML=
+    "<div class='status'>📍 Location checking...</div>";
 
 
   navigator.geolocation.getCurrentPosition(
 
     async function(position){
 
-      const latitude =
+      const latitude=
         position.coords.latitude;
 
-      const longitude =
+      const longitude=
         position.coords.longitude;
 
 
-      const {data:office,error:officeError} =
+      const {data:office,error:officeError}=
         await supabaseClient
           .from("office_settings")
           .select("*")
@@ -380,18 +584,21 @@ async function markAttendance(type){
           .single();
 
 
-      if(officeError || !office ||
-         office.latitude === null ||
-         office.longitude === null){
+      if(
+        officeError ||
+        !office ||
+        office.latitude===null ||
+        office.longitude===null
+      ){
 
-        message.innerHTML =
-          "<span class='error'>Office location set nahi hai.</span>";
+        message.innerHTML=
+          "<div class='status error'>Office location set nahi hai.</div>";
 
         return;
       }
 
 
-      const distance =
+      const distance=
         calculateDistance(
           latitude,
           longitude,
@@ -400,30 +607,30 @@ async function markAttendance(type){
         );
 
 
-      const radius =
+      const radius=
         office.radius_meters || 100;
 
 
-      if(distance > radius){
+      if(distance>radius){
 
-        message.innerHTML =
-          "<span class='error'>" +
-          "Aap office se " +
-          Math.round(distance) +
-          " meter door hain. " +
-          radius +
-          " meter ke andar hona zaroori hai." +
-          "</span>";
+        message.innerHTML=
+          "<div class='status error'>" +
+          "❌ Aap office se "+
+          Math.round(distance)+
+          " meter door hain.<br>" +
+          radius+
+          " meter ke andar hona zaroori hai."+
+          "</div>";
 
         return;
       }
 
 
-      const today =
+      const today=
         new Date().toISOString().split("T")[0];
 
 
-      const {error} =
+      const {error}=
         await supabaseClient
           .from("attendance")
           .insert({
@@ -434,52 +641,46 @@ async function markAttendance(type){
             employee_name:
               currentEmployee.name,
 
-            attendance_type:
-              type,
+            attendance_type:type,
 
-            latitude:
-              latitude,
+            latitude:latitude,
 
-            longitude:
-              longitude,
+            longitude:longitude,
 
-            distance_meters:
-              distance,
+            distance_meters:distance,
 
-            attendance_date:
-              today
+            attendance_date:today
           });
 
 
       if(error){
 
-        message.innerHTML =
-          "<span class='error'>" +
-          "Attendance save nahi hui: " +
-          error.message +
-          "</span>";
+        message.innerHTML=
+          "<div class='status error'>"+
+          error.message+
+          "</div>";
 
         return;
       }
 
 
-      message.innerHTML =
-        "<span class='success'>" +
-        type +
-        " Attendance successfully marked. " +
-        "Distance: " +
-        Math.round(distance) +
-        " m" +
-        "</span>";
+      message.innerHTML=
+        "<div class='status success'>"+
+        "✅ "+type+
+        " Attendance Successfully Marked<br>"+
+        "Distance: "+
+        Math.round(distance)+
+        " meter"+
+        "</div>";
 
     },
 
-    function(error){
+    function(){
 
-      message.innerHTML =
-        "<span class='error'>" +
-        "GPS permission/location check failed." +
-        "</span>";
+      message.innerHTML=
+        "<div class='status error'>"+
+        "❌ GPS permission allow karo."+
+        "</div>";
 
     },
 
@@ -494,38 +695,22 @@ async function markAttendance(type){
 }
 
 
-/* SAVE OFFICE LOCATION */
+/* OFFICE LOCATION */
 
 function saveOfficeLocation(){
 
-  const message =
+  const message=
     document.getElementById("locationMessage");
 
-  message.innerHTML =
-    "Current location mil rahi hai...";
-
-
-  if(!navigator.geolocation){
-
-    message.innerHTML =
-      "<span class='error'>GPS supported nahi hai.</span>";
-
-    return;
-  }
+  message.innerHTML=
+    "📍 Location mil rahi hai...";
 
 
   navigator.geolocation.getCurrentPosition(
 
     async function(position){
 
-      const latitude =
-        position.coords.latitude;
-
-      const longitude =
-        position.coords.longitude;
-
-
-      const {error} =
+      const {error}=
         await supabaseClient
           .from("office_settings")
           .upsert({
@@ -533,41 +718,41 @@ function saveOfficeLocation(){
             id:1,
 
             latitude:
-              latitude,
+              position.coords.latitude,
 
             longitude:
-              longitude,
+              position.coords.longitude,
 
-            radius_meters:
-              100
+            radius_meters:100
 
           });
 
 
       if(error){
 
-        message.innerHTML =
-          "<span class='error'>" +
-          error.message +
-          "</span>";
+        message.innerHTML=
+          "<div class='status error'>"+
+          error.message+
+          "</div>";
 
         return;
       }
 
 
-      message.innerHTML =
-        "<span class='success'>" +
-        "Office location saved. Radius: 100 meter" +
-        "</span>";
+      message.innerHTML=
+        "<div class='status success'>"+
+        "✅ Office Location Saved<br>"+
+        "GPS Radius: 100 meter"+
+        "</div>";
 
     },
 
     function(){
 
-      message.innerHTML =
-        "<span class='error'>" +
-        "Location permission allow karo." +
-        "</span>";
+      message.innerHTML=
+        "<div class='status error'>"+
+        "Location permission allow karo."+
+        "</div>";
 
     },
 
@@ -586,62 +771,58 @@ function saveOfficeLocation(){
 
 async function addEmployee(){
 
-  const id =
+  const id=
     document.getElementById("newEmployeeId")
       .value.trim();
 
-  const name =
+  const name=
     document.getElementById("newEmployeeName")
       .value.trim();
 
-  const password =
+  const password=
     document.getElementById("newEmployeePassword")
       .value;
 
-
-  const message =
+  const message=
     document.getElementById("employeeMessage");
 
 
   if(!id || !name || !password){
 
-    message.innerHTML =
-      "<span class='error'>" +
-      "Sabhi fields bhariye." +
-      "</span>";
+    message.innerHTML=
+      "<div class='status error'>"+
+      "Sabhi fields bhariye."+
+      "</div>";
 
     return;
   }
 
 
-  const {error} =
+  const {error}=
     await supabaseClient
       .from("employees")
       .insert({
-
         employee_id:id,
         name:name,
         password:password
-
       });
 
 
   if(error){
 
-    message.innerHTML =
-      "<span class='error'>" +
-      "Employee add nahi hua: " +
-      error.message +
-      "</span>";
+    message.innerHTML=
+      "<div class='status error'>"+
+      error.message+
+      "</div>";
 
     return;
   }
 
 
-  message.innerHTML =
-    "<span class='success'>" +
-    "Employee successfully add ho gaya." +
-    "</span>";
+  message.innerHTML=
+    "<div class='status success'>"+
+    "✅ Employee successfully add ho gaya."+
+    "</div>";
 
 
   document.getElementById("newEmployeeId").value="";
@@ -659,14 +840,13 @@ async function addEmployee(){
 
 async function loadEmployeeList(){
 
-  const list =
+  const list=
     document.getElementById("employeeList");
 
-  list.innerHTML =
-    "Loading...";
+  list.innerHTML="Loading...";
 
 
-  const {data,error} =
+  const {data,error}=
     await supabaseClient
       .from("employees")
       .select("id,employee_id,name")
@@ -675,98 +855,63 @@ async function loadEmployeeList(){
 
   if(error){
 
-    list.innerHTML =
-      "<span class='error'>" +
-      "Employee list load nahi hui: " +
-      error.message +
-      "</span>";
+    list.innerHTML=
+      "<div class='status error'>"+
+      error.message+
+      "</div>";
 
     return;
   }
 
 
-  if(!data || data.length===0){
-
-    list.innerHTML =
-      "<p>No employees found.</p>";
-
-    return;
-  }
-
-
-  let html =
-    "<table>" +
-    "<tr>" +
-    "<th>ID</th>" +
-    "<th>Name</th>" +
-    "<th>Action</th>" +
+  let html=
+    "<table>"+
+    "<tr>"+
+    "<th>ID</th>"+
+    "<th>Name</th>"+
+    "<th>Action</th>"+
     "</tr>";
 
 
   data.forEach(function(employee){
 
-    html +=
-      "<tr>" +
-
-      "<td>" +
-      employee.employee_id +
-      "</td>" +
-
-      "<td>" +
-      employee.name +
-      "</td>" +
-
-      "<td>" +
-
-      "<button class='red' " +
-      "onclick=\"deleteEmployee('" +
-      employee.id +
-      "','" +
-      employee.employee_id +
-      "')\">" +
-
-      "Delete" +
-
-      "</button>" +
-
-      "</td>" +
-
+    html+=
+      "<tr>"+
+      "<td>"+employee.employee_id+"</td>"+
+      "<td>"+employee.name+"</td>"+
+      "<td>"+
+      "<button class='red' "+
+      "onclick=\"deleteEmployee('"+
+      employee.id+"','"+
+      employee.employee_id+
+      "')\">Delete</button>"+
+      "</td>"+
       "</tr>";
 
   });
 
 
-  html +=
-    "</table>";
+  html+="</table>";
 
-
-  list.innerHTML =
-    html;
+  list.innerHTML=html;
 
 }
 
 
-/* DELETE EMPLOYEE */
+/* DELETE */
 
-async function deleteEmployee(
-  id,
-  employeeId
-){
+async function deleteEmployee(id,employeeId){
 
-  const confirmDelete =
-    confirm(
-      "Kya aap " +
-      employeeId +
-      " ko delete karna chahte hain?"
-    );
-
-
-  if(!confirmDelete){
+  if(!confirm(
+    "Kya aap "+
+    employeeId+
+    " ko delete karna chahte hain?"
+  )){
     return;
   }
 
 
-  const {error} =
+  const {error}=
     await supabaseClient
       .from("employees")
       .delete()
@@ -775,10 +920,7 @@ async function deleteEmployee(
 
   if(error){
 
-    alert(
-      "Employee delete nahi hua: " +
-      error.message
-    );
+    alert(error.message);
 
     return;
   }
@@ -795,41 +937,39 @@ async function deleteEmployee(
 }
 
 
-/* EMPLOYEE DROPDOWN */
+/* DROPDOWN */
 
 async function loadEmployeesForReport(){
 
-  const select =
+  const select=
     document.getElementById("reportEmployee");
 
 
-  const {data,error} =
+  const {data,error}=
     await supabaseClient
       .from("employees")
       .select("employee_id,name")
       .order("employee_id");
 
 
-  if(error){
-    return;
-  }
+  if(error)return;
 
 
-  select.innerHTML =
+  select.innerHTML=
     "<option value=''>All Employees</option>";
 
 
   data.forEach(function(employee){
 
-    const option =
+    const option=
       document.createElement("option");
 
-    option.value =
+    option.value=
       employee.employee_id;
 
-    option.textContent =
-      employee.employee_id +
-      " - " +
+    option.textContent=
+      employee.employee_id+
+      " - "+
       employee.name;
 
     select.appendChild(option);
@@ -839,25 +979,24 @@ async function loadEmployeesForReport(){
 }
 
 
-/* ATTENDANCE REPORT */
+/* REPORT */
 
 async function loadReport(){
 
-  const report =
+  const report=
     document.getElementById("report");
 
-  const date =
+  const date=
     document.getElementById("reportDate").value;
 
-  const employee =
+  const employee=
     document.getElementById("reportEmployee").value;
 
 
-  report.innerHTML =
-    "Loading...";
+  report.innerHTML="Loading...";
 
 
-  let query =
+  let query=
     supabaseClient
       .from("attendance")
       .select("*")
@@ -867,7 +1006,7 @@ async function loadReport(){
 
   if(employee){
 
-    query =
+    query=
       query.eq(
         "employee_id",
         employee
@@ -876,17 +1015,16 @@ async function loadReport(){
   }
 
 
-  const {data,error} =
+  const {data,error}=
     await query;
 
 
   if(error){
 
-    report.innerHTML =
-      "<span class='error'>" +
-      "Report load nahi hui: " +
-      error.message +
-      "</span>";
+    report.innerHTML=
+      "<div class='status error'>"+
+      error.message+
+      "</div>";
 
     return;
   }
@@ -894,68 +1032,54 @@ async function loadReport(){
 
   if(!data || data.length===0){
 
-    report.innerHTML =
+    report.innerHTML=
       "<p>No attendance found.</p>";
 
     return;
   }
 
 
-  let html =
-    "<table>" +
-
-    "<tr>" +
-    "<th>Employee</th>" +
-    "<th>Type</th>" +
-    "<th>Time</th>" +
-    "<th>Distance</th>" +
+  let html=
+    "<table>"+
+    "<tr>"+
+    "<th>Employee</th>"+
+    "<th>Type</th>"+
+    "<th>Time</th>"+
+    "<th>Distance</th>"+
     "</tr>";
 
 
   data.forEach(function(row){
 
-    const time =
+    html+=
+      "<tr>"+
+      "<td>"+
+      row.employee_id+
+      "<br>"+
+      row.employee_name+
+      "</td>"+
+      "<td>"+
+      row.attendance_type+
+      "</td>"+
+      "<td>"+
       new Date(
         row.created_at
-      ).toLocaleTimeString();
-
-
-    html +=
-
-      "<tr>" +
-
-      "<td>" +
-      row.employee_id +
-      "<br>" +
-      row.employee_name +
-      "</td>" +
-
-      "<td>" +
-      row.attendance_type +
-      "</td>" +
-
-      "<td>" +
-      time +
-      "</td>" +
-
-      "<td>" +
+      ).toLocaleTimeString()+
+      "</td>"+
+      "<td>"+
       Math.round(
         row.distance_meters
-      ) +
-      " m" +
-      "</td>" +
-
+      )+
+      " m"+
+      "</td>"+
       "</tr>";
 
   });
 
 
-  html +=
-    "</table>";
+  html+="</table>";
 
-
-  report.innerHTML =
-    html;
+  report.innerHTML=html;
 
 }
 
