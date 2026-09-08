@@ -1,34 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payol Attendance</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payol Attendance</title>
 </head>
 <body>
-  <h1>Payol Attendance</h1>
-  <p>Employee Attendance System</p>
 
-  <h2>Login</h2>
-  <input id="username" placeholder="Employee ID">
-  <br><br>
-  <input id="password" type="password" placeholder="Password">
-  <br><br>
-  <button onclick="login()">Login</button>
+<h1>Payol Attendance</h1>
 
-  <p id="message"></p>
+<input id="employeeId" placeholder="Employee ID">
+<br><br>
+
+<input id="password" type="password" placeholder="Password">
+<br><br>
+
+<button onclick="login()">Login</button>
+
+<p id="message"></p>
 
 <script>
-function login() {
-  let user = document.getElementById("username").value;
-  let pass = document.getElementById("password").value;
+const SUPABASE_URL = "https://nkbbcygtuaejcuquwhpi.supabase.co";
+const SUPABASE_KEY = "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
 
-  if (user === "Baijnath Saw" && pass === "Password12345") {
-    document.getElementById("message").innerHTML =
-      "✅ Admin Login Successful";
+async function login() {
+  const employeeId = document.getElementById("employeeId").value.trim();
+  const password = document.getElementById("password").value;
+
+  const response = await fetch(
+    SUPABASE_URL + "/rest/v1/employees?employee_id=eq." +
+    encodeURIComponent(employeeId) +
+    "&password=eq." +
+    encodeURIComponent(password) +
+    "&select=*",
+    {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY
+      }
+    }
+  );
+
+  if (!response.ok) {
+    document.getElementById("message").innerText =
+      "❌ Supabase connection error";
+    return;
+  }
+
+  const data = await response.json();
+
+  if (data.length > 0) {
+    document.getElementById("message").innerText =
+      "✅ Login Successful — " + data[0].name;
   } else {
-    document.getElementById("message").innerHTML =
-      "❌ Username या Password गलत है";
+    document.getElementById("message").innerText =
+      "❌ Username ya Password galat hai";
   }
 }
 </script>
