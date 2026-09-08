@@ -4,28 +4,157 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Payol Attendance</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 25px;
+}
+
+input {
+  padding: 12px;
+  width: 90%;
+  max-width: 300px;
+  margin: 5px;
+}
+
+button {
+  padding: 12px 20px;
+  margin: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#attendance {
+  display: none;
+}
+</style>
 </head>
 
 <body>
 
 <h1>Payol Attendance</h1>
 
+<div id="loginBox">
+
 <input id="employeeId" placeholder="Employee ID">
-<br><br>
+<br>
 
 <input id="password" type="password" placeholder="Password">
-<br><br>
+<br>
 
 <button onclick="login()">Login</button>
 
 <p id="message"></p>
 
-<hr>
+</div>
 
-<button onclick="setOfficeLocation()">📍 function setOfficeLocation() {
+<div id="attendance">
 
-  document.getElementById("locationMessage").innerText =
-    "📍 Location le rahe hain...";
+<h2 id="employeeName"></h2>
+
+<button onclick="markAttendance('IN')">
+🟢 IN Attendance
+</button>
+
+<button onclick="markAttendance('OUT')">
+🔴 OUT Attendance
+</button>
+
+<p id="attendanceMessage"></p>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+"https://nkbbcygtuaejcuquwhpi.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
+
+let loggedEmployee = null;
+
+
+// LOGIN
+async function login() {
+
+  const employeeId =
+    document.getElementById("employeeId").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  if (!employeeId || !password) {
+    document.getElementById("message").innerText =
+      "❌ Employee ID aur Password dalo";
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/employees?employee_id=eq." +
+      encodeURIComponent(employeeId) +
+      "&password=eq." +
+      encodeURIComponent(password) +
+      "&select=*",
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY
+        }
+      }
+    );
+
+    if (!response.ok) {
+      document.getElementById("message").innerText =
+        "❌ Supabase connection error";
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.length > 0) {
+
+      loggedEmployee = data[0];
+
+      document.getElementById("loginBox").style.display =
+        "none";
+
+      document.getElementById("attendance").style.display =
+        "block";
+
+      document.getElementById("employeeName").innerText =
+        "Welcome, " + loggedEmployee.name;
+
+    } else {
+
+      document.getElementById("message").innerText =
+        "❌ Employee ID ya Password galat hai";
+
+    }
+
+  } catch (error) {
+
+    document.getElementById("message").innerText =
+      "❌ Connection error";
+
+  }
+}
+
+
+// ATTENDANCE
+function markAttendance(type) {
+
+  if (!loggedEmployee) {
+    return;
+  }
+
+  document.getElementById("attendanceMessage").innerText =
+    "📍 Location check ho rahi hai...";
 
   navigator.geolocation.getCurrentPosition(
 
@@ -36,47 +165,111 @@
 
       try {
 
-        const response = await fetch(
-          SUPABASE_URL + "/rest/v1/office_settings?id=eq.1",
+        // OFFICE LOCATION GET
+        const officeResponse = await fetch(
+          SUPABASE_URL +
+          "/rest/v1/office_settings?id=eq.1&select=*",
           {
-            method: "PATCH",
+            headers: {
+              "apikey": SUPABASE_KEY,
+              "Authorization": "Bearer " + SUPABASE_KEY
+            }
+          }
+        );
+
+        if (!officeResponse.ok) {
+          document.getElementById("attendanceMessage").innerText =
+            "❌ Office location nahi mil rahi";
+          return;
+        }
+
+        const officeData = await officeResponse.json();
+
+        if (
+          officeData.length === 0 ||
+          officeData[0].latitude === null ||
+          officeData[0].longitude === null
+        ) {
+          document.getElementById("attendanceMessage").innerText =
+            "❌ Office location set nahi hai";
+          return;
+        }
+
+        const officeLat = officeData[0].latitude;
+        const officeLon = officeData[0].longitude;
+        const radius = officeData[0].radius_meters || 100;
+
+        // DISTANCE CALCULATION
+        const distance =
+          calculateDistance(
+            latitude,
+            longitude,
+            officeLat,
+            officeLon
+          );
+
+        if (distance > radius) {
+
+          document.getElementById("attendanceMessage").innerText =
+            "❌ Aap office se " +
+            Math.round(distance) +
+            " meter door hain. 100 meter ke andar aakar attendance lagaye.";
+
+          return;
+        }
+
+        // SAVE ATTENDANCE
+        const saveResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/attendance",
+          {
+            method: "POST",
+
             headers: {
               "apikey": SUPABASE_KEY,
               "Authorization": "Bearer " + SUPABASE_KEY,
               "Content-Type": "application/json",
               "Prefer": "return=representation"
             },
+
             body: JSON.stringify({
+              employee_id: loggedEmployee.employee_id,
+              employee_name: loggedEmployee.name,
+              attendance_type: type,
               latitude: latitude,
               longitude: longitude,
-              radius_meters: 100
+              distance_meters: Math.round(distance)
             })
           }
         );
 
-        const result = await response.text();
+        const saveResult = await saveResponse.text();
 
-        if (!response.ok) {
-          document.getElementById("locationMessage").innerText =
-            "❌ Save Error: " + result;
+        if (!saveResponse.ok) {
+
+          document.getElementById("attendanceMessage").innerText =
+            "❌ Attendance save error: " + saveResult;
+
           return;
         }
 
-        document.getElementById("locationMessage").innerText =
-          "✅ Office Location Successfully Set";
+        document.getElementById("attendanceMessage").innerText =
+          "✅ " + type +
+          " Attendance Successfully Marked\n" +
+          "Distance: " + Math.round(distance) + " meter";
 
       } catch (error) {
 
-        document.getElementById("locationMessage").innerText =
-          "❌ Connection Error: " + error.message;
+        document.getElementById("attendanceMessage").innerText =
+          "❌ Error: " + error.message;
 
       }
+
     },
 
     function(error) {
 
-      document.getElementById("locationMessage").innerText =
-        "❌ GPS Error: " + error.message;
+      document.getElementById("attendanceMessage").innerText =
+        "❌ Location permission allow karein";
 
     },
 
@@ -88,118 +281,33 @@
   );
 }
 
-<p id="locationMessage"></p>
 
-<script>
+// DISTANCE FUNCTION
+function calculateDistance(lat1, lon1, lat2, lon2) {
 
-const SUPABASE_URL = "https://nkbbcygtuaejcuquwhpi.supabase.co";
-const SUPABASE_KEY = "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
+  const R = 6371000;
 
-async function login() {
+  const dLat =
+    (lat2 - lat1) * Math.PI / 180;
 
-  const employeeId =
-    document.getElementById("employeeId").value.trim();
+  const dLon =
+    (lon2 - lon1) * Math.PI / 180;
 
-  const password =
-    document.getElementById("password").value;
+  const a =
+    Math.sin(dLat / 2) *
+    Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
 
-  const response = await fetch(
-    SUPABASE_URL +
-    "/rest/v1/employees?employee_id=eq." +
-    encodeURIComponent(employeeId) +
-    "&password=eq." +
-    encodeURIComponent(password) +
-    "&select=*",
-    {
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": "Bearer " + SUPABASE_KEY
-      }
-    }
-  );
+  const c =
+    2 * Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    );
 
-  if (!response.ok) {
-    document.getElementById("message").innerText =
-      "❌ Supabase connection error";
-    return;
-  }
-
-  const data = await response.json();
-
-  if (data.length > 0) {
-    document.getElementById("message").innerText =
-      "✅ Login Successful — " + data[0].name;
-  } else {
-    document.getElementById("message").innerText =
-      "❌ Username ya Password galat hai";
-  }
-}
-
-
-function setOfficeLocation() {
-
-  document.getElementById("locationMessage").innerText =
-    "📍 Location permission ka wait karein...";
-
-  navigator.geolocation.getCurrentPosition(
-
-    async function(position) {
-
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      const response = await fetch(
-        SUPABASE_URL + "/rest/v1/office_settings?id=eq.1",
-        {
-          method: "PATCH",
-
-          headers: {
-            "apikey": SUPABASE_KEY,
-            "Authorization": "Bearer " + SUPABASE_KEY,
-            "Content-Type": "application/json",
-            "Prefer": "return=minimal"
-          },
-
-          body: JSON.stringify({
-            latitude: latitude,
-            longitude: longitude,
-            radius_meters: 100
-          })
-        }
-      );
-
-      if (response.ok) {
-const result = await response.text();
-
-if (!response.ok) {
-  document.getElementById("locationMessage").innerText =
-    "❌ Save Error: " + result;
-  return;
-}
-        document.getElementById("locationMessage").innerText =
-          "✅ Office Location Successfully Set";
-
-      } else {
-
-        document.getElementById("locationMessage").innerText =
-          "❌ Location save nahi hui";
-
-      }
-
-    },
-
-    function(error) {
-
-      document.getElementById("locationMessage").innerText =
-        "❌ Location permission allow karein";
-
-    },
-
-    {
-      enableHighAccuracy: true,
-      timeout: 15000
-    }
-  );
+  return R * c;
 }
 
 </script>
