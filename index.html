@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payol Attendance</title>
+</head>
+<body>
+  <h1>Payol Attendance</h1>
+  <p>Employee Attendance System</p>
+
+  <h2>Login</h2>
+  <input id="username" placeholder="Employee ID">
+  <br><br>
+  <input id="password" type="password" placeholder="Password">
+  <br><br>
+  <button onclick="login()">Login</button>
+
+  <p id="message"></p>
+
+<script>
+function login() {
+  let user = document.getElementById("username").value;
+  let pass = document.getElementById("password").value;
+
+  if (user === "Baijnath Saw" && pass === "Password12345") {
+    document.getElementById("message").innerHTML =
+      "✅ Admin Login Successful";
+  } else {
+    document.getElementById("message").innerHTML =
+      "❌ Username या Password गलत है";
+  }
+}
+</script>
+
+</body>
+</html>
