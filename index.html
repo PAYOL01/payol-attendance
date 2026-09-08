@@ -397,6 +397,175 @@ document.getElementById("adminMessage").innerText=
 // ATTENDANCE
 function markAttendance(type){
 
+  if(!loggedEmployee) return;
+
+  document.getElementById("attendanceMessage").innerText =
+    "📍 Location check ho rahi hai...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    async function(position){
+
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      try{
+
+        const officeResponse = await fetch(
+          SUPABASE_URL +
+          "/rest/v1/office_settings?id=eq.1&select=*",
+          {
+            headers:{
+              "apikey":SUPABASE_KEY,
+              "Authorization":"Bearer "+SUPABASE_KEY
+            }
+          }
+        );
+
+        const office = await officeResponse.json();
+
+        if(!office.length){
+
+          document.getElementById("attendanceMessage").innerText =
+            "❌ Office location nahi mili";
+          return;
+        }
+
+        const distance = calculateDistance(
+          lat,
+          lon,
+          office[0].latitude,
+          office[0].longitude
+        );
+
+        const radius = office[0].radius_meters || 100;
+
+        if(distance > radius){
+
+          document.getElementById("attendanceMessage").innerText =
+            "❌ Aap office se " +
+            Math.round(distance) +
+            " meter door hain. 100 meter ke andar aaiye.";
+
+          return;
+        }
+
+        // Aaj ka attendance check
+        const today = new Date()
+          .toLocaleDateString("en-CA");
+
+        const checkResponse = await fetch(
+          SUPABASE_URL +
+          "/rest/v1/attendance" +
+          "?employee_id=eq." +
+          encodeURIComponent(loggedEmployee.employee_id) +
+          "&attendance_date=eq." +
+          today +
+          "&select=attendance_type,created_at" +
+          "&order=created_at.desc",
+          {
+            headers:{
+              "apikey":SUPABASE_KEY,
+              "Authorization":"Bearer "+SUPABASE_KEY
+            }
+          }
+        );
+
+        const todayData = await checkResponse.json();
+
+        // Same type dobara na lage
+        const alreadyMarked = todayData.some(
+          row => row.attendance_type === type
+        );
+
+        if(alreadyMarked){
+
+          document.getElementById("attendanceMessage").innerText =
+            "⚠️ Aaj ka " + type +
+            " Attendance pehle hi lag chuka hai.";
+
+          return;
+        }
+
+        // OUT sirf IN ke baad
+        if(type === "OUT"){
+
+          const hasIN = todayData.some(
+            row => row.attendance_type === "IN"
+          );
+
+          if(!hasIN){
+
+            document.getElementById("attendanceMessage").innerText =
+              "⚠️ Pehle IN Attendance lagaiye.";
+
+            return;
+          }
+        }
+
+        // Attendance save
+        const saveResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/attendance",
+          {
+            method:"POST",
+
+            headers:{
+              "apikey":SUPABASE_KEY,
+              "Authorization":"Bearer "+SUPABASE_KEY,
+              "Content-Type":"application/json",
+              "Prefer":"return=representation"
+            },
+
+            body:JSON.stringify({
+              employee_id:loggedEmployee.employee_id,
+              employee_name:loggedEmployee.name,
+              attendance_type:type,
+              latitude:lat,
+              longitude:lon,
+              distance_meters:Math.round(distance),
+              attendance_date:today
+            })
+          }
+        );
+
+        const saveResult = await saveResponse.text();
+
+        if(!saveResponse.ok){
+
+          document.getElementById("attendanceMessage").innerText =
+            "❌ Attendance Error: " + saveResult;
+
+          return;
+        }
+
+        document.getElementById("attendanceMessage").innerText =
+          "✅ " + type +
+          " Attendance Successfully Marked";
+
+      }catch(error){
+
+        document.getElementById("attendanceMessage").innerText =
+          "❌ Error: " + error.message;
+
+      }
+
+    },
+
+    function(){
+
+      document.getElementById("attendanceMessage").innerText =
+        "❌ Location permission Allow karein";
+
+    },
+
+    {
+      enableHighAccuracy:true,
+      timeout:15000,
+      maximumAge:0
+    }
+  );
+}
+
 document.getElementById("attendanceMessage").innerText=
 "📍 Location check ho rahi hai...";
 
