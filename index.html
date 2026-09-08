@@ -1,240 +1,808 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payol Attendance</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payol Attendance</title>
 
-<style>
-body{
-  font-family:Arial,sans-serif;
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-  text-align:center;
-}
-input,button{
-  padding:12px;
-  margin:6px;
-  font-size:16px;
-}
-input{width:260px;max-width:90%}
-button{cursor:pointer}
-.card{
-  border:1px solid #ddd;
-  padding:20px;
-  margin:15px 0;
-  border-radius:10px;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-th,td{
-  border:1px solid #ddd;
-  padding:8px;
-}
-.hidden{display:none}
-</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.12);
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    input, select, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 7px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      background: #1769aa;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0d4f82;
+    }
+
+    .green {
+      background: #168a45;
+    }
+
+    .red {
+      background: #c62828;
+    }
+
+    .gray {
+      background: #555;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .message {
+      text-align: center;
+      margin: 12px 0;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 7px;
+      text-align: center;
+    }
+
+    th {
+      background: #eee;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Payol Attendance</h1>
-
 <!-- LOGIN -->
-<div id="loginBox" class="card">
+<div class="box" id="loginBox">
+  <h1>Payol Attendance</h1>
 
-<h2>Employee Login</h2>
+  <input id="loginId" placeholder="Employee ID / Admin Username">
+  <input id="loginPassword" type="password" placeholder="Password">
 
-<input id="employeeId" placeholder="Employee ID">
-<br>
+  <button onclick="login()">Login</button>
 
-<input id="password" type="password" placeholder="Password">
-<br>
-
-<button onclick="employeeLogin()">Employee Login</button>
-
-<br>
-
-<button onclick="showAdminLogin()">Admin Login</button>
-
-<p id="loginMessage"></p>
-
+  <div class="message" id="loginMessage"></div>
 </div>
 
 
 <!-- EMPLOYEE PANEL -->
-<div id="employeePanel" class="card hidden">
+<div class="box hidden" id="employeePanel">
+  <h2>Employee Attendance</h2>
 
-<h2 id="welcome"></h2>
+  <p>
+    Welcome, <b id="employeeName"></b>
+  </p>
 
-<button onclick="markAttendance('IN')">
-🟢 IN Attendance
-</button>
+  <button class="green" onclick="markAttendance('IN')">
+    Mark IN
+  </button>
 
-<button onclick="markAttendance('OUT')">
-🔴 OUT Attendance
-</button>
+  <button class="red" onclick="markAttendance('OUT')">
+    Mark OUT
+  </button>
 
-<p id="attendanceMessage"></p>
+  <div class="message" id="attendanceMessage"></div>
 
-<button onclick="logout()">Logout</button>
-
-</div>
-
-
-<!-- ADMIN LOGIN -->
-<div id="adminLogin" class="card hidden">
-
-<h2>Admin Login</h2>
-
-<input id="adminId" placeholder="Admin ID">
-<br>
-
-<input id="adminPassword" type="password" placeholder="Password">
-<br>
-
-<button onclick="adminLogin()">Login</button>
-
-<p id="adminMessage"></p>
-
-<button onclick="backToLogin()">Back</button>
-
+  <button class="gray" onclick="logout()">Logout</button>
 </div>
 
 
 <!-- ADMIN PANEL -->
-<div id="adminPanel" class="card hidden">
+<div class="box hidden" id="adminPanel">
+  <h2>Admin Panel</h2>
 
-<h2>👨‍💼 Admin Panel</h2>
+  <button onclick="saveOfficeLocation()">
+    Save Current Office Location
+  </button>
 
-async function loadAttendance(){
+  <div class="message" id="officeMessage"></div>
 
-  const response = await fetch(
-    SUPABASE_URL +
-    "/rest/v1/attendance?select=*&order=created_at.desc",
-    {
-      headers:{
-        "apikey":SUPABASE_KEY,
-        "Authorization":"Bearer "+SUPABASE_KEY
-      }
+  <hr>
+
+  <h3>Add Employee</h3>
+
+  <input id="newEmployeeId" placeholder="Employee ID">
+  <input id="newEmployeeName" placeholder="Employee Name">
+  <input id="newEmployeePassword" placeholder="Password">
+
+  <button onclick="addEmployee()">Add Employee</button>
+
+  <div class="message" id="employeeMessage"></div>
+
+  <hr>
+
+  <h3>Attendance Report</h3>
+
+  <input id="reportDate" type="date">
+
+  <select id="reportEmployee">
+    <option value="">All Employees</option>
+  </select>
+
+  <button onclick="loadReport()">Show Report</button>
+
+  <div id="report"></div>
+
+  <button class="gray" onclick="logout()">Logout</button>
+</div>
+
+
+<script>
+
+  /* ==============================
+     SUPABASE
+  ============================== */
+
+  const SUPABASE_URL =
+    "https://nkbbcygtuaejcuquwhpi.supabase.co";
+
+  /*
+    IMPORTANT:
+    Yahan apni pehle wali Supabase Publishable Key paste karo.
+    Key mujhe mat bhejna.
+  */
+
+  const SUPABASE_KEY = "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
+
+  const supabaseClient =
+    supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+  /* ==============================
+     VARIABLES
+  ============================== */
+
+  let currentEmployee = null;
+
+
+  /* ==============================
+     LOGIN
+  ============================== */
+
+  async function login() {
+
+    const loginId =
+      document.getElementById("loginId").value.trim();
+
+    const password =
+      document.getElementById("loginPassword").value.trim();
+
+    const message =
+      document.getElementById("loginMessage");
+
+    message.innerText = "";
+
+    if (!loginId || !password) {
+      message.innerText = "ID aur Password dono bhariye.";
+      return;
     }
-  );
 
-  if(!response.ok){
-    document.getElementById("attendanceTable").innerHTML =
-      "❌ Attendance load nahi hui";
-    return;
+
+    /* ADMIN LOGIN */
+
+    if (
+      loginId === "Baijnathpayol" &&
+      password === "123456789"
+    ) {
+
+      document.getElementById("loginBox")
+        .classList.add("hidden");
+
+      document.getElementById("adminPanel")
+        .classList.remove("hidden");
+
+      document.getElementById("reportDate").value =
+        new Date().toISOString().split("T")[0];
+
+      loadEmployeesForReport();
+
+      return;
+    }
+
+
+    /* EMPLOYEE LOGIN */
+
+    const { data, error } =
+      await supabaseClient
+        .from("employees")
+        .select("*")
+        .eq("employee_id", loginId)
+        .eq("password", password)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(error);
+
+      message.innerText =
+        "Login error: " + error.message;
+
+      return;
+    }
+
+
+    if (!data) {
+
+      message.innerText =
+        "Employee ID ya Password galat hai.";
+
+      return;
+    }
+
+
+    currentEmployee = data;
+
+    document.getElementById("loginBox")
+      .classList.add("hidden");
+
+    document.getElementById("employeePanel")
+      .classList.remove("hidden");
+
+    document.getElementById("employeeName").innerText =
+      data.name;
+
   }
 
-  const data = await response.json();
 
-  let html =
-    "<h3>📋 Attendance Records</h3>" +
+  /* ==============================
+     LOGOUT
+  ============================== */
 
-    "<input type='date' id='reportDate' onchange='filterReport()'>" +
+  function logout() {
 
-    "<select id='reportEmployee' onchange='filterReport()'>" +
-    "<option value=''>All Employees</option>" +
-    "</select>" +
+    currentEmployee = null;
 
-    "<div id='reportResult'></div>";
+    document.getElementById("loginBox")
+      .classList.remove("hidden");
 
-  document.getElementById("attendanceTable").innerHTML = html;
+    document.getElementById("employeePanel")
+      .classList.add("hidden");
 
-  const employees = [...new Set(
-    data.map(row => row.employee_id)
-  )];
+    document.getElementById("adminPanel")
+      .classList.add("hidden");
 
-  const select = document.getElementById("reportEmployee");
+    document.getElementById("loginId").value = "";
+    document.getElementById("loginPassword").value = "";
 
-  employees.forEach(id => {
-
-    const option = document.createElement("option");
-
-    option.value = id;
-    option.textContent = id;
-
-    select.appendChild(option);
-
-  });
-
-  window.allAttendance = data;
-
-  showReport(data);
-}
+    document.getElementById("loginMessage").innerText = "";
+  }
 
 
-function filterReport(){
+  /* ==============================
+     DISTANCE CALCULATION
+  ============================== */
 
-  const date =
-    document.getElementById("reportDate").value;
+  function calculateDistance(lat1, lon1, lat2, lon2) {
 
-  const employee =
-    document.getElementById("reportEmployee").value;
+    const R = 6371000;
 
-  let filtered = window.allAttendance || [];
+    const dLat =
+      (lat2 - lat1) * Math.PI / 180;
 
-  if(date){
+    const dLon =
+      (lon2 - lon1) * Math.PI / 180;
 
-    filtered = filtered.filter(row => {
+    const a =
+      Math.sin(dLat / 2) *
+      Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
 
-      const rowDate =
-        new Date(row.created_at)
-        .toLocaleDateString("en-CA");
+    const c =
+      2 * Math.atan2(
+        Math.sqrt(a),
+        Math.sqrt(1 - a)
+      );
 
-      return rowDate === date;
+    return R * c;
+  }
+
+
+  /* ==============================
+     MARK ATTENDANCE
+  ============================== */
+
+  async function markAttendance(type) {
+
+    const message =
+      document.getElementById("attendanceMessage");
+
+    message.innerText =
+      "Location check ho raha hai...";
+
+
+    if (!navigator.geolocation) {
+
+      message.innerText =
+        "Aapke browser me GPS available nahi hai.";
+
+      return;
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+      async function(position) {
+
+        try {
+
+          const latitude =
+            position.coords.latitude;
+
+          const longitude =
+            position.coords.longitude;
+
+
+          /* GET OFFICE LOCATION */
+
+          const { data: office, error: officeError } =
+            await supabaseClient
+              .from("office_settings")
+              .select("*")
+              .eq("id", 1)
+              .single();
+
+
+          if (officeError || !office) {
+
+            message.innerText =
+              "Office location nahi mili.";
+
+            return;
+          }
+
+
+          if (
+            office.latitude === null ||
+            office.longitude === null
+          ) {
+
+            message.innerText =
+              "Admin ne office location save nahi ki hai.";
+
+            return;
+          }
+
+
+          const distance =
+            calculateDistance(
+              latitude,
+              longitude,
+              office.latitude,
+              office.longitude
+            );
+
+
+          const radius =
+            office.radius_meters || 100;
+
+
+          if (distance > radius) {
+
+            message.innerText =
+              "Aap office se " +
+              Math.round(distance) +
+              " meter door hain. 100 meter ke andar hona zaroori hai.";
+
+            return;
+          }
+
+
+          /* TODAY DATE */
+
+          const today =
+            new Date().toISOString().split("T")[0];
+
+
+          /* SAVE ATTENDANCE */
+
+          const { error } =
+            await supabaseClient
+              .from("attendance")
+              .insert([{
+
+                employee_id:
+                  currentEmployee.employee_id,
+
+                employee_name:
+                  currentEmployee.name,
+
+                attendance_type:
+                  type,
+
+                latitude:
+                  latitude,
+
+                longitude:
+                  longitude,
+
+                distance_meters:
+                  distance,
+
+                attendance_date:
+                  today
+
+              }]);
+
+
+          if (error) {
+
+            console.error(error);
+
+            message.innerText =
+              "Attendance save nahi hui: " +
+              error.message;
+
+            return;
+          }
+
+
+          message.innerText =
+            type +
+            " Attendance Successfully Marked. Distance: " +
+            Math.round(distance) +
+            " meter";
+
+        }
+
+        catch (err) {
+
+          console.error(err);
+
+          message.innerText =
+            "Kuch error hua.";
+
+        }
+
+      },
+
+      function(error) {
+
+        if (error.code === 1) {
+
+          message.innerText =
+            "Location permission Allow karo.";
+
+        } else {
+
+          message.innerText =
+            "Location nahi mil pa rahi hai.";
+
+        }
+
+      },
+
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+      }
+    );
+
+  }
+
+
+  /* ==============================
+     SAVE OFFICE LOCATION
+  ============================== */
+
+  function saveOfficeLocation() {
+
+    const message =
+      document.getElementById("officeMessage");
+
+    message.innerText =
+      "Current location li ja rahi hai...";
+
+
+    if (!navigator.geolocation) {
+
+      message.innerText =
+        "GPS available nahi hai.";
+
+      return;
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+      async function(position) {
+
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+
+        const { error } =
+          await supabaseClient
+            .from("office_settings")
+            .update({
+              latitude: latitude,
+              longitude: longitude,
+              radius_meters: 100
+            })
+            .eq("id", 1);
+
+
+        if (error) {
+
+          console.error(error);
+
+          message.innerText =
+            "Location save nahi hui: " +
+            error.message;
+
+          return;
+        }
+
+
+        message.innerText =
+          "Office location successfully save ho gayi. Radius: 100 meter";
+
+      },
+
+      function() {
+
+        message.innerText =
+          "Location permission Allow karo.";
+
+      },
+
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+      }
+    );
+
+  }
+
+
+  /* ==============================
+     ADD EMPLOYEE
+  ============================== */
+
+  async function addEmployee() {
+
+    const id =
+      document.getElementById("newEmployeeId")
+        .value.trim();
+
+    const name =
+      document.getElementById("newEmployeeName")
+        .value.trim();
+
+    const password =
+      document.getElementById("newEmployeePassword")
+        .value.trim();
+
+    const message =
+      document.getElementById("employeeMessage");
+
+
+    if (!id || !name || !password) {
+
+      message.innerText =
+        "Sabhi details bhariye.";
+
+      return;
+    }
+
+
+    const { error } =
+      await supabaseClient
+        .from("employees")
+        .insert([{
+
+          employee_id: id,
+          name: name,
+          password: password
+
+        }]);
+
+
+    if (error) {
+
+      console.error(error);
+
+      message.innerText =
+        "Employee add nahi hua: " +
+        error.message;
+
+      return;
+    }
+
+
+    message.innerText =
+      "Employee successfully add ho gaya.";
+
+
+    document.getElementById("newEmployeeId").value = "";
+    document.getElementById("newEmployeeName").value = "";
+    document.getElementById("newEmployeePassword").value = "";
+
+
+    loadEmployeesForReport();
+
+  }
+
+
+  /* ==============================
+     LOAD EMPLOYEES
+  ============================== */
+
+  async function loadEmployeesForReport() {
+
+    const select =
+      document.getElementById("reportEmployee");
+
+
+    const { data, error } =
+      await supabaseClient
+        .from("employees")
+        .select("employee_id,name")
+        .order("employee_id");
+
+
+    if (error) {
+
+      console.error(error);
+      return;
+    }
+
+
+    select.innerHTML =
+      '<option value="">All Employees</option>';
+
+
+    data.forEach(function(employee) {
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        employee.employee_id;
+
+      option.textContent =
+        employee.employee_id +
+        " - " +
+        employee.name;
+
+      select.appendChild(option);
 
     });
 
   }
 
-  if(employee){
 
-    filtered = filtered.filter(row =>
-      row.employee_id === employee
-    );
+  /* ==============================
+     ATTENDANCE REPORT
+  ============================== */
 
-  }
+  async function loadReport() {
 
-  showReport(filtered);
-}
+    const report =
+      document.getElementById("report");
+
+    const date =
+      document.getElementById("reportDate").value;
+
+    const employee =
+      document.getElementById("reportEmployee").value;
 
 
-function showReport(data){
+    report.innerHTML =
+      "Loading...";
 
-  let html =
 
-    "<table>" +
+    let query =
+      supabaseClient
+        .from("attendance")
+        .select("*")
+        .eq("attendance_date", date)
+        .order("created_at", {
+          ascending: false
+        });
 
-    "<tr>" +
-    "<th>Employee ID</th>" +
-    "<th>Employee Name</th>" +
-    "<th>Type</th>" +
-    "<th>Distance</th>" +
-    "<th>Date & Time</th>" +
-    "</tr>";
 
-  if(data.length === 0){
+    if (employee) {
 
-    html +=
-      "<tr><td colspan='5'>No attendance found</td></tr>";
+      query =
+        query.eq("employee_id", employee);
 
-  }else{
+    }
 
-    data.forEach(row => {
+
+    const { data, error } =
+      await query;
+
+
+    if (error) {
+
+      console.error(error);
+
+      report.innerHTML =
+        "Report load nahi hui: " +
+        error.message;
+
+      return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+      report.innerHTML =
+        "<p>No attendance found.</p>";
+
+      return;
+    }
+
+
+    let html =
+      "<table>" +
+      "<tr>" +
+      "<th>Employee</th>" +
+      "<th>Type</th>" +
+      "<th>Time</th>" +
+      "<th>Distance</th>" +
+      "</tr>";
+
+
+    data.forEach(function(row) {
+
+      const time =
+        new Date(row.created_at)
+          .toLocaleTimeString();
+
 
       html +=
-
         "<tr>" +
-
         "<td>" +
         row.employee_id +
-        "</td>" +
-
-        "<td>" +
+        "<br>" +
         row.employee_name +
         "</td>" +
 
@@ -243,563 +811,25 @@ function showReport(data){
         "</td>" +
 
         "<td>" +
-        row.distance_meters +
-        " m</td>" +
+        time +
+        "</td>" +
 
         "<td>" +
-        new Date(row.created_at)
-        .toLocaleString("en-IN") +
+        Math.round(row.distance_meters) +
+        " m" +
         "</td>" +
 
         "</tr>";
 
     });
 
+
+    html += "</table>";
+
+
+    report.innerHTML = html;
+
   }
-
-  html += "</table>";
-
-  document.getElementById("reportResult").innerHTML =
-    html;
-}
-📋 View Attendance
-</button>
-
-<button onclick="showAddEmployee()">
-➕ Add Employee
-</button>
-
-<button onclick="logout()">
-Logout
-</button>
-
-<div id="addEmployeeBox" class="hidden">
-
-<h3>Add Employee</h3>
-
-<input id="newEmployeeId" placeholder="Employee ID">
-<br>
-
-<input id="newEmployeeName" placeholder="Employee Name">
-<br>
-
-<input id="newEmployeePassword" placeholder="Password">
-<br>
-
-<button onclick="addEmployee()">Add Employee</button>
-
-<p id="addMessage"></p>
-
-</div>
-
-<div id="attendanceTable"></div>
-
-</div>
-
-
-<script>
-
-const SUPABASE_URL =
-"https://nkbbcygtuaejcuquwhpi.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
-
-let loggedEmployee=null;
-
-
-// EMPLOYEE LOGIN
-async function employeeLogin(){
-
-const id=document.getElementById("employeeId").value.trim();
-const pass=document.getElementById("password").value;
-
-const response=await fetch(
-SUPABASE_URL+
-"/rest/v1/employees?employee_id=eq."+
-encodeURIComponent(id)+
-"&password=eq."+
-encodeURIComponent(pass)+
-"&select=*",
-{
-headers:{
-"apikey":SUPABASE_KEY,
-"Authorization":"Bearer "+SUPABASE_KEY
-}
-});
-
-const data=await response.json();
-
-if(data.length>0){
-
-loggedEmployee=data[0];
-
-document.getElementById("loginBox").classList.add("hidden");
-
-document.getElementById("employeePanel").classList.remove("hidden");
-
-document.getElementById("welcome").innerText=
-"Welcome, "+loggedEmployee.name;
-
-}else{
-
-document.getElementById("loginMessage").innerText=
-"❌ Employee ID ya Password galat hai";
-
-}
-
-}
-
-
-// ADMIN LOGIN
-function showAdminLogin(){
-
-document.getElementById("loginBox").classList.add("hidden");
-
-document.getElementById("adminLogin").classList.remove("hidden");
-
-}
-
-
-function backToLogin(){
-
-document.getElementById("adminLogin").classList.add("hidden");
-
-document.getElementById("loginBox").classList.remove("hidden");
-
-}
-
-
-function adminLogin(){
-
-const id=document.getElementById("adminId").value.trim();
-
-const pass=document.getElementById("adminPassword").value;
-
-if(id==="Baijnathpayol" && pass==="123456789"){
-
-document.getElementById("adminLogin").classList.add("hidden");
-
-document.getElementById("adminPanel").classList.remove("hidden");
-
-loadAttendance();
-
-}else{
-
-document.getElementById("adminMessage").innerText=
-"❌ Admin ID ya Password galat hai";
-
-}
-
-}
-
-
-// ATTENDANCE
-function markAttendance(type){
-
-  if(!loggedEmployee) return;
-
-  document.getElementById("attendanceMessage").innerText =
-    "📍 Location check ho rahi hai...";
-
-  navigator.geolocation.getCurrentPosition(
-
-    async function(position){
-
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-
-      try{
-
-        const officeResponse = await fetch(
-          SUPABASE_URL +
-          "/rest/v1/office_settings?id=eq.1&select=*",
-          {
-            headers:{
-              "apikey":SUPABASE_KEY,
-              "Authorization":"Bearer "+SUPABASE_KEY
-            }
-          }
-        );
-
-        const office = await officeResponse.json();
-
-        if(!office.length){
-
-          document.getElementById("attendanceMessage").innerText =
-            "❌ Office location nahi mili";
-          return;
-        }
-
-        const distance = calculateDistance(
-          lat,
-          lon,
-          office[0].latitude,
-          office[0].longitude
-        );
-
-        const radius = office[0].radius_meters || 100;
-
-        if(distance > radius){
-
-          document.getElementById("attendanceMessage").innerText =
-            "❌ Aap office se " +
-            Math.round(distance) +
-            " meter door hain. 100 meter ke andar aaiye.";
-
-          return;
-        }
-
-        // Aaj ka attendance check
-        const today = new Date()
-          .toLocaleDateString("en-CA");
-
-        const checkResponse = await fetch(
-          SUPABASE_URL +
-          "/rest/v1/attendance" +
-          "?employee_id=eq." +
-          encodeURIComponent(loggedEmployee.employee_id) +
-          "&attendance_date=eq." +
-          today +
-          "&select=attendance_type,created_at" +
-          "&order=created_at.desc",
-          {
-            headers:{
-              "apikey":SUPABASE_KEY,
-              "Authorization":"Bearer "+SUPABASE_KEY
-            }
-          }
-        );
-
-        const todayData = await checkResponse.json();
-
-        // Same type dobara na lage
-        const alreadyMarked = todayData.some(
-          row => row.attendance_type === type
-        );
-
-        if(alreadyMarked){
-
-          document.getElementById("attendanceMessage").innerText =
-            "⚠️ Aaj ka " + type +
-            " Attendance pehle hi lag chuka hai.";
-
-          return;
-        }
-
-        // OUT sirf IN ke baad
-        if(type === "OUT"){
-
-          const hasIN = todayData.some(
-            row => row.attendance_type === "IN"
-          );
-
-          if(!hasIN){
-
-            document.getElementById("attendanceMessage").innerText =
-              "⚠️ Pehle IN Attendance lagaiye.";
-
-            return;
-          }
-        }
-
-        // Attendance save
-        const saveResponse = await fetch(
-          SUPABASE_URL + "/rest/v1/attendance",
-          {
-            method:"POST",
-
-            headers:{
-              "apikey":SUPABASE_KEY,
-              "Authorization":"Bearer "+SUPABASE_KEY,
-              "Content-Type":"application/json",
-              "Prefer":"return=representation"
-            },
-
-            body:JSON.stringify({
-              employee_id:loggedEmployee.employee_id,
-              employee_name:loggedEmployee.name,
-              attendance_type:type,
-              latitude:lat,
-              longitude:lon,
-              distance_meters:Math.round(distance),
-              attendance_date:today
-            })
-          }
-        );
-
-        const saveResult = await saveResponse.text();
-
-        if(!saveResponse.ok){
-
-          document.getElementById("attendanceMessage").innerText =
-            "❌ Attendance Error: " + saveResult;
-
-          return;
-        }
-
-        document.getElementById("attendanceMessage").innerText =
-          "✅ " + type +
-          " Attendance Successfully Marked";
-
-      }catch(error){
-
-        document.getElementById("attendanceMessage").innerText =
-          "❌ Error: " + error.message;
-
-      }
-
-    },
-
-    function(){
-
-      document.getElementById("attendanceMessage").innerText =
-        "❌ Location permission Allow karein";
-
-    },
-
-    {
-      enableHighAccuracy:true,
-      timeout:15000,
-      maximumAge:0
-    }
-  );
-}
-
-document.getElementById("attendanceMessage").innerText=
-"📍 Location check ho rahi hai...";
-
-navigator.geolocation.getCurrentPosition(
-
-async function(position){
-
-const lat=position.coords.latitude;
-const lon=position.coords.longitude;
-
-const officeResponse=await fetch(
-SUPABASE_URL+
-"/rest/v1/office_settings?id=eq.1&select=*",
-{
-headers:{
-"apikey":SUPABASE_KEY,
-"Authorization":"Bearer "+SUPABASE_KEY
-}
-});
-
-const office=await officeResponse.json();
-
-if(!office.length){
-
-document.getElementById("attendanceMessage").innerText=
-"❌ Office location nahi mili";
-
-return;
-}
-
-const distance=calculateDistance(
-lat,
-lon,
-office[0].latitude,
-office[0].longitude
-);
-
-const radius=office[0].radius_meters||100;
-
-if(distance>radius){
-
-document.getElementById("attendanceMessage").innerText=
-"❌ Aap "+Math.round(distance)+
-" meter door hain. 100 meter ke andar aaiye.";
-
-return;
-}
-
-const save=await fetch(
-SUPABASE_URL+"/rest/v1/attendance",
-{
-method:"POST",
-headers:{
-"apikey":SUPABASE_KEY,
-"Authorization":"Bearer "+SUPABASE_KEY,
-"Content-Type":"application/json",
-"Prefer":"return=representation"
-},
-body:JSON.stringify({
-employee_id:loggedEmployee.employee_id,
-employee_name:loggedEmployee.name,
-attendance_type:type,
-latitude:lat,
-longitude:lon,
-distance_meters:Math.round(distance)
-})
-});
-
-if(save.ok){
-
-document.getElementById("attendanceMessage").innerText=
-"✅ "+type+" Attendance Successfully Marked";
-
-}else{
-
-const error=await save.text();
-
-document.getElementById("attendanceMessage").innerText=
-"❌ Attendance Error: "+error;
-
-}
-
-},
-
-function(){
-
-document.getElementById("attendanceMessage").innerText=
-"❌ Location permission Allow karein";
-
-},
-
-{
-enableHighAccuracy:true,
-timeout:15000,
-maximumAge:0
-}
-
-);
-
-}
-
-
-// DISTANCE
-function calculateDistance(lat1,lon1,lat2,lon2){
-
-const R=6371000;
-
-const dLat=(lat2-lat1)*Math.PI/180;
-const dLon=(lon2-lon1)*Math.PI/180;
-
-const a=
-Math.sin(dLat/2)**2+
-Math.cos(lat1*Math.PI/180)*
-Math.cos(lat2*Math.PI/180)*
-Math.sin(dLon/2)**2;
-
-return R*2*Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
-);
-
-}
-
-
-// ADD EMPLOYEE
-function showAddEmployee(){
-
-document.getElementById("addEmployeeBox").classList.remove("hidden");
-
-}
-
-
-async function addEmployee(){
-
-const id=document.getElementById("newEmployeeId").value.trim();
-const name=document.getElementById("newEmployeeName").value.trim();
-const pass=document.getElementById("newEmployeePassword").value;
-
-if(!id||!name||!pass){
-
-document.getElementById("addMessage").innerText=
-"❌ Sabhi details bhariye";
-
-return;
-}
-
-const response=await fetch(
-SUPABASE_URL+"/rest/v1/employees",
-{
-method:"POST",
-headers:{
-"apikey":SUPABASE_KEY,
-"Authorization":"Bearer "+SUPABASE_KEY,
-"Content-Type":"application/json",
-"Prefer":"return=representation"
-},
-body:JSON.stringify({
-employee_id:id,
-name:name,
-password:pass
-})
-});
-
-if(response.ok){
-
-document.getElementById("addMessage").innerText=
-"✅ Employee successfully added";
-
-document.getElementById("newEmployeeId").value="";
-document.getElementById("newEmployeeName").value="";
-document.getElementById("newEmployeePassword").value="";
-
-}else{
-
-const error=await response.text();
-
-document.getElementById("addMessage").innerText=
-"❌ Error: "+error;
-
-}
-
-}
-
-
-// ATTENDANCE REPORT
-async function loadAttendance(){
-
-const response=await fetch(
-SUPABASE_URL+
-"/rest/v1/attendance?select=*&order=created_at.desc",
-{
-headers:{
-"apikey":SUPABASE_KEY,
-"Authorization":"Bearer "+SUPABASE_KEY
-}
-});
-
-const data=await response.json();
-
-let html=
-"<h3>Attendance Records</h3>"+
-"<table>"+
-"<tr>"+
-"<th>Employee</th>"+
-"<th>Type</th>"+
-"<th>Distance</th>"+
-"<th>Date/Time</th>"+
-"</tr>";
-
-data.forEach(row=>{
-
-html+=
-"<tr>"+
-"<td>"+row.employee_name+"</td>"+
-"<td>"+row.attendance_type+"</td>"+
-"<td>"+row.distance_meters+" m</td>"+
-"<td>"+new Date(row.created_at).toLocaleString()+"</td>"+
-"</tr>";
-
-});
-
-html+="</table>";
-
-document.getElementById("attendanceTable").innerHTML=html;
-
-}
-
-
-// LOGOUT
-function logout(){
-
-location.reload();
-
-}
 
 </script>
 
