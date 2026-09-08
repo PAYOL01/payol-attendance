@@ -913,6 +913,102 @@
 
   async function loadReport() {
 
+  const report = document.getElementById("report");
+
+  const date = document.getElementById("reportDate").value;
+
+  const employee =
+    document.getElementById("reportEmployee").value;
+
+  report.innerHTML = "Loading...";
+
+  let query = supabaseClient
+    .from("attendance")
+    .select("*")
+    .eq("attendance_date", date)
+    .order("created_at", { ascending: true });
+
+  if (employee) {
+    query = query.eq("employee_id", employee);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    report.innerHTML =
+      "Report load nahi hui: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    report.innerHTML =
+      "<p>No attendance found.</p>";
+    return;
+  }
+
+  let html = `
+    <table>
+      <tr>
+        <th>Employee ID</th>
+        <th>Name</th>
+        <th>Date</th>
+        <th>IN Time</th>
+        <th>OUT Time</th>
+        <th>Distance</th>
+      </tr>
+  `;
+
+  const employees = {};
+
+  data.forEach(function(row) {
+
+    if (!employees[row.employee_id]) {
+      employees[row.employee_id] = {
+        id: row.employee_id,
+        name: row.employee_name,
+        date: row.attendance_date,
+        inTime: "-",
+        outTime: "-",
+        distance: "-"
+      };
+    }
+
+    if (row.attendance_type === "IN") {
+      employees[row.employee_id].inTime =
+        new Date(row.created_at).toLocaleTimeString();
+      employees[row.employee_id].distance =
+        Math.round(row.distance_meters) + " m";
+    }
+
+    if (row.attendance_type === "OUT") {
+      employees[row.employee_id].outTime =
+        new Date(row.created_at).toLocaleTimeString();
+    }
+
+  });
+
+
+  Object.values(employees).forEach(function(emp) {
+
+    html += `
+      <tr>
+        <td>${emp.id}</td>
+        <td>${emp.name}</td>
+        <td>${emp.date}</td>
+        <td>${emp.inTime}</td>
+        <td>${emp.outTime}</td>
+        <td>${emp.distance}</td>
+      </tr>
+    `;
+
+  });
+
+
+  html += "</table>";
+
+  report.innerHTML = html;
+}
+
     const report =
       document.getElementById("report");
 
