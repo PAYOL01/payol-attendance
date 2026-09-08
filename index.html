@@ -22,7 +22,71 @@
 
 <hr>
 
-<button onclick="setOfficeLocation()">📍 Set Office Location</button>
+<button onclick="setOfficeLocation()">📍 function setOfficeLocation() {
+
+  document.getElementById("locationMessage").innerText =
+    "📍 Location le rahe hain...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    async function(position) {
+
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      try {
+
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/office_settings?id=eq.1",
+          {
+            method: "PATCH",
+            headers: {
+              "apikey": SUPABASE_KEY,
+              "Authorization": "Bearer " + SUPABASE_KEY,
+              "Content-Type": "application/json",
+              "Prefer": "return=representation"
+            },
+            body: JSON.stringify({
+              latitude: latitude,
+              longitude: longitude,
+              radius_meters: 100
+            })
+          }
+        );
+
+        const result = await response.text();
+
+        if (!response.ok) {
+          document.getElementById("locationMessage").innerText =
+            "❌ Save Error: " + result;
+          return;
+        }
+
+        document.getElementById("locationMessage").innerText =
+          "✅ Office Location Successfully Set";
+
+      } catch (error) {
+
+        document.getElementById("locationMessage").innerText =
+          "❌ Connection Error: " + error.message;
+
+      }
+    },
+
+    function(error) {
+
+      document.getElementById("locationMessage").innerText =
+        "❌ GPS Error: " + error.message;
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
 
 <p id="locationMessage"></p>
 
