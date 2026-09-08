@@ -504,6 +504,50 @@ async function deleteEmployee(id, employeeId) {
 /* REPORT */
 
 async function loadReport(){
+  const report=document.getElementById("report");
+  const date=document.getElementById("reportDate").value;
+  const employee=document.getElementById("reportEmployee").value;
+
+  report.innerHTML="Loading...";
+
+  let query=supabaseClient
+    .from("attendance")
+    .select("*")
+    .eq("attendance_date",date)
+    .order("created_at",{ascending:false});
+
+  if(employee){
+    query=query.eq("employee_id",employee);
+  }
+
+  const {data,error}=await query;
+
+  if(error){
+    report.innerHTML="Report load nahi hui: "+error.message;
+    return;
+  }
+
+  if(!data || data.length===0){
+    report.innerHTML="<p>No attendance found.</p>";
+    return;
+  }
+
+  let html="<table><tr><th>Employee</th><th>Type</th><th>Time</th><th>Distance</th></tr>";
+
+  data.forEach(function(row){
+    const time=new Date(row.created_at).toLocaleTimeString();
+
+    html+="<tr>" +
+      "<td>"+row.employee_id+"<br>"+row.employee_name+"</td>" +
+      "<td>"+row.attendance_type+"</td>" +
+      "<td>"+time+"</td>" +
+      "<td>"+Math.round(row.distance_meters)+" m</td>" +
+      "</tr>";
+  });
+
+  html+="</table>";
+  report.innerHTML=html;
+}
 
   const report = document.getElementById("report");
   const date = document.getElementById("reportDate").value;
