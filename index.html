@@ -2,15 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<meta name="theme-color" content="#a40000">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Payol Attendance</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+:root{
+  --primary:#2563eb;
+  --primary2:#1d4ed8;
+  --bg:#f5f7fb;
+  --card:#fff;
+  --text:#172033;
+  --muted:#64748b;
+  --line:#e5e7eb;
+  --green:#16a34a;
+  --red:#dc2626;
+  --orange:#d97706;
+}
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -18,10 +28,9 @@
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:#080808;
-  color:#fff;
-  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
 button,input,select,textarea{
@@ -29,550 +38,537 @@ button,input,select,textarea{
 }
 
 button{
-  border:0;
-  border-radius:10px;
-  padding:12px 15px;
   cursor:pointer;
-  background:#a40000;
-  color:white;
-}
-
-button:active{
-  transform:scale(.98);
-}
-
-input,select,textarea{
-  width:100%;
-  padding:13px;
-  border-radius:10px;
-  border:1px solid #444;
-  background:#151515;
-  color:#fff;
-  outline:none;
-}
-
-textarea{
-  min-height:80px;
-  resize:vertical;
 }
 
 .hidden{
   display:none!important;
 }
 
-.container{
-  width:min(1100px,94%);
-  margin:auto;
-}
+/* LOGIN */
 
-header{
-  background:#a40000;
-  padding:16px;
-  box-shadow:0 3px 15px #000;
-}
-
-.header-inner{
-  width:min(1100px,94%);
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-
-.logo{
-  font-size:21px;
-  font-weight:bold;
-}
-
-.logout{
-  background:#fff;
-  color:#a40000;
-  padding:9px 13px;
-}
-
-.card{
-  background:#111;
-  border:1px solid #292929;
-  border-radius:16px;
-  padding:18px;
-  margin:15px 0;
-  box-shadow:0 5px 20px #0007;
-}
-
-h2{
-  margin-bottom:15px;
-}
-
-h3{
-  margin-bottom:12px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-}
-
-.stat{
-  background:#181818;
-  border:1px solid #292929;
-  padding:15px 10px;
-  border-radius:12px;
-  text-align:center;
-}
-
-.stat b{
-  display:block;
-  font-size:23px;
-  margin-bottom:5px;
-}
-
-.muted{
-  color:#aaa;
-  font-size:13px;
-}
-
-.success{
-  color:#45df72;
-}
-
-.danger{
-  color:#ff5555;
-}
-
-.warning{
-  color:#ffc107;
-}
-
-.center{
-  text-align:center;
-}
-
-.login-wrap{
+.login-page{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:20px;
+  background:linear-gradient(135deg,#eff6ff,#f8fafc);
 }
 
-.login-box{
-  width:min(430px,100%);
-  background:#111;
-  border:1px solid #292929;
-  border-radius:20px;
-  padding:25px;
-  box-shadow:0 10px 40px #000;
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 20px 60px rgba(15,23,42,.10);
 }
 
-.login-logo{
-  text-align:center;
-  font-size:30px;
-  font-weight:bold;
-  color:#ff3d3d;
-  margin-bottom:5px;
-}
-
-.login-sub{
-  text-align:center;
-  color:#aaa;
-  margin-bottom:25px;
-}
-
-.tabs{
+.logo{
+  width:60px;
+  height:60px;
+  border-radius:18px;
+  background:var(--primary);
+  color:#fff;
   display:flex;
-  gap:8px;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  font-weight:bold;
   margin-bottom:15px;
 }
 
-.tabs button{
-  flex:1;
-  background:#222;
+.login-card h1{
+  margin-bottom:7px;
 }
 
-.tabs button.active{
-  background:#a40000;
+.muted{
+  color:var(--muted);
 }
 
-.form-group{
-  margin-bottom:12px;
+.field{
+  margin-top:15px;
 }
 
-.form-group label{
+.field label{
   display:block;
-  margin-bottom:6px;
-  color:#ccc;
-  font-size:14px;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:7px;
 }
 
-.full{
+input,select,textarea{
   width:100%;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:12px;
+  outline:none;
+  background:#fff;
 }
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+.btn{
+  border:0;
+  padding:11px 15px;
+  border-radius:11px;
+  font-weight:bold;
+}
+
+.primary{
+  background:var(--primary);
+  color:#fff;
+}
+
+.primary:hover{
+  background:var(--primary2);
+}
+
+.secondary{
+  background:#eaf1ff;
+  color:#1d4ed8;
+}
+
+.danger{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+.ghost{
+  background:#f8fafc;
+  border:1px solid var(--line);
+}
+
+.full-btn{
+  width:100%;
+  margin-top:18px;
+}
+
+/* HEADER */
+
+.topbar{
+  height:70px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:bold;
+}
+
+.brand-logo{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  background:var(--primary);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#dbeafe;
+  color:#1d4ed8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+/* MAIN */
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:22px;
+}
+
+.grid{
+  display:grid;
+  gap:16px;
+}
+
+.stats{
+  grid-template-columns:repeat(4,1fr);
+}
+
+.two{
+  grid-template-columns:1.1fr .9fr;
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 5px 20px rgba(15,23,42,.04);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.stat b{
+  display:block;
+  font-size:27px;
+  margin:7px 0;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+/* ATTENDANCE */
+
+.attendance-btn{
+  flex:1;
+  min-width:140px;
+  padding:20px;
+  border:0;
+  border-radius:15px;
+  font-weight:bold;
+  font-size:16px;
+}
+
+.in-btn{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.out-btn{
+  background:#dbeafe;
+  color:#1d4ed8;
+}
+
+.disabled{
+  opacity:.45;
+  pointer-events:none;
+}
+
+/* NAV */
 
 .nav{
   display:flex;
   gap:8px;
-  overflow-x:auto;
-  padding:10px 0;
+  overflow:auto;
+  margin-bottom:18px;
 }
 
 .nav button{
   white-space:nowrap;
-  background:#222;
-}
-
-.nav button.active{
-  background:#a40000;
-}
-
-.action-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.action{
-  min-height:80px;
-  font-size:16px;
+  border:1px solid var(--line);
+  background:#fff;
+  padding:10px 14px;
+  border-radius:10px;
   font-weight:bold;
 }
 
-.in-btn{
-  background:#087f35;
+.nav button.active{
+  background:#dbeafe;
+  color:#1d4ed8;
+  border-color:#bfdbfe;
 }
 
-.out-btn{
-  background:#a40000;
-}
-
-.location-box{
-  background:#171717;
-  padding:13px;
-  border-radius:12px;
-  margin:12px 0;
-  font-size:14px;
-  line-height:1.7;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:650px;
-}
+/* TABLE */
 
 .table-wrap{
-  overflow-x:auto;
+  overflow:auto;
 }
 
-th,td{
-  border-bottom:1px solid #292929;
-  padding:10px 8px;
+.table{
+  width:100%;
+  min-width:650px;
+  border-collapse:collapse;
+}
+
+.table th,
+.table td{
+  padding:11px;
+  border-bottom:1px solid var(--line);
   text-align:left;
   font-size:13px;
 }
 
-th{
-  color:#aaa;
-  background:#151515;
+.table th{
+  color:var(--muted);
+  background:#f8fafc;
 }
+
+/* BADGE */
 
 .badge{
   display:inline-block;
-  padding:5px 8px;
-  border-radius:7px;
+  padding:5px 9px;
+  border-radius:999px;
   font-size:11px;
   font-weight:bold;
 }
 
-.present{
-  background:#063d20;
-  color:#4cff8a;
+.full{
+  background:#dcfce7;
+  color:#166534;
 }
 
 .half{
-  background:#4a3900;
-  color:#ffd33d;
+  background:#fef3c7;
+  color:#92400e;
 }
 
-.absent{
-  background:#4b0909;
-  color:#ff6666;
-}
-
-.leave{
-  background:#102e50;
-  color:#63b5ff;
-}
-
-.holiday{
-  background:#4b1761;
-  color:#e5a3ff;
-}
-
-.sunday{
-  background:#252525;
-  color:#aaa;
+.incomplete{
+  background:#fee2e2;
+  color:#991b1b;
 }
 
 .pending{
-  background:#4a3900;
-  color:#ffd33d;
+  background:#fef3c7;
+  color:#92400e;
 }
 
 .approved{
-  background:#063d20;
-  color:#4cff8a;
+  background:#dcfce7;
+  color:#166534;
 }
 
 .rejected{
-  background:#4b0909;
-  color:#ff6666;
+  background:#fee2e2;
+  color:#991b1b;
 }
 
 /* CALENDAR */
+
 .calendar-title{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  gap:8px;
   position:relative;
 }
 
 .month-btn{
-  width:42px;
-  height:42px;
-  padding:0;
-  font-size:24px;
-  background:#222;
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:10px;
+  background:#f1f5f9;
+  font-size:22px;
 }
 
 .month-label{
-  min-width:190px;
-  background:#222;
-  border:1px solid #444;
+  padding:10px 15px;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:10px;
   font-weight:bold;
 }
 
 .month-menu{
-  background:#111;
-  border:1px solid #444;
+  position:absolute;
+  z-index:10;
+  background:#fff;
+  border:1px solid var(--line);
   border-radius:15px;
   padding:12px;
-  margin:12px 0;
-  box-shadow:0 10px 30px #0009;
+  width:290px;
+  margin-top:10px;
+  box-shadow:0 15px 45px rgba(15,23,42,.18);
 }
 
 .month-menu-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .month-menu-head button{
-  width:42px;
-  height:38px;
-  padding:0;
-  font-size:20px;
-  background:#222;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:8px;
+  background:#f1f5f9;
 }
 
 .month-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
+  gap:7px;
 }
 
 .month-grid button{
-  padding:12px 5px;
-  font-size:13px;
-  background:#222;
-  border:1px solid #333;
+  border:0;
+  padding:9px;
+  border-radius:9px;
+  background:#f8fafc;
 }
 
 .month-grid button.active{
-  background:#a40000;
-  border-color:#d00000;
+  background:var(--primary);
+  color:#fff;
 }
 
 .calendar{
   display:grid;
   grid-template-columns:repeat(7,1fr);
-  gap:5px;
+  gap:6px;
   margin-top:15px;
 }
 
-.calhead{
+.dow{
   text-align:center;
-  color:#aaa;
   font-size:11px;
-  padding:7px 2px;
+  color:var(--muted);
+  font-weight:bold;
+  padding:5px;
 }
 
 .day{
-  min-height:67px;
-  background:#181818;
-  border-radius:8px;
-  padding:7px 3px;
-  text-align:center;
-  border:1px solid #252525;
-}
-
-.day b{
-  display:block;
-  font-size:14px;
-  margin-bottom:6px;
-}
-
-.day small{
-  display:block;
-  font-size:9px;
+  min-height:72px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:7px;
 }
 
 .day.today{
-  border:2px solid #fff;
+  outline:2px solid #93c5fd;
 }
 
-.day.empty{
-  background:transparent;
-  border:0;
+.day.holiday{
+  background:#fff7ed;
 }
 
-.salary-box{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
+.day.leave{
+  background:#f5f3ff;
 }
 
-.salary-item{
-  background:#181818;
-  padding:15px;
-  border-radius:12px;
-  text-align:center;
+.day.sun{
+  background:#f8fafc;
 }
 
-.salary-item b{
+.day small{
+  font-weight:bold;
+}
+
+.mini{
   display:block;
-  font-size:20px;
+  font-size:10px;
   margin-top:5px;
 }
 
-.modal{
+/* FORM */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.full-col{
+  grid-column:1/-1;
+}
+
+/* MODAL */
+
+.modal-bg{
   position:fixed;
   inset:0;
-  background:#000b;
+  background:rgba(0,0,0,.55);
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:20px;
-  z-index:100;
+  padding:18px;
+  z-index:50;
 }
 
-.modal-box{
-  width:min(500px,100%);
+.modal{
+  width:100%;
+  max-width:520px;
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
   max-height:90vh;
   overflow:auto;
-  background:#111;
-  border:1px solid #444;
-  border-radius:18px;
-  padding:20px;
 }
 
-.modal-actions{
-  display:flex;
-  gap:10px;
-  margin-top:15px;
-}
-
-.modal-actions button{
-  flex:1;
-}
-
-.close{
-  background:#333;
-}
+/* TOAST */
 
 .toast{
   position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#222;
-  border:1px solid #555;
-  padding:12px 18px;
-  border-radius:10px;
-  z-index:500;
-  display:none;
-  max-width:90%;
-  text-align:center;
+  right:18px;
+  bottom:18px;
+  z-index:100;
+  background:#111827;
+  color:#fff;
+  padding:13px 16px;
+  border-radius:12px;
+  max-width:360px;
 }
 
-.admin-menu{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
+/* MOBILE */
 
-.admin-menu button{
-  background:#222;
-}
-
-.admin-menu button.active{
-  background:#a40000;
-}
-
-.danger-btn{
-  background:#850000;
-}
-
-.green-btn{
-  background:#087f35;
-}
-
-.gray{
-  background:#222!important;
-}
-
-@media(max-width:700px){
-  .grid,
-  .stats,
-  .salary-box{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .admin-menu{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-@media(max-width:430px){
-  .container{
-    width:94%;
-  }
+@media(max-width:800px){
 
   .stats{
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .calendar{
-    gap:3px;
+  .two{
+    grid-template-columns:1fr;
+  }
+
+  .container{
+    padding:15px;
+  }
+
+  .topbar{
+    padding:0 14px;
+  }
+
+  .topbar .muted{
+    display:none;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
   }
 
   .day{
-    min-height:61px;
-    padding:5px 2px;
+    min-height:62px;
+    padding:5px;
   }
 
-  .month-label{
-    min-width:165px;
-    font-size:13px;
+  .day .mini{
+    font-size:9px;
   }
 }
 </style>
@@ -580,767 +576,14 @@ th{
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginPage" class="login-wrap">
-
-  <div class="login-box">
-
-    <div class="login-logo">PAYOL</div>
-    <div class="login-sub">Attendance Management System</div>
-
-    <div class="tabs">
-      <button id="employeeTab" class="active" onclick="showLogin('employee')">
-        Employee
-      </button>
-      <button id="adminTab" onclick="showLogin('admin')">
-        Admin
-      </button>
-    </div>
-
-    <div id="employeeLogin">
-
-      <div class="form-group">
-        <label>Employee ID</label>
-        <input id="empLoginId" placeholder="Enter Employee ID">
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input id="empLoginPassword" type="password" placeholder="Enter Password">
-      </div>
-
-      <button class="full" onclick="employeeLogin()">
-        Login
-      </button>
-
-    </div>
-
-    <div id="adminLogin" class="hidden">
-
-      <div class="form-group">
-        <label>Admin Username</label>
-        <input id="adminUsername" placeholder="Username">
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input id="adminPassword" type="password" placeholder="Password">
-      </div>
-
-      <button class="full" onclick="adminLogin()">
-        Admin Login
-      </button>
-
-    </div>
-
-  </div>
-</div>
-
-
-<!-- EMPLOYEE -->
-<div id="employeePage" class="hidden">
-
-<header>
-  <div class="header-inner">
-    <div class="logo">PAYOL ATTENDANCE</div>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
-</header>
-
-<div class="container">
-
-  <div class="card">
-
-    <h2 id="empWelcome">Welcome</h2>
-
-    <div class="muted">
-      <span id="empPost">Employee</span>
-      •
-      ID: <span id="empIdShow"></span>
-    </div>
-
-    <div class="nav">
-      <button id="empNavHome" class="active" onclick="employeeSection('home')">
-        🏠 Home
-      </button>
-      <button id="empNavCalendar" onclick="employeeSection('calendar')">
-        📅 Calendar
-      </button>
-      <button id="empNavLeave" onclick="employeeSection('leave')">
-        📝 Leave
-      </button>
-      <button id="empNavSalary" onclick="employeeSection('salary')">
-        💰 Salary
-      </button>
-    </div>
-
-  </div>
-
-
-  <!-- EMP HOME -->
-  <div id="empHome">
-
-    <div class="stats">
-
-      <div class="stat">
-        <b id="empPresent">0</b>
-        <span class="muted">Present</span>
-      </div>
-
-      <div class="stat">
-        <b id="empHalf">0</b>
-        <span class="muted">Half Day</span>
-      </div>
-
-      <div class="stat">
-        <b id="empAbsent">0</b>
-        <span class="muted">Absent</span>
-      </div>
-
-      <div class="stat">
-        <b id="empLeave">0</b>
-        <span class="muted">Leave</span>
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <h3>📍 Today's Attendance</h3>
-
-      <div class="location-box">
-
-        <div>
-          Date:
-          <b id="todayDate"></b>
-        </div>
-
-        <div>
-          Time:
-          <b id="currentTime"></b>
-        </div>
-
-        <div>
-          Office Radius:
-          <b id="radiusShow">100 m</b>
-        </div>
-
-        <div id="gpsStatus">
-          Location check required
-        </div>
-
-      </div>
-
-      <div class="action-grid">
-
-        <button class="action in-btn" onclick="markAttendance('IN')">
-          🟢 MARK IN
-        </button>
-
-        <button class="action out-btn" onclick="markAttendance('OUT')">
-          🔴 MARK OUT
-        </button>
-
-      </div>
-
-      <div id="todayAttendance" class="location-box">
-        Loading...
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <h3>Recent Attendance</h3>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>IN</th>
-              <th>OUT</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="recentAttendance"></tbody>
-        </table>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- EMP CALENDAR -->
-  <div id="empCalendarSection" class="hidden">
-
-    <div class="card">
-
-      <div class="calendar-title">
-
-        <button class="month-btn gray"
-                onclick="changeEmployeeMonth(-1)">
-          ‹
-        </button>
-
-        <button class="month-label"
-                id="employeeMonthLabel"
-                onclick="toggleMonthMenu()">
-          📅 <span id="monthText">September 2026</span>
-        </button>
-
-        <button class="month-btn gray"
-                onclick="changeEmployeeMonth(1)">
-          ›
-        </button>
-
-      </div>
-
-
-      <div id="monthMenu" class="month-menu hidden">
-
-        <div class="month-menu-head">
-
-          <button onclick="changeYear(-1)">‹</button>
-
-          <b id="monthYear">2026</b>
-
-          <button onclick="changeYear(1)">›</button>
-
-        </div>
-
-        <div id="monthGrid" class="month-grid"></div>
-
-      </div>
-
-
-      <div id="calendar" class="calendar"></div>
-
-
-      <div class="location-box">
-
-        <span class="badge present">Present</span>
-        <span class="badge half">Half Day</span>
-        <span class="badge absent">Absent</span>
-        <span class="badge leave">Leave</span>
-        <span class="badge holiday">Holiday</span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- LEAVE -->
-  <div id="empLeaveSection" class="hidden">
-
-    <div class="card">
-
-      <h2>📝 Apply Leave</h2>
-
-      <div class="form-group">
-        <label>Leave Date</label>
-        <input type="date" id="leaveDate">
-      </div>
-
-      <div class="form-group">
-        <label>Reason</label>
-        <textarea id="leaveReason"
-                  placeholder="Enter reason"></textarea>
-      </div>
-
-      <button class="full" onclick="applyLeave()">
-        Submit Leave Request
-      </button>
-
-    </div>
-
-
-    <div class="card">
-
-      <h3>My Leave Requests</h3>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Reason</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody id="myLeaves"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- SALARY -->
-  <div id="empSalarySection" class="hidden">
-
-    <div class="card">
-
-      <h2>💰 Monthly Salary</h2>
-
-      <div class="form-group">
-        <label>Select Month</label>
-        <input type="month" id="salaryMonth"
-               onchange="loadEmployeeSalary()">
-      </div>
-
-      <div class="salary-box">
-
-        <div class="salary-item">
-          <span class="muted">Basic Salary</span>
-          <b id="salaryBasic">₹0</b>
-        </div>
-
-        <div class="salary-item">
-          <span class="muted">Present Days</span>
-          <b id="salaryPresent">0</b>
-        </div>
-
-        <div class="salary-item">
-          <span class="muted">Payable</span>
-          <b id="salaryPayable">₹0</b>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-</div>
-
-
-<!-- ADMIN -->
-<div id="adminPage" class="hidden">
-
-<header>
-  <div class="header-inner">
-    <div class="logo">PAYOL ADMIN</div>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
-</header>
-
-<div class="container">
-
-  <div class="card">
-
-    <h2>Admin Dashboard</h2>
-
-    <div class="admin-menu">
-
-      <button id="adminBtnHome"
-              class="active"
-              onclick="adminSection('home')">
-        🏠 Dashboard
-      </button>
-
-      <button onclick="adminSection('employees')">
-        👥 Employees
-      </button>
-
-      <button onclick="adminSection('office')">
-        📍 Office
-      </button>
-
-      <button onclick="adminSection('holidays')">
-        🎉 Holidays
-      </button>
-
-      <button onclick="adminSection('leaves')">
-        📝 Leaves
-      </button>
-
-      <button onclick="adminSection('salary')">
-        💰 Salary
-      </button>
-
-      <button onclick="adminSection('daily')">
-        📊 Daily Report
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- ADMIN HOME -->
-  <div id="adminHome">
-
-    <div class="stats">
-
-      <div class="stat">
-        <b id="adminTotalEmployees">0</b>
-        <span class="muted">Employees</span>
-      </div>
-
-      <div class="stat">
-        <b id="adminTodayPresent">0</b>
-        <span class="muted">Today Present</span>
-      </div>
-
-      <div class="stat">
-        <b id="adminTodayHalf">0</b>
-        <span class="muted">Half Day</span>
-      </div>
-
-      <div class="stat">
-        <b id="adminPendingLeave">0</b>
-        <span class="muted">Pending Leave</span>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- EMPLOYEES -->
-  <div id="adminEmployees" class="hidden">
-
-    <div class="card">
-
-      <h2>👥 Employees</h2>
-
-      <button onclick="openEmployeeModal()">
-        + Add Employee
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Post</th>
-              <th>Salary</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="employeesTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- OFFICE -->
-  <div id="adminOffice" class="hidden">
-
-    <div class="card">
-
-      <h2>📍 Office Location</h2>
-
-      <p class="muted">
-        Office location set karne ke liye office ke andar khade hokar button dabayein.
-      </p>
-
-      <br>
-
-      <div class="location-box">
-
-        Latitude:
-        <b id="officeLat">Not Set</b>
-        <br>
-
-        Longitude:
-        <b id="officeLng">Not Set</b>
-        <br>
-
-        Radius:
-        <b id="officeRadiusText">100 m</b>
-
-      </div>
-
-      <div class="form-group">
-
-        <label>Attendance Radius (meters)</label>
-
-        <input type="number"
-               id="officeRadius"
-               value="100"
-               min="10"
-               max="5000">
-
-      </div>
-
-      <button class="full" onclick="setOfficeLocation()">
-        📍 Use Current GPS Location
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- HOLIDAYS -->
-  <div id="adminHolidays" class="hidden">
-
-    <div class="card">
-
-      <h2>🎉 Holidays</h2>
-
-      <div class="grid">
-
-        <div class="form-group">
-          <label>Holiday Date</label>
-          <input type="date" id="holidayDate">
-        </div>
-
-        <div class="form-group">
-          <label>Holiday Name</label>
-          <input id="holidayName"
-                 placeholder="Example: Chhath Puja">
-        </div>
-
-      </div>
-
-      <button onclick="addHoliday()">
-        + Add Holiday
-      </button>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Holiday</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="holidaysTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- LEAVES -->
-  <div id="adminLeaves" class="hidden">
-
-    <div class="card">
-
-      <h2>📝 Leave Requests</h2>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Employee</th>
-              <th>Date</th>
-              <th>Reason</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="adminLeavesTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- SALARY -->
-  <div id="adminSalary" class="hidden">
-
-    <div class="card">
-
-      <h2>💰 Monthly Salary Attendance</h2>
-
-      <div class="form-group">
-        <label>Select Month</label>
-        <input type="month"
-               id="adminSalaryMonth"
-               onchange="loadAdminSalary()">
-      </div>
-
-    </div>
-
-    <div class="card">
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Employee</th>
-              <th>Post</th>
-              <th>Salary</th>
-              <th>Present</th>
-              <th>Half</th>
-              <th>Leave</th>
-              <th>Payable</th>
-            </tr>
-          </thead>
-
-          <tbody id="adminSalaryTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- DAILY -->
-  <div id="adminDaily" class="hidden">
-
-    <div class="card">
-
-      <h2>📊 Daily Report</h2>
-
-      <div class="form-group">
-        <label>Select Date</label>
-        <input type="date"
-               id="dailyDate"
-               onchange="loadDailyReport()">
-      </div>
-
-    </div>
-
-    <div class="card">
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Post</th>
-              <th>IN</th>
-              <th>OUT</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody id="dailyTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-</div>
-
-
-<!-- EMPLOYEE MODAL -->
-<div id="employeeModal" class="modal hidden">
-
-  <div class="modal-box">
-
-    <h2 id="employeeModalTitle">Add Employee</h2>
-
-    <input type="hidden" id="editEmployeeOldId">
-
-    <div class="form-group">
-      <label>Employee ID</label>
-      <input id="employeeFormId" placeholder="EMP001">
-    </div>
-
-    <div class="form-group">
-      <label>Name</label>
-      <input id="employeeFormName" placeholder="Employee Name">
-    </div>
-
-    <div class="form-group">
-      <label>Post / Designation</label>
-      <input id="employeeFormPost"
-             placeholder="Digital Marketing Executive">
-    </div>
-
-    <div class="form-group">
-      <label>Password</label>
-      <input id="employeeFormPassword"
-             type="text"
-             placeholder="Login Password">
-    </div>
-
-    <div class="form-group">
-      <label>Monthly Salary</label>
-      <input id="employeeFormSalary"
-             type="number"
-             placeholder="15000">
-    </div>
-
-    <div class="modal-actions">
-
-      <button onclick="saveEmployee()">
-        Save
-      </button>
-
-      <button class="close"
-              onclick="closeEmployeeModal()">
-        Cancel
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<div id="toast" class="toast"></div>
-
+<div id="app"></div>
+<div id="toast" class="toast hidden"></div>
 
 <script>
-/* =====================================================
-   SUPABASE
-===================================================== */
+
+/* ================================
+   SUPABASE CONFIG
+================================ */
 
 const SUPABASE_URL =
 "https://nkbbcygtuaejcuquwhpi.supabase.co";
@@ -1349,942 +592,1501 @@ const SUPABASE_KEY =
 "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
 
 const db =
-supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 
-/* =====================================================
+/* ================================
    ADMIN LOGIN
-===================================================== */
+================================ */
 
-const ADMIN_USERNAME="Baijnathpayol";
-const ADMIN_PASSWORD="123456789";
+const ADMIN_USER = "Baijnathpayol";
+const ADMIN_PASS = "123456789";
 
 
-/* =====================================================
+/* ================================
    GLOBAL
-===================================================== */
+================================ */
 
-let employee=null;
-let employees=[];
-let employeeCalendarDate=new Date();
+let session =
+JSON.parse(localStorage.getItem("payol") || "null");
+
+let employeeCalendarDate = new Date();
+employeeCalendarDate.setDate(1);
+
+let adminTab = "dashboard";
+let editingId = null;
 
 
-function $(id){
-  return document.getElementById(id);
-}
+/* ================================
+   HELPERS
+================================ */
 
+const $ = id => document.getElementById(id);
 
-function toast(msg){
-  const t=$("toast");
-  t.textContent=msg;
-  t.style.display="block";
+function toast(message){
+
+  $("toast").textContent = message;
+
+  $("toast").classList.remove("hidden");
 
   setTimeout(()=>{
-    t.style.display="none";
-  },2500);
+    $("toast").classList.add("hidden");
+  },3000);
 }
 
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g,c=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[c]));
+}
 
 function today(){
-  const d=new Date();
 
-  return d.getFullYear()+"-"+
-    String(d.getMonth()+1).padStart(2,"0")+"-"+
-    String(d.getDate()).padStart(2,"0");
+  return new Date()
+    .toISOString()
+    .slice(0,10);
+}
+
+function fmtDate(date){
+
+  return new Date(date)
+    .toLocaleDateString("en-IN",{
+      day:"2-digit",
+      month:"short",
+      year:"numeric"
+    });
+}
+
+function fmtTime(time){
+
+  return time
+    ? String(time).slice(0,5)
+    : "--";
 }
 
 
-function month(){
-  const d=new Date();
+/* ================================
+   LOGIN PAGE
+================================ */
 
-  return d.getFullYear()+"-"+
-    String(d.getMonth()+1).padStart(2,"0");
+function loginPage(){
+
+  $("app").innerHTML = `
+
+  <div class="login-page">
+
+    <div class="login-card">
+
+      <div class="logo">P</div>
+
+      <h1>Payol Attendance</h1>
+
+      <p class="muted">
+        GPS based employee attendance
+      </p>
+
+      <div class="field">
+
+        <label>Login Type</label>
+
+        <select id="loginType">
+
+          <option value="employee">
+            Employee
+          </option>
+
+          <option value="admin">
+            Admin
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label>
+          Username / Employee ID
+        </label>
+
+        <input
+          id="loginUser"
+          placeholder="Enter ID"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Password</label>
+
+        <input
+          id="loginPass"
+          type="password"
+          placeholder="Enter password"
+        >
+
+      </div>
+
+      <button
+        class="btn primary full-btn"
+        onclick="doLogin()"
+      >
+        Login
+      </button>
+
+      <p
+        class="muted"
+        style="font-size:11px;margin-top:15px"
+      >
+        GPS attendance ke liye location permission
+        ON aur website HTTPS par honi chahiye.
+      </p>
+
+    </div>
+
+  </div>
+
+  `;
 }
 
 
-function formatTime(t){
+/* ================================
+   LOGIN
+================================ */
 
-  if(!t) return "-";
+async function doLogin(){
 
-  return String(t).substring(0,5);
-}
+  const type =
+    $("loginType").value;
 
+  const username =
+    $("loginUser").value.trim();
 
-function money(n){
-  return "₹"+Number(n||0).toLocaleString("en-IN");
-}
+  const password =
+    $("loginPass").value;
 
+  if(!username || !password){
 
-/* =====================================================
-   LOGIN TYPE
-===================================================== */
+    toast("Username aur password bhariye");
 
-function showLogin(type){
-
-  if(type==="employee"){
-
-    $("employeeLogin").classList.remove("hidden");
-    $("adminLogin").classList.add("hidden");
-
-    $("employeeTab").classList.add("active");
-    $("adminTab").classList.remove("active");
-
-  }else{
-
-    $("employeeLogin").classList.add("hidden");
-    $("adminLogin").classList.remove("hidden");
-
-    $("employeeTab").classList.remove("active");
-    $("adminTab").classList.add("active");
-
-  }
-}
-
-
-/* =====================================================
-   EMPLOYEE LOGIN
-===================================================== */
-
-async function employeeLogin(){
-
-  const id=$("empLoginId").value.trim();
-  const password=$("empLoginPassword").value;
-
-  if(!id || !password){
-    toast("Employee ID aur password dalein");
     return;
   }
 
-  const {data,error}=await db
-    .from("employees")
-    .select("*")
-    .eq("employee_id",id)
-    .eq("password",password)
-    .maybeSingle();
 
-  if(error){
-    toast(error.message);
-    return;
-  }
+  /* ADMIN */
 
-  if(!data){
-    toast("Invalid Employee ID ya Password");
-    return;
-  }
+  if(type === "admin"){
 
-  employee=data;
+    if(
+      username !== ADMIN_USER ||
+      password !== ADMIN_PASS
+    ){
 
-  localStorage.setItem(
-    "payol_employee",
-    JSON.stringify(data)
-  );
+      toast("Admin login details galat hain");
 
-  showEmployee();
+      return;
+    }
 
-}
+    session = {
+      role:"admin",
+      name:"Admin"
+    };
 
-
-/* =====================================================
-   ADMIN LOGIN
-===================================================== */
-
-function adminLogin(){
-
-  const u=$("adminUsername").value;
-  const p=$("adminPassword").value;
-
-  if(u===ADMIN_USERNAME && p===ADMIN_PASSWORD){
-
-    localStorage.setItem("payol_admin","1");
-
-    showAdmin();
-
-  }else{
-
-    toast("Invalid Admin Login");
-
-  }
-
-}
-
-
-/* =====================================================
-   SHOW EMPLOYEE
-===================================================== */
-
-async function showEmployee(){
-
-  $("loginPage").classList.add("hidden");
-  $("adminPage").classList.add("hidden");
-  $("employeePage").classList.remove("hidden");
-
-  $("empWelcome").textContent=
-    "Welcome, "+(employee.name||employee.employee_id);
-
-  $("empPost").textContent=
-    employee.post||"Employee";
-
-  $("empIdShow").textContent=
-    employee.employee_id;
-
-  $("todayDate").textContent=
-    new Date().toLocaleDateString("en-IN");
-
-  $("salaryMonth").value=month();
-
-  employeeCalendarDate=new Date();
-
-  $("monthText").textContent=
-    employeeCalendarDate.toLocaleDateString(
-      "en-IN",
-      {month:"long",year:"numeric"}
+    localStorage.setItem(
+      "payol",
+      JSON.stringify(session)
     );
 
-  await loadOfficeSettings();
-  await loadEmployeeHome();
-  await employeeCalendar();
-}
+    render();
 
-
-/* =====================================================
-   EMPLOYEE SECTION
-===================================================== */
-
-function employeeSection(section){
-
-  $("empHome").classList.add("hidden");
-  $("empCalendarSection").classList.add("hidden");
-  $("empLeaveSection").classList.add("hidden");
-  $("empSalarySection").classList.add("hidden");
-
-  ["empNavHome","empNavCalendar","empNavLeave","empNavSalary"]
-    .forEach(id=>$(id).classList.remove("active"));
-
-  if(section==="home"){
-
-    $("empHome").classList.remove("hidden");
-    $("empNavHome").classList.add("active");
-
-    loadEmployeeHome();
-
+    return;
   }
 
-  if(section==="calendar"){
 
-    $("empCalendarSection").classList.remove("hidden");
-    $("empNavCalendar").classList.add("active");
+  /* EMPLOYEE */
 
-    employeeCalendar();
+  const {data,error} =
+    await db
+      .from("employees")
+      .select("*")
+      .eq("employee_id",username)
+      .maybeSingle();
 
+  if(error){
+
+    toast(error.message);
+
+    return;
   }
 
-  if(section==="leave"){
+  if(
+    !data ||
+    String(data.password) !== String(password)
+  ){
 
-    $("empLeaveSection").classList.remove("hidden");
-    $("empNavLeave").classList.add("active");
+    toast("Employee ID ya password galat hai");
 
-    loadMyLeaves();
-
+    return;
   }
 
-  if(section==="salary"){
+  session = {
 
-    $("empSalarySection").classList.remove("hidden");
-    $("empNavSalary").classList.add("active");
+    role:"employee",
 
-    loadEmployeeSalary();
+    id:data.employee_id,
 
-  }
+    name:data.name,
 
-}
+    post:data.post || "",
 
+    salary:Number(data.salary || 0)
 
-/* =====================================================
-   OFFICE SETTINGS
-===================================================== */
+  };
 
-let officeSettings={
-  latitude:null,
-  longitude:null,
-  radius_meters:100
-};
-
-
-async function loadOfficeSettings(){
-
-  const {data,error}=await db
-    .from("office_settings")
-    .select("*")
-    .eq("id",1)
-    .maybeSingle();
-
-  if(!error && data){
-
-    officeSettings=data;
-
-    $("radiusShow").textContent=
-      (data.radius_meters||100)+" m";
-
-    $("officeLat").textContent=
-      data.latitude ?? "Not Set";
-
-    $("officeLng").textContent=
-      data.longitude ?? "Not Set";
-
-    $("officeRadiusText").textContent=
-      (data.radius_meters||100)+" m";
-
-    $("officeRadius").value=
-      data.radius_meters||100;
-
-  }
-
-}
-
-
-/* =====================================================
-   DISTANCE
-===================================================== */
-
-function distanceMeters(lat1,lon1,lat2,lon2){
-
-  const R=6371000;
-
-  const p1=lat1*Math.PI/180;
-  const p2=lat2*Math.PI/180;
-
-  const dp=(lat2-lat1)*Math.PI/180;
-  const dl=(lon2-lon1)*Math.PI/180;
-
-  const a=
-    Math.sin(dp/2)*Math.sin(dp/2)+
-    Math.cos(p1)*Math.cos(p2)*
-    Math.sin(dl/2)*Math.sin(dl/2);
-
-  const c=2*Math.atan2(
-    Math.sqrt(a),
-    Math.sqrt(1-a)
+  localStorage.setItem(
+    "payol",
+    JSON.stringify(session)
   );
 
-  return R*c;
+  render();
 }
 
 
-/* =====================================================
+/* ================================
+   LOGOUT
+================================ */
+
+function logout(){
+
+  localStorage.removeItem("payol");
+
+  session = null;
+
+  loginPage();
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+function header(title,sub=""){
+
+  return `
+
+  <div class="topbar">
+
+    <div class="brand">
+
+      <div class="brand-logo">
+        P
+      </div>
+
+      <div>
+        ${esc(title)}
+
+        <div
+          class="muted"
+          style="font-size:11px"
+        >
+          ${esc(sub)}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="user-area">
+
+      <div class="avatar">
+
+        ${esc(
+          (session?.name || "A")
+          .slice(0,1)
+          .toUpperCase()
+        )}
+
+      </div>
+
+      <button
+        class="btn ghost"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+  `;
+}
+
+
+/* ================================
+   OFFICE SETTINGS
+================================ */
+
+async function getOffice(){
+
+  const {data,error} =
+    await db
+      .from("office_settings")
+      .select("*")
+      .eq("id",1)
+      .maybeSingle();
+
+  if(error) throw error;
+
+  return data || {
+
+    id:1,
+    latitude:null,
+    longitude:null,
+    radius_meters:100
+
+  };
+}
+
+
+/* ================================
+   GPS DISTANCE
+================================ */
+
+function distance(
+  lat1,
+  lon1,
+  lat2,
+  lon2
+){
+
+  const R = 6371000;
+
+  const toRad =
+    x => x * Math.PI / 180;
+
+  const a =
+    Math.sin(
+      toRad(lat2-lat1)/2
+    ) ** 2 +
+
+    Math.cos(toRad(lat1)) *
+    Math.cos(toRad(lat2)) *
+    Math.sin(
+      toRad(lon2-lon1)/2
+    ) ** 2;
+
+  return Math.round(
+    R * 2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1-a)
+    )
+  );
+}
+
+
+/* ================================
    GET GPS
-===================================================== */
+================================ */
 
 function getGPS(){
 
   return new Promise((resolve,reject)=>{
 
     if(!navigator.geolocation){
-      reject(new Error("GPS supported nahi hai"));
+
+      reject(
+        new Error(
+          "Browser GPS support nahi karta"
+        )
+      );
+
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-      pos=>resolve(pos.coords),
-      err=>reject(err),
+
+      position=>{
+
+        resolve({
+
+          lat:position.coords.latitude,
+
+          lon:position.coords.longitude,
+
+          accuracy:
+            Math.round(
+              position.coords.accuracy
+            )
+
+        });
+
+      },
+
+      error=>{
+
+        reject(
+          new Error(
+            error.message ||
+            "GPS permission error"
+          )
+        );
+
+      },
+
       {
         enableHighAccuracy:true,
         timeout:15000,
         maximumAge:0
       }
+
     );
 
   });
-
 }
 
 
-/* =====================================================
-   MARK ATTENDANCE
-===================================================== */
+/* ================================
+   LOCATION CHECK
+================================ */
 
-async function markAttendance(type){
+async function locate(){
 
-  if(!employee){
-    toast("Login required");
-    return;
-  }
+  const office =
+    await getOffice();
 
   if(
-    officeSettings.latitude===null ||
-    officeSettings.longitude===null
+    office.latitude == null ||
+    office.longitude == null
   ){
 
-    toast("Admin ne office location set nahi ki hai");
-    return;
+    throw new Error(
+      "Admin ne office GPS set nahi kiya hai"
+    );
 
   }
 
-  $("gpsStatus").textContent=
-    "📍 GPS location check ho rahi hai...";
+  const gps =
+    await getGPS();
 
-  try{
-
-    const coords=await getGPS();
-
-    const distance=distanceMeters(
-      coords.latitude,
-      coords.longitude,
-      Number(officeSettings.latitude),
-      Number(officeSettings.longitude)
+  const dist =
+    distance(
+      gps.lat,
+      gps.lon,
+      Number(office.latitude),
+      Number(office.longitude)
     );
 
-    const radius=
-      Number(officeSettings.radius_meters||100);
+  return {
 
-    if(distance>radius){
+    ...gps,
 
-      $("gpsStatus").innerHTML=
-        "❌ Office se <b>"+
-        Math.round(distance)+
-        " m</b> door. Allowed radius "+
-        radius+" m hai.";
+    dist,
 
-      toast("Aap office ke allowed area me nahi hain");
+    radius:
+      Number(
+        office.radius_meters || 100
+      )
 
-      return;
-
-    }
-
-    $("gpsStatus").innerHTML=
-      "✅ Location verified: "+
-      Math.round(distance)+" m";
-
-    const date=today();
-
-    const now=new Date();
-
-    const time=
-      String(now.getHours()).padStart(2,"0")+":"+
-      String(now.getMinutes()).padStart(2,"0")+":"+
-      String(now.getSeconds()).padStart(2,"0");
+  };
+}
 
 
-    const payload={
-      employee_id:employee.employee_id,
-      employee_name:employee.name,
-      attendance_date:date,
-      attendance_type:type,
-      latitude:coords.latitude,
-      longitude:coords.longitude,
-      distance_meters:Math.round(distance)
-    };
+/* ================================
+   TODAY ATTENDANCE
+================================ */
 
-    if(type==="IN"){
-      payload.in_time=time;
-    }else{
-      payload.out_time=time;
-    }
+async function todayAttendance(){
 
-
-    const {error}=await db
+  const {data,error} =
+    await db
       .from("attendance")
-      .insert(payload);
+      .select("*")
+      .eq("employee_id",session.id)
+      .eq("attendance_date",today());
 
-    if(error){
+  if(error) throw error;
 
-      toast(error.message);
-      return;
+  const rows = data || [];
 
-    }
-
-    toast(
-      type==="IN"
-      ?"🟢 IN marked successfully"
-      :"🔴 OUT marked successfully"
+  const inRow =
+    rows.find(
+      x => (x.attendance_type || "IN") === "IN"
     );
 
-    await loadEmployeeHome();
-
-  }catch(err){
-
-    $("gpsStatus").textContent=
-      "❌ GPS permission required";
-
-    toast(
-      "Location permission allow karein"
+  const outRow =
+    rows.find(
+      x => x.attendance_type === "OUT"
     );
 
-  }
-
+  return {
+    inRow,
+    outRow,
+    rows
+  };
 }
 
 
-/* =====================================================
-   GROUP ATTENDANCE
-===================================================== */
-
-function groupAttendance(rows){
-
-  const g={};
-
-  for(const r of rows){
-
-    const d=r.attendance_date;
-
-    if(!g[d]){
-      g[d]={};
-    }
-
-    if(r.attendance_type==="IN" && r.in_time){
-      g[d].IN=r.in_time;
-    }
-
-    if(r.attendance_type==="OUT" && r.out_time){
-      g[d].OUT=r.out_time;
-    }
-
-    if(r.in_time && !g[d].IN){
-      g[d].IN=r.in_time;
-    }
-
-    if(r.out_time && !g[d].OUT){
-      g[d].OUT=r.out_time;
-    }
-
-  }
-
-  return g;
-
-}
-
-
-/* =====================================================
+/* ================================
    STATUS
-===================================================== */
+================================ */
 
 function status(inTime,outTime){
+
+  if(!inTime && !outTime)
+    return "Absent";
 
   if(!inTime || !outTime)
     return "Incomplete";
 
-  const inParts=String(inTime)
-    .substring(0,5)
+  const [ih,im] =
+    String(inTime)
     .split(":")
     .map(Number);
 
-  const outParts=String(outTime)
-    .substring(0,5)
+  const [oh,om] =
+    String(outTime)
     .split(":")
     .map(Number);
 
-  const inMin=
-    inParts[0]*60+inParts[1];
+  const start =
+    ih*60 + im;
 
-  const outMin=
-    outParts[0]*60+outParts[1];
+  const end =
+    oh*60 + om;
 
-  if(inMin>=720)
+  const minutes =
+    end-start;
+
+
+  /* late IN */
+
+  if(ih >= 12)
     return "Half Day";
 
-  if(outMin<=840)
+
+  /* early OUT */
+
+  if(oh < 14)
     return "Half Day";
 
-  if(inMin<720 && outMin>=1080)
+
+  /* 8 hours */
+
+  if(minutes >= 480)
     return "Full Day";
 
-  const duration=outMin-inMin;
 
-  return duration>=480
-    ?"Full Day"
-    :"Half Day";
+  return "Half Day";
 }
 
 
-/* =====================================================
-   EMPLOYEE HOME
-===================================================== */
+/* ================================
+   MARK ATTENDANCE
+================================ */
 
-async function loadEmployeeHome(){
+async function mark(type){
 
-  if(!employee)return;
+  try{
 
-  const start=new Date();
+    toast("GPS check ho raha hai...");
 
-  start.setDate(1);
+    const current =
+      await todayAttendance();
 
-  const startDate=
-    start.getFullYear()+"-"+
-    String(start.getMonth()+1).padStart(2,"0")+
-    "-01";
 
-  const endDate=today();
+    if(
+      type === "IN" &&
+      current.inRow
+    ){
 
-  const {data:att,error}=await db
-    .from("attendance")
-    .select("*")
-    .eq("employee_id",employee.employee_id)
-    .gte("attendance_date",startDate)
-    .lte("attendance_date",endDate);
+      toast(
+        "Aaj ka IN already marked hai"
+      );
 
-  if(error){
-    toast(error.message);
-    return;
-  }
-
-  const g=groupAttendance(att||[]);
-
-  let present=0;
-  let half=0;
-
-  Object.values(g).forEach(x=>{
-
-    if(x.IN && x.OUT){
-
-      const s=status(x.IN,x.OUT);
-
-      if(s==="Full Day")
-        present++;
-
-      if(s==="Half Day")
-        half++;
-
+      return;
     }
 
-  });
+
+    if(
+      type === "OUT" &&
+      !current.inRow
+    ){
+
+      toast(
+        "Pehle IN mark kijiye"
+      );
+
+      return;
+    }
 
 
-  const {data:leave}=await db
-    .from("leave_requests")
-    .select("*")
-    .eq("employee_id",employee.employee_id)
-    .eq("status","APPROVED")
-    .gte("leave_date",startDate)
-    .lte("leave_date",endDate);
+    if(
+      type === "OUT" &&
+      current.outRow
+    ){
 
-  const leaveCount=(leave||[]).length;
+      toast(
+        "Aaj ka OUT already marked hai"
+      );
 
-  const days=new Date(
-    new Date().getFullYear(),
-    new Date().getMonth()+1,
-    0
-  ).getDate();
+      return;
+    }
 
-  const todayNum=new Date().getDate();
 
-  let absent=0;
+    const gps =
+      await locate();
 
-  for(let d=1;d<=todayNum;d++){
 
-    const date=
-      start.getFullYear()+"-"+
-      String(start.getMonth()+1).padStart(2,"0")+"-"+
-      String(d).padStart(2,"0");
+    if(gps.dist > gps.radius){
 
-    const dow=new Date(
-      start.getFullYear(),
-      start.getMonth(),
-      d
-    ).getDay();
+      toast(
+        `Office se ${gps.dist}m door hain. ` +
+        `Allowed ${gps.radius}m hai.`
+      );
 
-    if(dow===0)continue;
+      return;
+    }
 
-    if(leaveCount && (leave||[]).some(x=>x.leave_date===date))
-      continue;
 
-    if(!g[date]?.IN || !g[date]?.OUT)
-      absent++;
+    const now =
+      new Date()
+      .toTimeString()
+      .slice(0,8);
+
+
+    const payload = {
+
+      employee_id:
+        session.id,
+
+      employee_name:
+        session.name,
+
+      attendance_date:
+        today(),
+
+      attendance_type:
+        type,
+
+      in_time:
+        type === "IN"
+          ? now
+          : null,
+
+      out_time:
+        type === "OUT"
+          ? now
+          : null,
+
+      latitude:
+        gps.lat,
+
+      longitude:
+        gps.lon,
+
+      distance_meters:
+        gps.dist
+
+    };
+
+
+    const {error} =
+      await db
+        .from("attendance")
+        .insert(payload);
+
+
+    if(error)
+      throw error;
+
+
+    toast(
+      `${type} successful • ${gps.dist}m`
+    );
+
+    employeePage();
 
   }
 
+  catch(error){
 
-  $("empPresent").textContent=present;
-  $("empHalf").textContent=half;
-  $("empAbsent").textContent=Math.max(0,absent);
-  $("empLeave").textContent=leaveCount;
+    toast(
+      error.message ||
+      "Attendance failed"
+    );
+
+  }
+}
 
 
-  const todayGroup=g[today()];
+/* ================================
+   EMPLOYEE PAGE
+================================ */
 
-  $("todayAttendance").innerHTML=`
-    <b>Today's Record</b><br>
-    🟢 IN: ${formatTime(todayGroup?.IN)}<br>
-    🔴 OUT: ${formatTime(todayGroup?.OUT)}<br>
-    Status:
-    ${
-      todayGroup?.IN && todayGroup?.OUT
-      ? `<span class="badge ${
-          status(todayGroup.IN,todayGroup.OUT)==="Full Day"
-          ?"present":"half"
-        }">${status(todayGroup.IN,todayGroup.OUT)}</span>`
-      : `<span class="badge absent">Incomplete</span>`
-    }
+async function employeePage(){
+
+  let attendance = {};
+
+  try{
+
+    attendance =
+      await todayAttendance();
+
+  }catch(e){}
+
+
+  let office = {};
+
+  try{
+
+    office =
+      await getOffice();
+
+  }catch(e){}
+
+
+  const month =
+    await monthRows(
+      session.id,
+      employeeCalendarDate.getFullYear(),
+      employeeCalendarDate.getMonth()
+    );
+
+
+  const fullDays =
+    month.filter(
+      x=>x.st==="Full Day"
+    ).length;
+
+  const halfDays =
+    month.filter(
+      x=>x.st==="Half Day"
+    ).length;
+
+  const units =
+    fullDays +
+    halfDays*.5;
+
+
+  $("app").innerHTML =
+
+  header(
+    "Payol Attendance",
+    session.name
+  )
+
+  +
+
+  `
+
+  <div class="container">
+
+    <div class="grid stats">
+
+      <div class="card stat">
+
+        <span>Today</span>
+
+        <b>
+          ${esc(
+            status(
+              attendance.inRow?.in_time,
+              attendance.outRow?.out_time
+            )
+          )}
+        </b>
+
+        <span>
+          ${fmtDate(today())}
+        </span>
+
+      </div>
+
+
+      <div class="card stat">
+
+        <span>IN Time</span>
+
+        <b>
+          ${fmtTime(
+            attendance.inRow?.in_time
+          )}
+        </b>
+
+        <span>
+          GPS verified
+        </span>
+
+      </div>
+
+
+      <div class="card stat">
+
+        <span>OUT Time</span>
+
+        <b>
+          ${fmtTime(
+            attendance.outRow?.out_time
+          )}
+        </b>
+
+        <span>
+          GPS verified
+        </span>
+
+      </div>
+
+
+      <div class="card stat">
+
+        <span>Monthly Salary</span>
+
+        <b>
+          ₹${Number(
+            session.salary || 0
+          ).toLocaleString("en-IN")}
+        </b>
+
+        <span>
+          ${esc(session.post || "Employee")}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="grid two"
+      style="margin-top:16px"
+    >
+
+      <div class="card">
+
+        <h3>
+          Mark Attendance
+        </h3>
+
+        <p
+          class="muted"
+          style="margin-top:6px"
+        >
+          Office radius:
+          ${Number(
+            office.radius_meters || 100
+          )} meters
+        </p>
+
+
+        <div
+          class="actions"
+          style="margin-top:15px"
+        >
+
+          <button
+            class="attendance-btn in-btn
+            ${attendance.inRow
+              ? "disabled"
+              : ""}"
+            onclick="mark('IN')"
+          >
+            🟢 Mark IN
+          </button>
+
+
+          <button
+            class="attendance-btn out-btn
+            ${
+              !attendance.inRow ||
+              attendance.outRow
+                ? "disabled"
+                : ""
+            }"
+            onclick="mark('OUT')"
+          >
+            🔵 Mark OUT
+          </button>
+
+        </div>
+
+
+        <p
+          class="muted"
+          style="
+            font-size:11px;
+            margin-top:12px
+          "
+        >
+          GPS permission ON rakhein.
+          Attendance ke saath GPS distance
+          save hoga.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Monthly Summary
+        </h3>
+
+        <div
+          class="grid"
+          style="
+            grid-template-columns:
+            repeat(2,1fr);
+            margin-top:15px
+          "
+        >
+
+          <div>
+
+            <span class="muted">
+              Present
+            </span>
+
+            <h2>
+              ${units}
+            </h2>
+
+          </div>
+
+
+          <div>
+
+            <span class="muted">
+              Full Days
+            </span>
+
+            <h2>
+              ${fullDays}
+            </h2>
+
+          </div>
+
+
+          <div>
+
+            <span class="muted">
+              Half Days
+            </span>
+
+            <h2>
+              ${halfDays}
+            </h2>
+
+          </div>
+
+
+          <div>
+
+            <span class="muted">
+              Estimated Pay
+            </span>
+
+            <h2>
+              ₹${Math.round(
+                (
+                  Number(session.salary||0) /
+                  new Date(
+                    employeeCalendarDate.getFullYear(),
+                    employeeCalendarDate.getMonth()+1,
+                    0
+                  ).getDate()
+                ) * units
+              ).toLocaleString("en-IN")}
+            </h2>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CALENDAR -->
+
+    <div
+      class="card"
+      style="margin-top:16px"
+    >
+
+      <div class="calendar-title">
+
+        <button
+          class="month-btn"
+          onclick="changeEmployeeMonth(-1)"
+        >
+          ‹
+        </button>
+
+
+        <button
+          class="month-label"
+          onclick="toggleMonthMenu()"
+        >
+          📅
+
+          <span id="monthText">
+            ${employeeCalendarDate.toLocaleDateString(
+              "en-IN",
+              {
+                month:"long",
+                year:"numeric"
+              }
+            )}
+          </span>
+
+        </button>
+
+
+        <button
+          class="month-btn"
+          onclick="changeEmployeeMonth(1)"
+        >
+          ›
+        </button>
+
+
+        <div
+          id="monthMenu"
+          class="month-menu hidden"
+        >
+
+          <div class="month-menu-head">
+
+            <button onclick="changeYear(-1)">
+              ‹
+            </button>
+
+            <b id="monthYear">
+              ${employeeCalendarDate.getFullYear()}
+            </b>
+
+            <button onclick="changeYear(1)">
+              ›
+            </button>
+
+          </div>
+
+          <div
+            id="monthGrid"
+            class="month-grid"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <div id="calendar"></div>
+
+
+      <div
+        class="muted"
+        style="
+          font-size:11px;
+          margin-top:12px
+        "
+      >
+        🟢 Full Day &nbsp;
+        🟡 Half Day &nbsp;
+        🔴 Incomplete &nbsp;
+        🟠 Holiday &nbsp;
+        🟣 Leave
+      </div>
+
+    </div>
+
+
+    <!-- LEAVE -->
+
+    <div
+      class="grid two"
+      style="margin-top:16px"
+    >
+
+      <div class="card">
+
+        <h3>
+          Apply Leave
+        </h3>
+
+        <div class="field">
+
+          <label>
+            Date
+          </label>
+
+          <input
+            id="leaveDate"
+            type="date"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Reason
+          </label>
+
+          <textarea
+            id="leaveReason"
+            rows="3"
+            placeholder="Leave reason"
+          ></textarea>
+
+        </div>
+
+
+        <button
+          class="btn primary"
+          onclick="applyLeave()"
+        >
+          Submit Leave
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          My Leave Requests
+        </h3>
+
+        <div
+          id="myLeaves"
+          style="margin-top:10px"
+        >
+          Loading...
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
   `;
 
 
-  const recentDates=Object.keys(g)
-    .sort()
-    .reverse()
+  loadCal();
+
+  loadMyLeaves();
+}
+
+
+/* ================================
+   MONTH ATTENDANCE
+================================ */
+
+async function monthRows(
+  employeeId,
+  year,
+  month
+){
+
+  const start =
+    new Date(year,month,1)
+    .toISOString()
     .slice(0,10);
 
-  $("recentAttendance").innerHTML=
-    recentDates.map(d=>{
+  const end =
+    new Date(year,month+1,0)
+    .toISOString()
+    .slice(0,10);
 
-      const x=g[d];
 
-      let st="Incomplete";
+  const {data} =
+    await db
+      .from("attendance")
+      .select("*")
+      .eq("employee_id",employeeId)
+      .gte("attendance_date",start)
+      .lte("attendance_date",end);
 
-      if(x.IN&&x.OUT)
-        st=status(x.IN,x.OUT);
 
-      return `
-      <tr>
-        <td>${d}</td>
-        <td>${formatTime(x.IN)}</td>
-        <td>${formatTime(x.OUT)}</td>
-        <td>
-          <span class="badge ${
-            st==="Full Day"
-            ?"present"
-            :st==="Half Day"
-            ?"half"
-            :"absent"
-          }">${st}</span>
-        </td>
-      </tr>`;
+  const map = {};
 
-    }).join("");
 
-}
+  (data || []).forEach(row=>{
 
+    map[row.attendance_date] ??= {};
 
-/* =====================================================
-   CUSTOM MONTH MENU
-===================================================== */
+    if(
+      row.attendance_type === "IN"
+    ){
 
-function toggleMonthMenu(){
+      map[row.attendance_date].i =
+        row.in_time;
 
-  const menu=$("monthMenu");
+    }
 
-  menu.classList.toggle("hidden");
+    if(
+      row.attendance_type === "OUT"
+    ){
 
-  renderMonthMenu();
+      map[row.attendance_date].o =
+        row.out_time;
 
-}
-
-
-function renderMonthMenu(){
-
-  const year=
-    employeeCalendarDate.getFullYear();
-
-  const currentMonth=
-    employeeCalendarDate.getMonth();
-
-  $("monthYear").textContent=year;
-
-  const names=[
-    "January","February","March",
-    "April","May","June",
-    "July","August","September",
-    "October","November","December"
-  ];
-
-  $("monthGrid").innerHTML=
-    names.map((name,i)=>`
-
-      <button
-        class="${i===currentMonth?"active":""}"
-        onclick="selectEmployeeMonth(${i})">
-
-        ${name}
-
-      </button>
-
-    `).join("");
-
-}
-
-
-function changeYear(n){
-
-  employeeCalendarDate.setFullYear(
-    employeeCalendarDate.getFullYear()+n
-  );
-
-  renderMonthMenu();
-
-}
-
-
-function selectEmployeeMonth(m){
-
-  employeeCalendarDate.setMonth(m,1);
-
-  $("monthMenu").classList.add("hidden");
-
-  employeeCalendar();
-
-}
-
-
-function changeEmployeeMonth(n){
-
-  employeeCalendarDate.setMonth(
-    employeeCalendarDate.getMonth()+n,
-    1
-  );
-
-  $("monthMenu").classList.add("hidden");
-
-  employeeCalendar();
-
-}
-
-
-/* =====================================================
-   EMPLOYEE CALENDAR
-===================================================== */
-
-async function employeeCalendar(){
-
-  if(!employee)return;
-
-  const y=employeeCalendarDate.getFullYear();
-  const m=employeeCalendarDate.getMonth();
-
-  const mon=
-    y+"-"+String(m+1).padStart(2,"0");
-
-  $("monthText").textContent=
-    employeeCalendarDate.toLocaleDateString(
-      "en-IN",
-      {
-        month:"long",
-        year:"numeric"
-      }
-    );
-
-
-  const total=
-    new Date(y,m+1,0).getDate();
-
-  const start=
-    new Date(y,m,1).getDay();
-
-
-  const {data:att}=await db
-    .from("attendance")
-    .select("*")
-    .eq("employee_id",employee.employee_id)
-    .gte("attendance_date",mon+"-01")
-    .lte(
-      "attendance_date",
-      mon+"-"+String(total).padStart(2,"0")
-    );
-
-
-  const {data:leave}=await db
-    .from("leave_requests")
-    .select("*")
-    .eq("employee_id",employee.employee_id)
-    .eq("status","APPROVED");
-
-
-  const {data:hol}=await db
-    .from("holidays")
-    .select("*");
-
-
-  const g=groupAttendance(att||[]);
-
-  const ls=new Set(
-    (leave||[]).map(x=>x.leave_date)
-  );
-
-  const hs=new Map(
-    (hol||[]).map(x=>[
-      x.holiday_date,
-      x.name
-    ])
-  );
-
-
-  let html="";
-
-  [
-    "Sun","Mon","Tue",
-    "Wed","Thu","Fri","Sat"
-  ].forEach(x=>{
-
-    html+=`
-      <div class="calhead">${x}</div>
-    `;
+    }
 
   });
 
 
-  for(let i=0;i<start;i++){
+  return Object.entries(map)
+    .map(([date,value])=>({
 
-    html+=`
-      <div class="day empty"></div>
-    `;
+      d:date,
+
+      ...value,
+
+      st:status(
+        value.i,
+        value.o
+      )
+
+    }));
+
+}
+
+
+/* ================================
+   CALENDAR
+================================ */
+
+async function loadCal(){
+
+  const year =
+    employeeCalendarDate.getFullYear();
+
+  const month =
+    employeeCalendarDate.getMonth();
+
+
+  const rows =
+    await monthRows(
+      session.id,
+      year,
+      month
+    );
+
+
+  const map =
+    Object.fromEntries(
+      rows.map(x=>[x.d,x])
+    );
+
+
+  const monthStart =
+    `${year}-${String(month+1)
+      .padStart(2,"0")}-01`;
+
+  const monthEnd =
+    new Date(year,month+1,0)
+      .toISOString()
+      .slice(0,10);
+
+
+  const {data:holidays} =
+    await db
+      .from("holidays")
+      .select("*")
+      .gte("holiday_date",monthStart)
+      .lte("holiday_date",monthEnd);
+
+
+  const holidayMap =
+    Object.fromEntries(
+      (holidays || [])
+      .map(x=>[
+        x.holiday_date,
+        x.holiday_name ||
+        x.name ||
+        "Holiday"
+      ])
+    );
+
+
+  const {data:leaves} =
+    await db
+      .from("leave_requests")
+      .select("*")
+      .eq("employee_id",session.id)
+      .eq("status","APPROVED")
+      .gte("leave_date",monthStart)
+      .lte("leave_date",monthEnd);
+
+
+  const leaveMap =
+    Object.fromEntries(
+      (leaves || [])
+      .map(x=>[
+        x.leave_date,
+        x.reason
+      ])
+    );
+
+
+  const first =
+    new Date(year,month,1)
+    .getDay();
+
+  const days =
+    new Date(year,month+1,0)
+    .getDate();
+
+
+  let html = `
+    <div class="calendar">
+
+      ${[
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat"
+      ]
+      .map(x=>`
+        <div class="dow">
+          ${x}
+        </div>
+      `)
+      .join("")}
+  `;
+
+
+  for(let i=0;i<first;i++){
+
+    html += `<div></div>`;
 
   }
 
 
-  for(let d=1;d<=total;d++){
+  for(
+    let day=1;
+    day<=days;
+    day++
+  ){
 
-    const ds=
-      y+"-"+String(m+1).padStart(2,"0")+
-      "-"+String(d).padStart(2,"0");
+    const date =
+      `${year}-${String(month+1)
+        .padStart(2,"0")}-${String(day)
+        .padStart(2,"0")}`;
 
-    const dow=
-      new Date(y,m,d).getDay();
 
-    let text="Absent";
-    let cls="absent";
+    const row =
+      map[date];
 
-    if(g[ds]?.IN && g[ds]?.OUT){
 
-      const st=
-        status(g[ds].IN,g[ds].OUT);
+    const holiday =
+      holidayMap[date];
 
-      text=
-        st==="Full Day"
-        ?"Present"
-        :"Half Day";
 
-      cls=
-        st==="Full Day"
-        ?"present"
-        :"half";
+    const leave =
+      leaveMap[date];
 
-    }else if(ls.has(ds)){
 
-      text="Leave";
-      cls="leave";
+    let classes =
+      "day";
 
-    }else if(hs.has(ds)){
 
-      text="Holiday";
-      cls="holiday";
+    if(date === today())
+      classes += " today";
 
-    }else if(dow===0){
 
-      text="Sunday";
-      cls="sunday";
+    if(holiday)
+      classes += " holiday";
+
+
+    if(leave)
+      classes += " leave";
+
+
+    if(
+      new Date(date).getDay() === 0
+    )
+      classes += " sun";
+
+
+    let info = "";
+
+
+    if(holiday){
+
+      info =
+        `🟠 ${esc(holiday)}`;
+
+    }
+
+    else if(leave){
+
+      info =
+        `🟣 Leave`;
+
+    }
+
+    else if(row){
+
+      let cls =
+        row.st === "Full Day"
+          ? "full"
+          : row.st === "Half Day"
+            ? "half"
+            : "incomplete";
+
+
+      info =
+        `<span class="badge ${cls}">
+          ${esc(row.st)}
+        </span>`;
 
     }
 
 
-    html+=`
+    html += `
 
-      <div class="day ${
-        ds===today()?"today":""
-      }">
-
-        <b>${d}</b>
+      <div class="${classes}">
 
         <small>
-          <span class="badge ${cls}">
-            ${text}
-          </span>
+          ${day}
         </small>
+
+        <span class="mini">
+          ${info}
+        </span>
+
+        ${
+          row
+            ? `
+              <span class="mini">
+                ${fmtTime(row.i)}
+                -
+                ${fmtTime(row.o)}
+              </span>
+            `
+            : ""
+        }
 
       </div>
 
@@ -2293,1111 +2095,1897 @@ async function employeeCalendar(){
   }
 
 
-  $("calendar").innerHTML=html;
+  html += `</div>`;
+
+
+  $("calendar").innerHTML =
+    html;
+
+
+  renderMonthMenu();
+}
+
+
+/* ================================
+   MONTH MENU
+================================ */
+
+function toggleMonthMenu(){
+
+  $("monthMenu")
+    .classList
+    .toggle("hidden");
+
+  renderMonthMenu();
+}
+
+
+function renderMonthMenu(){
+
+  const year =
+    employeeCalendarDate.getFullYear();
+
+  const month =
+    employeeCalendarDate.getMonth();
+
+
+  const names = [
+
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+
+  ];
+
+
+  if($("monthYear"))
+    $("monthYear").textContent = year;
+
+
+  if($("monthGrid")){
+
+    $("monthGrid").innerHTML =
+
+      names.map(
+        (name,index)=>`
+
+          <button
+            class="${
+              index === month
+                ? "active"
+                : ""
+            }"
+            onclick="
+              selectEmployeeMonth(${index})
+            "
+          >
+            ${name.slice(0,3)}
+          </button>
+
+        `
+      ).join("");
+
+  }
 
 }
 
 
-/* =====================================================
+function changeYear(n){
+
+  employeeCalendarDate
+    .setFullYear(
+      employeeCalendarDate.getFullYear()+n
+    );
+
+  renderMonthMenu();
+}
+
+
+function selectEmployeeMonth(month){
+
+  employeeCalendarDate
+    .setMonth(month,1);
+
+  employeePage();
+}
+
+
+function changeEmployeeMonth(n){
+
+  employeeCalendarDate
+    .setMonth(
+      employeeCalendarDate.getMonth()+n,
+      1
+    );
+
+  employeePage();
+}
+
+
+/* ================================
    LEAVE
-===================================================== */
+================================ */
 
 async function applyLeave(){
 
-  const date=$("leaveDate").value;
-  const reason=$("leaveReason").value.trim();
+  const date =
+    $("leaveDate").value;
+
+  const reason =
+    $("leaveReason")
+      .value
+      .trim();
+
 
   if(!date || !reason){
 
-    toast("Date aur reason dono dalein");
-    return;
+    toast(
+      "Date aur reason bhariye"
+    );
 
+    return;
   }
 
 
-  const {error}=await db
-    .from("leave_requests")
-    .insert({
+  const {error} =
+    await db
+      .from("leave_requests")
+      .insert({
 
-      employee_id:employee.employee_id,
-      employee_name:employee.name,
-      leave_date:date,
-      reason:reason,
-      status:"PENDING"
+        employee_id:
+          session.id,
 
-    });
+        employee_name:
+          session.name,
+
+        leave_date:
+          date,
+
+        reason:
+          reason,
+
+        status:
+          "PENDING"
+
+      });
 
 
   if(error){
 
     toast(error.message);
-    return;
 
+    return;
   }
 
 
-  $("leaveDate").value="";
-  $("leaveReason").value="";
+  toast(
+    "Leave request submit ho gaya"
+  );
 
-  toast("Leave request submitted");
+
+  $("leaveDate").value = "";
+  $("leaveReason").value = "";
+
 
   loadMyLeaves();
-
 }
 
 
 async function loadMyLeaves(){
 
-  if(!employee)return;
+  const {data,error} =
+    await db
+      .from("leave_requests")
+      .select("*")
+      .eq("employee_id",session.id)
+      .order(
+        "leave_date",
+        {ascending:false}
+      )
+      .limit(30);
 
-  const {data,error}=await db
-    .from("leave_requests")
-    .select("*")
-    .eq("employee_id",employee.employee_id)
-    .order("leave_date",{ascending:false});
 
   if(error){
-    toast(error.message);
+
+    $("myLeaves").innerHTML =
+      esc(error.message);
+
     return;
   }
 
 
-  $("myLeaves").innerHTML=
-    (data||[]).map(x=>`
+  if(!data?.length){
 
-      <tr>
+    $("myLeaves").innerHTML =
+      `<div class="muted">
+        No leave requests
+      </div>`;
 
-        <td>${x.leave_date}</td>
+    return;
+  }
 
-        <td>${x.reason}</td>
 
-        <td>
+  $("myLeaves").innerHTML =
+    data.map(x=>`
 
-          <span class="badge ${
-            x.status==="APPROVED"
-            ?"approved"
-            :x.status==="REJECTED"
-            ?"rejected"
-            :"pending"
-          }">
+      <div
+        style="
+          padding:10px 0;
+          border-bottom:
+          1px solid var(--line)
+        "
+      >
 
-            ${x.status}
+        <b>
+          ${fmtDate(x.leave_date)}
+        </b>
 
-          </span>
+        <span
+          class="badge
+          ${String(x.status).toLowerCase()}"
+        >
+          ${esc(x.status)}
+        </span>
 
-        </td>
+        <div
+          class="muted"
+          style="font-size:12px;margin-top:4px"
+        >
+          ${esc(x.reason)}
+        </div>
 
-      </tr>
+      </div>
 
     `).join("");
-
 }
 
 
-/* =====================================================
-   EMPLOYEE SALARY
-===================================================== */
+/* ================================
+   ADMIN PAGE
+================================ */
 
-async function loadEmployeeSalary(){
+async function adminPage(){
 
-  if(!employee)return;
+  $("app").innerHTML =
 
-  const mon=
-    $("salaryMonth").value||month();
+    header(
+      "Payol Attendance",
+      "Admin Panel"
+    )
 
-  const [y,m]=mon.split("-").map(Number);
+    +
 
-  const total=
-    new Date(y,m,0).getDate();
+    `
 
-  const {data:att}=await db
-    .from("attendance")
-    .select("*")
-    .eq("employee_id",employee.employee_id)
-    .gte("attendance_date",mon+"-01")
-    .lte(
-      "attendance_date",
-      mon+"-"+String(total).padStart(2,"0")
-    );
+    <div class="container">
 
+      <div class="nav">
 
-  const {data:leave}=await db
-    .from("leave_requests")
-    .select("*")
-    .eq("employee_id",employee.employee_id)
-    .eq("status","APPROVED")
-    .gte("leave_date",mon+"-01")
-    .lte(
-      "leave_date",
-      mon+"-"+String(total).padStart(2,"0")
-    );
+        ${
+          [
+            ["dashboard","Dashboard"],
+            ["employees","Employees"],
+            ["attendance","Attendance"],
+            ["holidays","Holidays"],
+            ["leaves","Leaves"],
+            ["office","Office GPS"]
+          ]
+          .map(x=>`
 
+            <button
+              class="${
+                adminTab === x[0]
+                  ? "active"
+                  : ""
+              }"
+              onclick="
+                adminTab='${x[0]}';
+                adminPage()
+              "
+            >
+              ${x[1]}
+            </button>
 
-  const g=groupAttendance(att||[]);
+          `)
+          .join("")
+        }
 
-  let present=0;
+      </div>
 
-  Object.values(g).forEach(x=>{
+      <div id="adminContent"></div>
 
-    if(x.IN&&x.OUT&&
-       status(x.IN,x.OUT)==="Full Day"){
+    </div>
 
-      present++;
-
-    }
-
-  });
-
-
-  const salary=Number(employee.salary||0);
-
-  const daysInMonth=
-    new Date(y,m,0).getDate();
-
-  const payable=
-    salary/daysInMonth*present;
+    `;
 
 
-  $("salaryBasic").textContent=money(salary);
-  $("salaryPresent").textContent=present;
-  $("salaryPayable").textContent=
-    money(payable);
+  if(adminTab === "dashboard")
+    return adminDashboard();
 
+  if(adminTab === "employees")
+    return adminEmployees();
+
+  if(adminTab === "attendance")
+    return adminAttendance();
+
+  if(adminTab === "holidays")
+    return adminHolidays();
+
+  if(adminTab === "leaves")
+    return adminLeaves();
+
+  return adminOffice();
 }
 
 
-/* =====================================================
-   ADMIN SHOW
-===================================================== */
-
-async function showAdmin(){
-
-  $("loginPage").classList.add("hidden");
-  $("employeePage").classList.add("hidden");
-  $("adminPage").classList.remove("hidden");
-
-  $("dailyDate").value=today();
-  $("adminSalaryMonth").value=month();
-
-  await loadAdminDashboard();
-  await loadEmployees();
-  await loadOfficeSettings();
-
-}
-
-
-/* =====================================================
-   ADMIN SECTION
-===================================================== */
-
-function adminSection(section){
-
-  [
-    "adminHome",
-    "adminEmployees",
-    "adminOffice",
-    "adminHolidays",
-    "adminLeaves",
-    "adminSalary",
-    "adminDaily"
-  ].forEach(id=>$(id).classList.add("hidden"));
-
-
-  const map={
-    home:"adminHome",
-    employees:"adminEmployees",
-    office:"adminOffice",
-    holidays:"adminHolidays",
-    leaves:"adminLeaves",
-    salary:"adminSalary",
-    daily:"adminDaily"
-  };
-
-
-  $(map[section]).classList.remove("hidden");
-
-
-  if(section==="employees")
-    loadEmployees();
-
-  if(section==="office")
-    loadOfficeSettings();
-
-  if(section==="holidays")
-    loadHolidays();
-
-  if(section==="leaves")
-    loadAdminLeaves();
-
-  if(section==="salary")
-    loadAdminSalary();
-
-  if(section==="daily")
-    loadDailyReport();
-
-}
-
-
-/* =====================================================
+/* ================================
    ADMIN DASHBOARD
-===================================================== */
+================================ */
 
-async function loadAdminDashboard(){
+async function adminDashboard(){
 
-  const {data:emps}=await db
-    .from("employees")
-    .select("employee_id");
+  const [
+    employees,
+    attendance,
+    leaves
+  ] =
+  await Promise.all([
 
-  $("adminTotalEmployees").textContent=
-    (emps||[]).length;
+    db
+      .from("employees")
+      .select("*"),
 
+    db
+      .from("attendance")
+      .select("*")
+      .eq(
+        "attendance_date",
+        today()
+      ),
 
-  const {data:att}=await db
-    .from("attendance")
-    .select("*")
-    .eq("attendance_date",today());
+    db
+      .from("leave_requests")
+      .select("*")
+      .eq(
+        "status",
+        "PENDING"
+      )
 
-
-  const g={};
-
-  (att||[]).forEach(x=>{
-
-    if(!g[x.employee_id])
-      g[x.employee_id]={};
-
-    if(x.in_time)
-      g[x.employee_id].IN=x.in_time;
-
-    if(x.out_time)
-      g[x.employee_id].OUT=x.out_time;
-
-  });
-
-
-  let present=0;
-  let half=0;
-
-  Object.values(g).forEach(x=>{
-
-    if(x.IN&&x.OUT){
-
-      const s=status(x.IN,x.OUT);
-
-      if(s==="Full Day")present++;
-      if(s==="Half Day")half++;
-
-    }
-
-  });
+  ]);
 
 
-  $("adminTodayPresent").textContent=present;
-  $("adminTodayHalf").textContent=half;
+  $("adminContent").innerHTML = `
+
+    <div class="grid stats">
+
+      <div class="card stat">
+
+        <span>
+          Total Employees
+        </span>
+
+        <b>
+          ${employees.data?.length || 0}
+        </b>
+
+      </div>
 
 
-  const {data:leaves}=await db
-    .from("leave_requests")
-    .select("id")
-    .eq("status","PENDING");
+      <div class="card stat">
+
+        <span>
+          Today's Marking
+        </span>
+
+        <b>
+          ${attendance.data?.length || 0}
+        </b>
+
+      </div>
 
 
-  $("adminPendingLeave").textContent=
-    (leaves||[]).length;
+      <div class="card stat">
 
+        <span>
+          Pending Leaves
+        </span>
+
+        <b>
+          ${leaves.data?.length || 0}
+        </b>
+
+      </div>
+
+
+      <div class="card stat">
+
+        <span>
+          Today
+        </span>
+
+        <b>
+          ${new Date().getDate()}
+        </b>
+
+        <span>
+          ${new Date().toLocaleDateString(
+            "en-IN",
+            {
+              month:"long",
+              year:"numeric"
+            }
+          )}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-top:16px"
+    >
+
+      <h3>
+        Quick Actions
+      </h3>
+
+      <div
+        class="actions"
+        style="margin-top:15px"
+      >
+
+        <button
+          class="btn primary"
+          onclick="
+            adminTab='employees';
+            adminPage()
+          "
+        >
+          + Add Employee
+        </button>
+
+        <button
+          class="btn secondary"
+          onclick="
+            adminTab='attendance';
+            adminPage()
+          "
+        >
+          View Attendance
+        </button>
+
+        <button
+          class="btn ghost"
+          onclick="
+            adminTab='office';
+            adminPage()
+          "
+        >
+          📍 Set Office GPS
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
 }
 
 
-/* =====================================================
-   LOAD EMPLOYEES
-===================================================== */
+/* ================================
+   ADMIN EMPLOYEES
+================================ */
 
-async function loadEmployees(){
+async function adminEmployees(){
 
-  const {data,error}=await db
-    .from("employees")
-    .select("*")
-    .order("employee_id");
+  const {data,error} =
+    await db
+      .from("employees")
+      .select("*")
+      .order("name");
 
-  if(error){
 
-    toast(error.message);
-    return;
+  const rows =
+    data || [];
 
-  }
 
-  employees=data||[];
+  $("adminContent").innerHTML = `
 
-  $("employeesTable").innerHTML=
-    employees.map(x=>`
+    <div class="card">
 
-      <tr>
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+          flex-wrap:wrap
+        "
+      >
 
-        <td>${x.employee_id}</td>
+        <div>
 
-        <td>${x.name||"-"}</td>
+          <h3>
+            Employees
+          </h3>
 
-        <td>${x.post||"-"}</td>
+          <p class="muted">
+            Employee accounts
+          </p>
 
-        <td>${money(x.salary)}</td>
+        </div>
 
-        <td>
 
-          <button
-            onclick='editEmployee(${JSON.stringify(x)})'>
-            Edit
-          </button>
+        <button
+          class="btn primary"
+          onclick="openEmployeeModal()"
+        >
+          + Add Employee
+        </button>
 
-          <button
-            class="danger-btn"
-            onclick="deleteEmployee('${x.employee_id}')">
-            Delete
-          </button>
+      </div>
 
-        </td>
 
-      </tr>
+      <div
+        class="table-wrap"
+        style="margin-top:15px"
+      >
 
-    `).join("");
+        <table class="table">
 
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+              <th>Name</th>
+              <th>Post</th>
+              <th>Salary</th>
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${
+              error
+              ? `
+                <tr>
+                  <td colspan="5">
+                    ${esc(error.message)}
+                  </td>
+                </tr>
+              `
+              :
+              rows.length
+              ?
+              rows.map(x=>`
+
+                <tr>
+
+                  <td>
+                    ${esc(x.employee_id)}
+                  </td>
+
+                  <td>
+                    ${esc(x.name)}
+                  </td>
+
+                  <td>
+                    ${esc(x.post || "-")}
+                  </td>
+
+                  <td>
+                    ₹${Number(
+                      x.salary || 0
+                    ).toLocaleString("en-IN")}
+                  </td>
+
+                  <td>
+
+                    <button
+                      class="btn secondary"
+                      onclick='openEmployeeModal(
+                        ${JSON.stringify(x)}
+                      )'
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      class="btn danger"
+                      onclick="
+                        deleteEmployee(
+                          '${esc(x.employee_id)}'
+                        )
+                      "
+                    >
+                      Delete
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              `).join("")
+              :
+              `
+                <tr>
+                  <td
+                    colspan="5"
+                    style="text-align:center"
+                  >
+                    No employees
+                  </td>
+                </tr>
+              `
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
 }
 
 
-/* =====================================================
+/* ================================
    EMPLOYEE MODAL
-===================================================== */
+================================ */
 
-function openEmployeeModal(){
+function openEmployeeModal(employee=null){
 
-  $("employeeModalTitle").textContent=
-    "Add Employee";
+  editingId =
+    employee?.employee_id || null;
 
-  $("editEmployeeOldId").value="";
 
-  $("employeeFormId").value="";
-  $("employeeFormName").value="";
-  $("employeeFormPost").value="";
-  $("employeeFormPassword").value="";
-  $("employeeFormSalary").value="";
+  $("app").insertAdjacentHTML(
+    "beforeend",
 
-  $("employeeModal").classList.remove("hidden");
+    `
+
+    <div
+      class="modal-bg"
+      id="modal"
+    >
+
+      <div class="modal">
+
+        <h3>
+          ${employee ? "Edit" : "Add"}
+          Employee
+        </h3>
+
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label>
+              Employee ID
+            </label>
+
+            <input
+              id="e_id"
+              value="${esc(
+                employee?.employee_id || ""
+              )}"
+              ${employee ? "disabled" : ""}
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Name
+            </label>
+
+            <input
+              id="e_name"
+              value="${esc(
+                employee?.name || ""
+              )}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Password
+            </label>
+
+            <input
+              id="e_pass"
+              value="${esc(
+                employee?.password || ""
+              )}"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Post
+            </label>
+
+            <input
+              id="e_post"
+              value="${esc(
+                employee?.post || ""
+              )}"
+            >
+
+          </div>
+
+
+          <div
+            class="field full-col"
+          >
+
+            <label>
+              Monthly Salary
+            </label>
+
+            <input
+              id="e_salary"
+              type="number"
+              value="${Number(
+                employee?.salary || 0
+              )}"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="actions"
+          style="margin-top:15px"
+        >
+
+          <button
+            class="btn primary"
+            onclick="saveEmployee()"
+          >
+            Save
+          </button>
+
+          <button
+            class="btn ghost"
+            onclick="closeModal()"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    `
+  );
+}
+
+
+function closeModal(){
+
+  $("modal")?.remove();
 
 }
 
 
-function closeEmployeeModal(){
-
-  $("employeeModal").classList.add("hidden");
-
-}
-
-
-function editEmployee(x){
-
-  $("employeeModalTitle").textContent=
-    "Edit Employee";
-
-  $("editEmployeeOldId").value=
-    x.employee_id;
-
-  $("employeeFormId").value=
-    x.employee_id;
-
-  $("employeeFormName").value=
-    x.name||"";
-
-  $("employeeFormPost").value=
-    x.post||"";
-
-  $("employeeFormPassword").value=
-    x.password||"";
-
-  $("employeeFormSalary").value=
-    x.salary||0;
-
-  $("employeeModal").classList.remove("hidden");
-
-}
-
+/* ================================
+   SAVE EMPLOYEE
+================================ */
 
 async function saveEmployee(){
 
-  const id=$("employeeFormId").value.trim();
-  const name=$("employeeFormName").value.trim();
-  const post=$("employeeFormPost").value.trim();
-  const password=$("employeeFormPassword").value;
-  const salary=Number(
-    $("employeeFormSalary").value||0
-  );
+  const obj = {
 
-  const oldId=
-    $("editEmployeeOldId").value;
+    employee_id:
+      $("e_id").value.trim(),
 
+    name:
+      $("e_name").value.trim(),
 
-  if(!id||!name||!password){
+    password:
+      $("e_pass").value,
 
-    toast("ID, Name aur Password required hai");
-    return;
+    post:
+      $("e_post").value.trim(),
 
-  }
+    salary:
+      Number(
+        $("e_salary").value || 0
+      )
 
-
-  const payload={
-    employee_id:id,
-    name:name,
-    post:post,
-    password:password,
-    salary:salary
   };
 
 
-  let error;
+  if(
+    !obj.employee_id ||
+    !obj.name ||
+    !obj.password
+  ){
+
+    toast(
+      "ID, Name aur Password required"
+    );
+
+    return;
+  }
 
 
-  if(oldId){
+  let result;
 
-    const res=await db
-      .from("employees")
-      .update(payload)
-      .eq("employee_id",oldId);
 
-    error=res.error;
+  if(editingId){
 
-  }else{
+    result =
+      await db
+        .from("employees")
+        .update(obj)
+        .eq(
+          "employee_id",
+          editingId
+        );
 
-    const res=await db
-      .from("employees")
-      .insert(payload);
+  }
 
-    error=res.error;
+  else{
+
+    result =
+      await db
+        .from("employees")
+        .insert(obj);
 
   }
 
 
-  if(error){
+  if(result.error){
 
-    toast(error.message);
+    toast(
+      result.error.message
+    );
+
     return;
-
   }
 
 
   toast(
-    oldId
-    ?"Employee updated"
-    :"Employee added"
+    "Employee saved successfully"
   );
 
-  closeEmployeeModal();
 
-  loadEmployees();
-  loadAdminDashboard();
+  closeModal();
 
+  adminEmployees();
 }
 
 
-/* =====================================================
+/* ================================
    DELETE EMPLOYEE
-===================================================== */
+================================ */
 
 async function deleteEmployee(id){
 
-  if(!confirm(
-    "Employee "+id+" ko delete karna hai?"
-  ))return;
+  if(
+    !confirm(
+      "Employee delete karna hai?"
+    )
+  )
+    return;
 
 
-  const {error}=await db
-    .from("employees")
-    .delete()
-    .eq("employee_id",id);
+  const {error} =
+    await db
+      .from("employees")
+      .delete()
+      .eq(
+        "employee_id",
+        id
+      );
 
 
   if(error){
 
     toast(error.message);
-    return;
 
+    return;
   }
 
 
-  toast("Employee deleted");
+  toast(
+    "Employee deleted"
+  );
 
-  loadEmployees();
-  loadAdminDashboard();
 
+  adminEmployees();
 }
 
 
-/* =====================================================
-   SET OFFICE LOCATION
-===================================================== */
+/* ================================
+   ATTENDANCE REPORT
+================================ */
 
-async function setOfficeLocation(){
+async function adminAttendance(){
 
-  try{
-
-    toast("GPS location read ho rahi hai...");
-
-    const coords=await getGPS();
-
-    const radius=Number(
-      $("officeRadius").value||100
-    );
-
-
-    const {error}=await db
-      .from("office_settings")
-      .upsert({
-
-        id:1,
-        latitude:coords.latitude,
-        longitude:coords.longitude,
-        radius_meters:radius
-
-      });
+  const {data,error} =
+    await db
+      .from("attendance")
+      .select("*")
+      .order(
+        "attendance_date",
+        {ascending:false}
+      )
+      .limit(500);
 
 
-    if(error){
+  const grouped = {};
 
-      toast(error.message);
-      return;
+
+  (data || []).forEach(row=>{
+
+    const key =
+      row.employee_id +
+      "|" +
+      row.attendance_date;
+
+
+    grouped[key] ??= {
+
+      id:row.employee_id,
+
+      name:row.employee_name,
+
+      date:row.attendance_date
+
+    };
+
+
+    if(
+      row.attendance_type === "IN"
+    ){
+
+      grouped[key].i =
+        row.in_time;
 
     }
 
 
-    toast("Office location saved");
+    if(
+      row.attendance_type === "OUT"
+    ){
 
-    loadOfficeSettings();
+      grouped[key].o =
+        row.out_time;
 
-  }catch(e){
+    }
 
-    toast("GPS permission allow karein");
+  });
 
-  }
 
+  const rows =
+    Object.values(grouped);
+
+
+  $("adminContent").innerHTML = `
+
+    <div class="card">
+
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+          flex-wrap:wrap
+        "
+      >
+
+        <div>
+
+          <h3>
+            Attendance Report
+          </h3>
+
+          <p class="muted">
+            Latest attendance records
+          </p>
+
+        </div>
+
+
+        <button
+          class="btn secondary"
+          onclick='exportCSV(
+            ${JSON.stringify(rows)}
+          )'
+        >
+          Export CSV
+        </button>
+
+      </div>
+
+
+      <div
+        class="table-wrap"
+        style="margin-top:15px"
+      >
+
+        <table class="table">
+
+          <thead>
+
+            <tr>
+
+              <th>Date</th>
+              <th>Employee</th>
+              <th>IN</th>
+              <th>OUT</th>
+              <th>Status</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            ${
+              error
+              ?
+              `
+                <tr>
+                  <td colspan="5">
+                    ${esc(error.message)}
+                  </td>
+                </tr>
+              `
+              :
+              rows.length
+              ?
+              rows.map(x=>{
+
+                const st =
+                  status(x.i,x.o);
+
+                const cls =
+                  st === "Full Day"
+                    ? "full"
+                    : st === "Half Day"
+                      ? "half"
+                      : "incomplete";
+
+
+                return `
+
+                <tr>
+
+                  <td>
+                    ${fmtDate(x.date)}
+                  </td>
+
+                  <td>
+
+                    ${esc(x.name)}
+
+                    <br>
+
+                    <span
+                      class="muted"
+                    >
+                      ${esc(x.id)}
+                    </span>
+
+                  </td>
+
+                  <td>
+                    ${fmtTime(x.i)}
+                  </td>
+
+                  <td>
+                    ${fmtTime(x.o)}
+                  </td>
+
+                  <td>
+
+                    <span
+                      class="badge ${cls}"
+                    >
+                      ${esc(st)}
+                    </span>
+
+                  </td>
+
+                </tr>
+
+                `;
+
+              }).join("")
+              :
+              `
+                <tr>
+                  <td
+                    colspan="5"
+                    style="text-align:center"
+                  >
+                    No attendance
+                  </td>
+                </tr>
+              `
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
 }
 
 
-/* =====================================================
+/* ================================
+   CSV
+================================ */
+
+function exportCSV(rows){
+
+  let csv =
+    "Date,Employee ID,Employee Name,IN,OUT,Status\n";
+
+
+  rows.forEach(x=>{
+
+    csv += [
+
+      x.date,
+      x.id,
+      x.name,
+      x.i || "",
+      x.o || "",
+      status(x.i,x.o)
+
+    ]
+    .map(
+      value =>
+        `"${String(value)
+          .replace(/"/g,'""')}"`
+    )
+    .join(",")
+    + "\n";
+
+  });
+
+
+  const blob =
+    new Blob(
+      [csv],
+      {type:"text/csv"}
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+
+  const a =
+    document.createElement("a");
+
+
+  a.href = url;
+
+  a.download =
+    "payol-attendance.csv";
+
+  a.click();
+
+
+  URL.revokeObjectURL(url);
+}
+
+
+/* ================================
    HOLIDAYS
-===================================================== */
+================================ */
+
+async function adminHolidays(){
+
+  const {data,error} =
+    await db
+      .from("holidays")
+      .select("*")
+      .order("holiday_date");
+
+
+  $("adminContent").innerHTML = `
+
+    <div class="grid two">
+
+      <div class="card">
+
+        <h3>
+          Add Holiday
+        </h3>
+
+
+        <div class="field">
+
+          <label>
+            Date
+          </label>
+
+          <input
+            id="h_date"
+            type="date"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Holiday Name
+          </label>
+
+          <input
+            id="h_name"
+            placeholder="Diwali"
+          >
+
+        </div>
+
+
+        <button
+          class="btn primary"
+          onclick="addHoliday()"
+        >
+          Add Holiday
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Holiday List
+        </h3>
+
+
+        <div style="margin-top:10px">
+
+          ${
+            error
+            ?
+            esc(error.message)
+            :
+            data?.length
+            ?
+            data.map(x=>`
+
+              <div
+                style="
+                  padding:10px 0;
+                  border-bottom:
+                  1px solid var(--line)
+                "
+              >
+
+                <b>
+                  ${fmtDate(
+                    x.holiday_date
+                  )}
+                </b>
+
+                —
+
+                ${esc(
+                  x.holiday_name ||
+                  x.name ||
+                  "Holiday"
+                )}
+
+
+                <button
+                  class="btn danger"
+                  style="
+                    float:right;
+                    padding:6px 9px
+                  "
+                  onclick="
+                    deleteHoliday(
+                      ${x.id}
+                    )
+                  "
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            `).join("")
+            :
+            `
+              <div class="muted">
+                No holidays
+              </div>
+            `
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
 
 async function addHoliday(){
 
-  const date=$("holidayDate").value;
-  const name=$("holidayName").value.trim();
+  const date =
+    $("h_date").value;
 
-  if(!date||!name){
+  const name =
+    $("h_name")
+      .value
+      .trim();
 
-    toast("Date aur holiday name dalein");
+
+  if(!date || !name){
+
+    toast(
+      "Date aur holiday name bhariye"
+    );
+
     return;
-
   }
 
 
-  const {error}=await db
-    .from("holidays")
-    .insert({
+  const {error} =
+    await db
+      .from("holidays")
+      .insert({
 
-      holiday_date:date,
-      name:name
+        holiday_date:
+          date,
 
-    });
+        name:
+          name,
+
+        holiday_name:
+          name
+
+      });
 
 
   if(error){
 
     toast(error.message);
-    return;
 
+    return;
   }
 
 
-  $("holidayDate").value="";
-  $("holidayName").value="";
-
-  toast("Holiday added");
-
-  loadHolidays();
-
-}
+  toast(
+    "Holiday added"
+  );
 
 
-async function loadHolidays(){
-
-  const {data,error}=await db
-    .from("holidays")
-    .select("*")
-    .order("holiday_date");
-
-  if(error){
-
-    toast(error.message);
-    return;
-
-  }
-
-
-  $("holidaysTable").innerHTML=
-    (data||[]).map(x=>`
-
-      <tr>
-
-        <td>${x.holiday_date}</td>
-
-        <td>${x.name}</td>
-
-        <td>
-
-          <button
-            class="danger-btn"
-            onclick="deleteHoliday(${x.id})">
-            Delete
-          </button>
-
-        </td>
-
-      </tr>
-
-    `).join("");
-
+  adminHolidays();
 }
 
 
 async function deleteHoliday(id){
 
-  if(!confirm("Holiday delete karein?"))
-    return;
-
-
-  const {error}=await db
-    .from("holidays")
-    .delete()
-    .eq("id",id);
+  const {error} =
+    await db
+      .from("holidays")
+      .delete()
+      .eq("id",id);
 
 
   if(error){
 
     toast(error.message);
-    return;
 
+    return;
   }
 
 
-  toast("Holiday deleted");
+  toast(
+    "Holiday deleted"
+  );
 
-  loadHolidays();
 
+  adminHolidays();
 }
 
 
-/* =====================================================
-   ADMIN LEAVES
-===================================================== */
+/* ================================
+   LEAVES ADMIN
+================================ */
 
-async function loadAdminLeaves(){
+async function adminLeaves(){
 
-  const {data,error}=await db
-    .from("leave_requests")
-    .select("*")
-    .order("leave_date",{ascending:false});
+  const {data,error} =
+    await db
+      .from("leave_requests")
+      .select("*")
+      .order(
+        "leave_date",
+        {ascending:false}
+      );
+
+
+  $("adminContent").innerHTML = `
+
+    <div class="card">
+
+      <h3>
+        Leave Requests
+      </h3>
+
+
+      <div
+        class="table-wrap"
+        style="margin-top:15px"
+      >
+
+        <table class="table">
+
+          <thead>
+
+            <tr>
+
+              <th>Date</th>
+              <th>Employee</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            ${
+              error
+              ?
+              `
+                <tr>
+                  <td colspan="5">
+                    ${esc(error.message)}
+                  </td>
+                </tr>
+              `
+              :
+              data?.length
+              ?
+              data.map(x=>`
+
+                <tr>
+
+                  <td>
+                    ${fmtDate(
+                      x.leave_date
+                    )}
+                  </td>
+
+                  <td>
+
+                    ${esc(
+                      x.employee_name
+                    )}
+
+                    <br>
+
+                    <span class="muted">
+                      ${esc(
+                        x.employee_id
+                      )}
+                    </span>
+
+                  </td>
+
+                  <td>
+                    ${esc(x.reason)}
+                  </td>
+
+                  <td>
+
+                    <span
+                      class="badge
+                      ${String(
+                        x.status
+                      ).toLowerCase()}"
+                    >
+                      ${esc(x.status)}
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    ${
+                      x.status === "PENDING"
+                      ?
+                      `
+
+                        <button
+                          class="btn primary"
+                          onclick="
+                            leaveStatus(
+                              ${x.id},
+                              'APPROVED'
+                            )
+                          "
+                        >
+                          Approve
+                        </button>
+
+                        <button
+                          class="btn danger"
+                          onclick="
+                            leaveStatus(
+                              ${x.id},
+                              'REJECTED'
+                            )
+                          "
+                        >
+                          Reject
+                        </button>
+
+                      `
+                      :
+                      "-"
+                    }
+
+                  </td>
+
+                </tr>
+
+              `).join("")
+              :
+              `
+                <tr>
+                  <td
+                    colspan="5"
+                    style="text-align:center"
+                  >
+                    No leave requests
+                  </td>
+                </tr>
+              `
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+async function leaveStatus(
+  id,
+  newStatus
+){
+
+  const {error} =
+    await db
+      .from("leave_requests")
+      .update({
+        status:newStatus
+      })
+      .eq("id",id);
+
 
   if(error){
 
     toast(error.message);
-    return;
 
+    return;
   }
 
 
-  $("adminLeavesTable").innerHTML=
-    (data||[]).map(x=>`
+  toast(
+    "Leave status updated"
+  );
 
-      <tr>
 
-        <td>
-          ${x.employee_name||"-"}
-          <br>
-          <small>${x.employee_id}</small>
-        </td>
-
-        <td>${x.leave_date}</td>
-
-        <td>${x.reason}</td>
-
-        <td>
-
-          <span class="badge ${
-            x.status==="APPROVED"
-            ?"approved"
-            :x.status==="REJECTED"
-            ?"rejected"
-            :"pending"
-          }">
-            ${x.status}
-          </span>
-
-        </td>
-
-        <td>
-
-          ${
-            x.status==="PENDING"
-            ?`
-              <button
-                class="green-btn"
-                onclick="updateLeave(${x.id},'APPROVED')">
-                Approve
-              </button>
-
-              <button
-                class="danger-btn"
-                onclick="updateLeave(${x.id},'REJECTED')">
-                Reject
-              </button>
-            `
-            :""
-          }
-
-        </td>
-
-      </tr>
-
-    `).join("");
-
+  adminLeaves();
 }
 
 
-async function updateLeave(id,statusValue){
+/* ================================
+   OFFICE GPS
+================================ */
 
-  const {error}=await db
-    .from("leave_requests")
-    .update({
-      status:statusValue
-    })
-    .eq("id",id);
+async function adminOffice(){
+
+  let office = {};
 
 
-  if(error){
+  try{
 
-    toast(error.message);
-    return;
+    office =
+      await getOffice();
 
   }
 
+  catch(e){}
 
-  toast("Leave "+statusValue);
 
-  loadAdminLeaves();
-  loadAdminDashboard();
+  $("adminContent").innerHTML = `
 
+    <div class="card">
+
+      <h3>
+        Office GPS Settings
+      </h3>
+
+
+      <p
+        class="muted"
+        style="margin-top:6px"
+      >
+        Employee isi location ke allowed
+        radius ke andar attendance mark
+        kar sakenge.
+      </p>
+
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>
+            Latitude
+          </label>
+
+          <input
+            id="o_lat"
+            value="${esc(
+              office.latitude || ""
+            )}"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Longitude
+          </label>
+
+          <input
+            id="o_lon"
+            value="${esc(
+              office.longitude || ""
+            )}"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Allowed Radius (meters)
+          </label>
+
+          <input
+            id="o_radius"
+            type="number"
+            value="${Number(
+              office.radius_meters || 100
+            )}"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="actions"
+        style="margin-top:15px"
+      >
+
+        <button
+          class="btn secondary"
+          onclick="useCurrentOfficeGPS()"
+        >
+          📍 Use Current GPS
+        </button>
+
+
+        <button
+          class="btn primary"
+          onclick="saveOffice()"
+        >
+          Save Settings
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
 }
 
 
-/* =====================================================
-   ADMIN SALARY
-===================================================== */
+/* ================================
+   USE OFFICE GPS
+================================ */
 
-async function loadAdminSalary(){
+async function useCurrentOfficeGPS(){
 
-  const mon=
-    $("adminSalaryMonth").value||month();
+  try{
 
-  const [y,m]=mon.split("-").map(Number);
-
-  const total=
-    new Date(y,m,0).getDate();
+    const gps =
+      await getGPS();
 
 
-  const {data:emps}=await db
-    .from("employees")
-    .select("*")
-    .order("employee_id");
+    $("o_lat").value =
+      gps.lat;
+
+    $("o_lon").value =
+      gps.lon;
 
 
-  const {data:att}=await db
-    .from("attendance")
-    .select("*")
-    .gte("attendance_date",mon+"-01")
-    .lte(
-      "attendance_date",
-      mon+"-"+String(total).padStart(2,"0")
+    toast(
+      `GPS received • accuracy ${gps.accuracy}m`
+    );
+
+  }
+
+  catch(error){
+
+    toast(
+      error.message
+    );
+
+  }
+}
+
+
+/* ================================
+   SAVE OFFICE
+================================ */
+
+async function saveOffice(){
+
+  const lat =
+    Number(
+      $("o_lat").value
+    );
+
+  const lon =
+    Number(
+      $("o_lon").value
+    );
+
+  const radius =
+    Number(
+      $("o_radius").value || 100
     );
 
 
-  const {data:leave}=await db
-    .from("leave_requests")
-    .select("*")
-    .eq("status","APPROVED")
-    .gte("leave_date",mon+"-01")
-    .lte(
-      "leave_date",
-      mon+"-"+String(total).padStart(2,"0")
+  if(
+    !lat ||
+    !lon ||
+    radius < 1
+  ){
+
+    toast(
+      "Valid GPS aur radius bhariye"
     );
 
+    return;
+  }
 
-  $("adminSalaryTable").innerHTML=
-    (emps||[]).map(emp=>{
 
-      const rows=(att||[])
-        .filter(x=>
-          x.employee_id===emp.employee_id
-        );
+  const {error} =
+    await db
+      .from("office_settings")
+      .upsert({
 
-      const g=groupAttendance(rows);
+        id:1,
 
-      let present=0;
-      let half=0;
+        latitude:lat,
 
-      Object.values(g).forEach(x=>{
+        longitude:lon,
 
-        if(x.IN&&x.OUT){
-
-          const s=status(x.IN,x.OUT);
-
-          if(s==="Full Day")present++;
-          if(s==="Half Day")half++;
-
-        }
+        radius_meters:radius
 
       });
 
 
-      const leaveCount=
-        (leave||[]).filter(
-          x=>x.employee_id===emp.employee_id
-        ).length;
+  if(error){
 
+    toast(error.message);
 
-      const salary=Number(emp.salary||0);
-
-      const payable=
-        salary/total*
-        (present+(half*.5)+leaveCount);
-
-
-      return `
-
-        <tr>
-
-          <td>${emp.name||"-"}
-            <br>
-            <small>${emp.employee_id}</small>
-          </td>
-
-          <td>${emp.post||"-"}</td>
-
-          <td>${money(salary)}</td>
-
-          <td>${present}</td>
-
-          <td>${half}</td>
-
-          <td>${leaveCount}</td>
-
-          <td><b>${money(payable)}</b></td>
-
-        </tr>
-
-      `;
-
-    }).join("");
-
-}
-
-
-/* =====================================================
-   DAILY REPORT
-===================================================== */
-
-async function loadDailyReport(){
-
-  const date=
-    $("dailyDate").value||today();
-
-
-  const {data:emps}=await db
-    .from("employees")
-    .select("*")
-    .order("employee_id");
-
-
-  const {data:att}=await db
-    .from("attendance")
-    .select("*")
-    .eq("attendance_date",date);
-
-
-  const g={};
-
-  (att||[]).forEach(x=>{
-
-    if(!g[x.employee_id])
-      g[x.employee_id]={};
-
-    if(x.in_time)
-      g[x.employee_id].IN=x.in_time;
-
-    if(x.out_time)
-      g[x.employee_id].OUT=x.out_time;
-
-  });
-
-
-  $("dailyTable").innerHTML=
-    (emps||[]).map(emp=>{
-
-      const x=g[emp.employee_id]||{};
-
-      let st="Absent";
-
-      if(x.IN&&x.OUT)
-        st=status(x.IN,x.OUT);
-
-      else if(x.IN||x.OUT)
-        st="Incomplete";
-
-
-      const cls=
-        st==="Full Day"
-        ?"present"
-        :st==="Half Day"
-        ?"half"
-        :"absent";
-
-
-      return `
-
-        <tr>
-
-          <td>${emp.employee_id}</td>
-
-          <td>${emp.name||"-"}</td>
-
-          <td>${emp.post||"-"}</td>
-
-          <td>${formatTime(x.IN)}</td>
-
-          <td>${formatTime(x.OUT)}</td>
-
-          <td>
-            <span class="badge ${cls}">
-              ${st}
-            </span>
-          </td>
-
-        </tr>
-
-      `;
-
-    }).join("");
-
-}
-
-
-/* =====================================================
-   CLOCK
-===================================================== */
-
-function updateClock(){
-
-  $("currentTime").textContent=
-    new Date().toLocaleTimeString(
-      "en-IN",
-      {
-        hour:"2-digit",
-        minute:"2-digit",
-        second:"2-digit"
-      }
-    );
-
-}
-
-
-setInterval(updateClock,1000);
-updateClock();
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-function logout(){
-
-  employee=null;
-
-  localStorage.removeItem("payol_employee");
-  localStorage.removeItem("payol_admin");
-
-  $("employeePage").classList.add("hidden");
-  $("adminPage").classList.add("hidden");
-  $("loginPage").classList.remove("hidden");
-
-  $("empLoginId").value="";
-  $("empLoginPassword").value="";
-
-  showLogin("employee");
-
-}
-
-
-/* =====================================================
-   AUTO LOGIN
-===================================================== */
-
-async function autoLogin(){
-
-  const savedEmployee=
-    localStorage.getItem("payol_employee");
-
-  const savedAdmin=
-    localStorage.getItem("payol_admin");
-
-
-  if(savedAdmin==="1"){
-
-    showAdmin();
     return;
-
   }
 
 
-  if(savedEmployee){
+  toast(
+    "Office GPS saved successfully"
+  );
 
-    try{
+}
 
-      employee=
-        JSON.parse(savedEmployee);
 
-      const {data}=await db
-        .from("employees")
-        .select("*")
-        .eq("employee_id",employee.employee_id)
-        .maybeSingle();
+/* ================================
+   RENDER
+================================ */
 
-      if(data){
+function render(){
 
-        employee=data;
-        showEmployee();
+  if(!session){
 
-      }else{
+    loginPage();
 
-        localStorage.removeItem("payol_employee");
+    return;
+  }
 
-      }
 
-    }catch(e){
+  if(session.role === "admin"){
 
-      localStorage.removeItem("payol_employee");
+    adminPage();
 
-    }
+  }
+
+  else{
+
+    employeePage();
 
   }
 
 }
 
 
-autoLogin();
+render();
 
 </script>
 
