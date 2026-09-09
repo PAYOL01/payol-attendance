@@ -294,7 +294,7 @@ button:hover{
 
 .attendance-buttons{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(2,1fr);
   gap:10px;
   margin-top:18px;
 }
@@ -311,10 +311,6 @@ button:hover{
 .out-btn{
   background:#222;
   border:1px solid #444;
-}
-
-.half-btn{
-  background:#805b00;
 }
 
 .gps-box{
@@ -388,11 +384,6 @@ td{
 .b-present{
   background:#12351c;
   color:#73ef96;
-}
-
-.b-half{
-  background:#44320a;
-  color:#ffd36a;
 }
 
 .b-leave{
@@ -504,7 +495,6 @@ td{
 }
 
 .day.present{border-color:#1c6331}
-.day.half{border-color:#75560c}
 .day.leave{border-color:#75570c}
 .day.holiday{border-color:#713d61}
 .day.sunday{border-color:#444}
@@ -756,12 +746,6 @@ td{
     </div>
 
     <div class="card">
-      <div class="icon">🟡</div>
-      <div class="number" id="empHalf">0</div>
-      <div class="label">Half Day</div>
-    </div>
-
-    <div class="card">
       <div class="icon">📝</div>
       <div class="number" id="empLeave">0</div>
       <div class="label">Approved Leave</div>
@@ -787,13 +771,6 @@ td{
         onclick="markAttendance('IN')"
       >
         🟢 CHECK IN
-      </button>
-
-      <button
-        class="att-btn half-btn"
-        onclick="markAttendance('HALF_DAY')"
-      >
-        🟡 HALF DAY
       </button>
 
       <button
@@ -851,7 +828,6 @@ td{
     <div class="calendar-legend">
 
       <span class="legend">🟢 Present</span>
-      <span class="legend">🟡 Half Day</span>
       <span class="legend">🟠 Leave</span>
       <span class="legend">🎉 Holiday</span>
       <span class="legend">⚫ Sunday</span>
@@ -1242,7 +1218,6 @@ td{
     <div class="calendar-legend">
 
       <span class="legend">🟢 Present</span>
-      <span class="legend">🟡 Half Day</span>
       <span class="legend">🟠 Leave</span>
       <span class="legend">🎉 Holiday</span>
       <span class="legend">⚫ Sunday</span>
@@ -1356,7 +1331,6 @@ td{
             <th>Salary</th>
             <th>Working Days</th>
             <th>Present</th>
-            <th>Half</th>
             <th>Leave</th>
             <th>Absent</th>
             <th>Payable</th>
@@ -1374,7 +1348,7 @@ td{
       style="margin-top:12px"
     >
       Salary rule: Sunday/holiday paid, approved leave paid,
-      absent unpaid, half-day = 50%.
+      absent unpaid.
     </div>
 
   </div>
@@ -1391,10 +1365,6 @@ td{
 const SUPABASE_URL =
 "https://nkbbcygtuaejcuquwhpi.supabase.co";
 
-/*
-  YAHAN APNI EXISTING SUPABASE
-  PUBLISHABLE / ANON KEY PASTE KAREIN
-*/
 const SUPABASE_KEY =
 "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
 
@@ -1448,7 +1418,6 @@ new Date(
 
 /* =========================
    UUID
-   IMPORTANT FIX
 ========================= */
 
 function generateUUID(){
@@ -1857,6 +1826,10 @@ function getPosition(){
 
 async function markAttendance(type){
 
+  if(type !== "IN" && type !== "OUT"){
+    return;
+  }
+
   try{
 
     setStatus(
@@ -2021,11 +1994,9 @@ async function markAttendance(type){
     setStatus(
       "gpsStatus",
       `✅ ${
-        type==="IN"
+        type === "IN"
         ? "Check In"
-        : type==="OUT"
-        ? "Check Out"
-        : "Half Day"
+        : "Check Out"
       } successfully saved. Distance ${Math.round(distance)}m`,
       "success"
     );
@@ -2163,28 +2134,10 @@ async function loadEmployeeStats(){
   ).size;
 
 
-  const half =
-  new Set(
-    rows
-    .filter(
-      x => x.attendance_type === "HALF_DAY"
-    )
-    .map(
-      x => x.attendance_date
-    )
-  ).size;
-
-
   document.getElementById(
     "empPresent"
   ).textContent =
   present;
-
-
-  document.getElementById(
-    "empHalf"
-  ).textContent =
-  half;
 
 
   const {
@@ -2236,15 +2189,6 @@ async function loadEmployeeStats(){
 
 
   if(
-    todayRows.some(
-      x => x.attendance_type === "HALF_DAY"
-    )
-  ){
-
-    status="Half Day";
-
-  }
-  else if(
     todayRows.some(
       x => x.attendance_type === "IN"
     )
@@ -2495,7 +2439,7 @@ async function renderEmployeeCalendar(){
     const holiday =
     holidays.find(
       x =>
-      x.holiday_date ===
+      String(x.holiday_date).slice(0,10) ===
       dateString
     );
 
@@ -2503,15 +2447,15 @@ async function renderEmployeeCalendar(){
     const leave =
     leaves.some(
       x =>
-      dateString >= x.from_date &&
-      dateString <= x.to_date
+      dateString >= String(x.from_date).slice(0,10) &&
+      dateString <= String(x.to_date).slice(0,10)
     );
 
 
     const dayAttendance =
     attendance.filter(
       x =>
-      x.attendance_date ===
+      String(x.attendance_date).slice(0,10) ===
       dateString
     );
 
@@ -2523,13 +2467,9 @@ async function renderEmployeeCalendar(){
     "upcoming";
 
 
-    if(dateString > today){
+    /* HOLIDAY FIRST */
 
-      status="Upcoming";
-      cls="upcoming";
-
-    }
-    else if(holiday){
+    if(holiday){
 
       status="Holiday";
       cls="holiday";
@@ -2547,16 +2487,10 @@ async function renderEmployeeCalendar(){
       cls="leave";
 
     }
-    else if(
-      dayAttendance.some(
-        x =>
-        x.attendance_type ===
-        "HALF_DAY"
-      )
-    ){
+    else if(dateString > today){
 
-      status="Half Day";
-      cls="half";
+      status="Upcoming";
+      cls="upcoming";
 
     }
     else if(
@@ -3034,7 +2968,6 @@ async function loadAdminEmployees(){
 
 /* =========================
    ADD EMPLOYEE
-   UUID ERROR FIX
 ========================= */
 
 async function addEmployee(){
@@ -3089,8 +3022,6 @@ async function addEmployee(){
   }
 
 
-  /* DUPLICATE CHECK */
-
   const {
     data:existing,
     error:checkError
@@ -3130,15 +3061,6 @@ async function addEmployee(){
 
   }
 
-
-  /*
-    IMPORTANT:
-
-    id = UUID
-    employee_id = PAYOL01
-
-    PAYOL01 ko id mein nahi daalna hai.
-  */
 
   const {
     error
@@ -4083,7 +4005,7 @@ async function renderAdminCalendar(){
     const holiday =
     holidays.find(
       x =>
-      x.holiday_date ===
+      String(x.holiday_date).slice(0,10) ===
       dateString
     );
 
@@ -4091,8 +4013,8 @@ async function renderAdminCalendar(){
     const leave =
     leaves.some(
       x =>
-      dateString >= x.from_date &&
-      dateString <= x.to_date &&
+      dateString >= String(x.from_date).slice(0,10) &&
+      dateString <= String(x.to_date).slice(0,10) &&
       (
         !selected ||
         x.employee_id === selected
@@ -4103,7 +4025,7 @@ async function renderAdminCalendar(){
     const dayAttendance =
     attendance.filter(
       x =>
-      x.attendance_date ===
+      String(x.attendance_date).slice(0,10) ===
       dateString
     );
 
@@ -4115,13 +4037,9 @@ async function renderAdminCalendar(){
     "upcoming";
 
 
-    if(dateString > today){
+    /* HOLIDAY FIRST */
 
-      status="Upcoming";
-      cls="upcoming";
-
-    }
-    else if(holiday){
+    if(holiday){
 
       status="Holiday";
       cls="holiday";
@@ -4139,16 +4057,10 @@ async function renderAdminCalendar(){
       cls="leave";
 
     }
-    else if(
-      dayAttendance.some(
-        x =>
-        x.attendance_type ===
-        "HALF_DAY"
-      )
-    ){
+    else if(dateString > today){
 
-      status="Half Day";
-      cls="half";
+      status="Upcoming";
+      cls="upcoming";
 
     }
     else if(
@@ -4290,14 +4202,6 @@ async function loadReport(){
   ).length;
 
 
-  const half =
-  rows.filter(
-    x =>
-    x.attendance_type ===
-    "HALF_DAY"
-  ).length;
-
-
   const checkOut =
   rows.filter(
     x =>
@@ -4313,11 +4217,6 @@ async function loadReport(){
     <div class="mini">
       <b>${checkIn}</b>
       <span>Check In</span>
-    </div>
-
-    <div class="mini">
-      <b>${half}</b>
-      <span>Half Day</span>
     </div>
 
     <div class="mini">
@@ -4591,7 +4490,7 @@ async function loadSalaryReport(){
   new Set(
     holidays.map(
       x =>
-      x.holiday_date
+      String(x.holiday_date).slice(0,10)
     )
   );
 
@@ -4602,7 +4501,6 @@ async function loadSalaryReport(){
 
       let workingDays=0;
       let present=0;
-      let half=0;
       let leave=0;
       let absent=0;
 
@@ -4653,7 +4551,7 @@ async function loadSalaryReport(){
           x =>
           x.employee_id ===
           employee.employee_id &&
-          x.attendance_date ===
+          String(x.attendance_date).slice(0,10) ===
           dateString
         );
 
@@ -4664,26 +4562,15 @@ async function loadSalaryReport(){
           x.employee_id ===
           employee.employee_id &&
           dateString >=
-          x.from_date &&
+          String(x.from_date).slice(0,10) &&
           dateString <=
-          x.to_date
+          String(x.to_date).slice(0,10)
         );
 
 
         if(onLeave){
 
           leave++;
-
-        }
-        else if(
-          dayAttendance.some(
-            x =>
-            x.attendance_type ===
-            "HALF_DAY"
-          )
-        ){
-
-          half++;
 
         }
         else if(
@@ -4723,7 +4610,6 @@ async function loadSalaryReport(){
         0,
         (
           present +
-          half * 0.5 +
           leave
         ) * dailySalary
       );
@@ -4736,8 +4622,6 @@ async function loadSalaryReport(){
         workingDays,
 
         present,
-
-        half,
 
         leave,
 
@@ -4788,10 +4672,6 @@ async function loadSalaryReport(){
         </td>
 
         <td>
-          ${row.half}
-        </td>
-
-        <td>
           ${row.leave}
         </td>
 
@@ -4817,7 +4697,7 @@ async function loadSalaryReport(){
 
   `
     <tr>
-      <td colspan="9" class="empty-msg">
+      <td colspan="8" class="empty-msg">
         No employees
       </td>
     </tr>
