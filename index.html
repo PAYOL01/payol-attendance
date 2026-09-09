@@ -1,1226 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Payol Attendance</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-:root{
-  --red:#e11d2e;
-  --red2:#a90012;
-  --black:#080808;
-  --black2:#151515;
-  --bg:#f3f3f3;
-  --white:#fff;
-  --text:#111;
-  --muted:#777;
-  --line:#ddd;
-  --green:#16a34a;
-  --orange:#f59e0b;
-  --blue:#2563eb;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* LOGIN */
-
-#loginPage{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  background:
-    radial-gradient(circle at top right,#4a0008 0,#080808 45%,#000 100%);
-}
-
-.loginBox{
-  width:100%;
-  max-width:420px;
-  background:#fff;
-  border-radius:20px;
-  padding:30px;
-  box-shadow:0 20px 60px rgba(0,0,0,.45);
-}
-
-.logo{
-  width:75px;
-  height:75px;
-  margin:auto;
-  border-radius:18px;
-  background:var(--red);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:28px;
-  font-weight:bold;
-}
-
-.loginTitle{
-  text-align:center;
-  margin-top:15px;
-  font-size:27px;
-  font-weight:800;
-}
-
-.loginSub{
-  text-align:center;
-  color:var(--muted);
-  margin:7px 0 25px;
-}
-
-.formGroup{
-  margin-bottom:15px;
-}
-
-.formGroup label{
-  display:block;
-  margin-bottom:6px;
-  font-weight:700;
-  font-size:14px;
-}
-
-.formGroup input,
-.formGroup select,
-.formGroup textarea{
-  width:100%;
-  padding:12px 13px;
-  border:1px solid var(--line);
-  border-radius:10px;
-  outline:none;
-  background:white;
-}
-
-.formGroup input:focus,
-.formGroup select:focus,
-.formGroup textarea:focus{
-  border-color:var(--red);
-  box-shadow:0 0 0 3px rgba(225,29,46,.1);
-}
-
-.mainBtn{
-  width:100%;
-  border:0;
-  background:var(--red);
-  color:white;
-  padding:13px;
-  border-radius:10px;
-  font-weight:700;
-}
-
-.mainBtn:hover{
-  background:var(--red2);
-}
-
-.loginHint{
-  margin-top:15px;
-  text-align:center;
-  color:#888;
-  font-size:12px;
-}
-
-/* APP */
-
-#app{
-  min-height:100vh;
-}
-
-.topbar{
-  background:var(--black);
-  color:white;
-  min-height:65px;
-  padding:10px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  position:sticky;
-  top:0;
-  z-index:20;
-}
-
-.brand{
-  font-size:20px;
-  font-weight:800;
-}
-
-.brand span{
-  color:var(--red);
-}
-
-.topRight{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.userBadge{
-  background:#222;
-  padding:8px 11px;
-  border-radius:8px;
-  font-size:13px;
-}
-
-.logoutBtn{
-  border:0;
-  background:var(--red);
-  color:white;
-  padding:8px 12px;
-  border-radius:8px;
-  font-weight:700;
-}
-
-/* NAV */
-
-.nav{
-  background:#171717;
-  padding:8px;
-  display:flex;
-  gap:7px;
-  overflow-x:auto;
-}
-
-.nav button{
-  white-space:nowrap;
-  border:0;
-  background:#292929;
-  color:#ddd;
-  padding:10px 13px;
-  border-radius:8px;
-}
-
-.nav button.active{
-  background:var(--red);
-  color:white;
-}
-
-/* CONTENT */
-
-.container{
-  width:100%;
-  max-width:1200px;
-  margin:auto;
-  padding:18px;
-}
-
-.pageTitle{
-  font-size:25px;
-  font-weight:800;
-  margin-bottom:16px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
-
-.card{
-  background:white;
-  border:1px solid #e4e4e4;
-  border-radius:14px;
-  padding:18px;
-  box-shadow:0 3px 12px rgba(0,0,0,.04);
-}
-
-.statNumber{
-  font-size:28px;
-  font-weight:800;
-  margin-top:8px;
-}
-
-.statLabel{
-  color:var(--muted);
-  font-size:13px;
-}
-
-.section{
-  margin-bottom:18px;
-}
-
-.sectionTitle{
-  font-size:19px;
-  font-weight:800;
-  margin-bottom:12px;
-}
-
-/* EMPLOYEE */
-
-.attendanceBox{
-  text-align:center;
-  padding:25px 15px;
-}
-
-.bigStatus{
-  font-size:21px;
-  font-weight:800;
-  margin-bottom:8px;
-}
-
-.statusSmall{
-  color:#777;
-  margin-bottom:20px;
-}
-
-.attBtn{
-  width:100%;
-  max-width:320px;
-  border:0;
-  padding:17px;
-  border-radius:13px;
-  color:white;
-  font-size:18px;
-  font-weight:800;
-  margin:5px;
-}
-
-.inBtn{
-  background:var(--green);
-}
-
-.outBtn{
-  background:var(--red);
-}
-
-.disabledBtn{
-  opacity:.45;
-  cursor:not-allowed;
-}
-
-.gpsInfo{
-  background:#f7f7f7;
-  border-radius:10px;
-  padding:12px;
-  margin-top:12px;
-  font-size:13px;
-  color:#555;
-}
-
-/* TABLE */
-
-.tableWrap{
-  width:100%;
-  overflow-x:auto;
-  background:white;
-  border-radius:13px;
-  border:1px solid #ddd;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:700px;
-}
-
-th,
-td{
-  padding:11px 10px;
-  border-bottom:1px solid #eee;
-  text-align:left;
-  font-size:13px;
-}
-
-th{
-  background:#111;
-  color:white;
-}
-
-tr:last-child td{
-  border-bottom:0;
-}
-
-.actionBtn{
-  border:0;
-  padding:7px 10px;
-  border-radius:7px;
-  font-size:12px;
-  font-weight:700;
-  margin:2px;
-}
-
-.editBtn{
-  background:#eee;
-}
-
-.deleteBtn{
-  background:#fee2e2;
-  color:#b91c1c;
-}
-
-.approveBtn{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.rejectBtn{
-  background:#fee2e2;
-  color:#b91c1c;
-}
-
-/* TOOLBAR */
-
-.toolbar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:15px;
-}
-
-.toolbar input,
-.toolbar select{
-  padding:10px;
-  border:1px solid #ccc;
-  border-radius:9px;
-  background:white;
-}
-
-.smallBtn{
-  border:0;
-  padding:10px 13px;
-  border-radius:9px;
-  background:#111;
-  color:white;
-  font-weight:700;
-}
-
-.redBtn{
-  background:var(--red);
-}
-
-.greenBtn{
-  background:var(--green);
-}
-
-.blueBtn{
-  background:var(--blue);
-}
-
-/* CALENDAR */
-
-.calendarHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.calendarGrid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:5px;
-}
-
-.calDayName{
-  background:#111;
-  color:white;
-  text-align:center;
-  padding:9px 3px;
-  font-size:12px;
-  border-radius:5px;
-}
-
-.calDay{
-  min-height:75px;
-  background:white;
-  border:1px solid #ddd;
-  border-radius:7px;
-  padding:7px;
-  position:relative;
-}
-
-.calDate{
-  font-weight:800;
-  font-size:13px;
-}
-
-.present{
-  background:#dcfce7;
-  border-color:#86efac;
-}
-
-.absent{
-  background:#fee2e2;
-  border-color:#fecaca;
-}
-
-.holiday{
-  background:#fff7ed;
-  border-color:#fdba74;
-}
-
-.leave{
-  background:#dbeafe;
-  border-color:#93c5fd;
-}
-
-.calMark{
-  font-size:10px;
-  margin-top:5px;
-  font-weight:700;
-}
-
-/* MODAL */
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:15px;
-  z-index:100;
-}
-
-.modalBox{
-  background:white;
-  width:100%;
-  max-width:500px;
-  max-height:90vh;
-  overflow:auto;
-  border-radius:16px;
-  padding:20px;
-}
-
-.modalHead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px;
-}
-
-.closeBtn{
-  border:0;
-  background:#eee;
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  font-size:20px;
-}
-
-/* ALERT */
-
-.toast{
-  position:fixed;
-  right:15px;
-  bottom:15px;
-  background:#111;
-  color:white;
-  padding:13px 17px;
-  border-radius:10px;
-  z-index:200;
-  max-width:340px;
-  box-shadow:0 8px 30px rgba(0,0,0,.25);
-}
-
-.toast.success{
-  background:#166534;
-}
-
-.toast.error{
-  background:#991b1b;
-}
-
-/* MOBILE */
-
-@media(max-width:800px){
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:600px){
-  .topbar{
-    padding:9px 12px;
-  }
-
-  .brand{
-    font-size:17px;
-  }
-
-  .userBadge{
-    display:none;
-  }
-
-  .container{
-    padding:12px;
-  }
-
-  .pageTitle{
-    font-size:21px;
-  }
-
-  .grid{
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-  }
-
-  .card{
-    padding:13px;
-  }
-
-  .statNumber{
-    font-size:22px;
-  }
-
-  .calendarGrid{
-    gap:3px;
-  }
-
-  .calDay{
-    min-height:58px;
-    padding:5px;
-  }
-
-  .calMark{
-    font-size:8px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<!-- LOGIN -->
-
-<div id="loginPage">
-
-  <div class="loginBox">
-
-    <div class="logo">PA</div>
-
-    <div class="loginTitle">Payol Attendance</div>
-
-    <div class="loginSub">
-      Employee Attendance System
-    </div>
-
-    <div class="formGroup">
-      <label>Employee ID / Admin Username</label>
-      <input id="loginId" type="text" placeholder="Enter ID">
-    </div>
-
-    <div class="formGroup">
-      <label>Password</label>
-      <input id="loginPassword" type="password" placeholder="Enter password">
-    </div>
-
-    <button class="mainBtn" onclick="login()">
-      Login
-    </button>
-
-    <div class="loginHint">
-      GPS location permission is required for attendance.
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- APP -->
-
-<div id="app" class="hidden">
-
-  <div class="topbar">
-
-    <div class="brand">
-      <span>Payol</span> Attendance
-    </div>
-
-    <div class="topRight">
-
-      <div id="userBadge" class="userBadge"></div>
-
-      <button class="logoutBtn" onclick="logout()">
-        Logout
-      </button>
-
-    </div>
-
-  </div>
-
-  <div id="nav" class="nav"></div>
-
-  <main class="container">
-
-    <!-- EMPLOYEE DASHBOARD -->
-
-    <section id="employeeHome" class="page hidden">
-
-      <div class="pageTitle">
-        Employee Dashboard
-      </div>
-
-      <div class="grid">
-
-        <div class="card">
-          <div class="statLabel">Employee</div>
-          <div id="empDashName" class="statNumber">-</div>
-        </div>
-
-        <div class="card">
-          <div class="statLabel">Post</div>
-          <div id="empDashPost" class="statNumber">-</div>
-        </div>
-
-        <div class="card">
-          <div class="statLabel">Salary</div>
-          <div id="empDashSalary" class="statNumber">₹0</div>
-        </div>
-
-        <div class="card">
-          <div class="statLabel">Today</div>
-          <div id="todayStatus" class="statNumber">-</div>
-        </div>
-
-      </div>
-
-      <div class="section" style="margin-top:18px">
-
-        <div class="card attendanceBox">
-
-          <div id="attendanceStatus" class="bigStatus">
-            Checking attendance...
-          </div>
-
-          <div id="attendanceSub" class="statusSmall">
-            Please wait
-          </div>
-
-          <button id="inButton"
-                  class="attBtn inBtn"
-                  onclick="markAttendance('IN')">
-            📍 MARK IN
-          </button>
-
-          <button id="outButton"
-                  class="attBtn outBtn"
-                  onclick="markAttendance('OUT')">
-            📍 MARK OUT
-          </button>
-
-          <div id="gpsInfo" class="gpsInfo">
-            GPS status: Waiting...
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- EMPLOYEE CALENDAR -->
-
-    <section id="employeeCalendar" class="page hidden">
-
-      <div class="pageTitle">
-        My Attendance
-      </div>
-
-      <div class="card">
-
-        <div class="calendarHeader">
-
-          <button class="smallBtn"
-                  onclick="changeMonth(-1)">
-            ◀
-          </button>
-
-          <div id="calendarTitle"
-               style="font-weight:800">
-          </div>
-
-          <button class="smallBtn"
-                  onclick="changeMonth(1)">
-            ▶
-          </button>
-
-        </div>
-
-        <div id="calendarGrid"
-             class="calendarGrid">
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- EMPLOYEE LEAVE -->
-
-    <section id="employeeLeave" class="page hidden">
-
-      <div class="pageTitle">
-        Leave Request
-      </div>
-
-      <div class="card">
-
-        <div class="formGroup">
-          <label>Leave Date</label>
-          <input id="leaveDate" type="date">
-        </div>
-
-        <div class="formGroup">
-          <label>Reason</label>
-          <textarea id="leaveReason"
-                    rows="4"
-                    placeholder="Enter reason"></textarea>
-        </div>
-
-        <button class="mainBtn"
-                onclick="submitLeave()">
-          Submit Leave Request
-        </button>
-
-      </div>
-
-      <div class="section"
-           style="margin-top:18px">
-
-        <div class="sectionTitle">
-          My Leave Requests
-        </div>
-
-        <div id="myLeaves"></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ADMIN DASHBOARD -->
-
-    <section id="adminHome" class="page hidden">
-
-      <div class="pageTitle">
-        Admin Dashboard
-      </div>
-
-      <div class="grid">
-
-        <div class="card">
-          <div class="statLabel">Employees</div>
-          <div id="statEmployees"
-               class="statNumber">0</div>
-        </div>
-
-        <div class="card">
-          <div class="statLabel">Present Today</div>
-          <div id="statPresent"
-               class="statNumber">0</div>
-        </div>
-
-        <div class="card">
-          <div class="statLabel">IN Marked</div>
-          <div id="statIn"
-               class="statNumber">0</div>
-        </div>
-
-        <div class="card">
-          <div class="statLabel">OUT Marked</div>
-          <div id="statOut"
-               class="statNumber">0</div>
-        </div>
-
-      </div>
-
-      <div class="card"
-           style="margin-top:18px">
-
-        <div class="sectionTitle">
-          Today's Attendance
-        </div>
-
-        <div id="todayTable"></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ADMIN EMPLOYEES -->
-
-    <section id="adminEmployees" class="page hidden">
-
-      <div class="pageTitle">
-        Employees
-      </div>
-
-      <div class="toolbar">
-
-        <button class="smallBtn redBtn"
-                onclick="openEmployeeModal()">
-          + Add Employee
-        </button>
-
-        <input id="employeeSearch"
-               placeholder="Search employee..."
-               oninput="renderEmployees()">
-
-      </div>
-
-      <div class="tableWrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Post</th>
-              <th>Salary</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="employeesTable">
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-
-    <!-- ADMIN ATTENDANCE -->
-
-    <section id="adminAttendance" class="page hidden">
-
-      <div class="pageTitle">
-        Attendance Report
-      </div>
-
-      <div class="toolbar">
-
-        <input id="reportDate"
-               type="date"
-               onchange="loadAttendanceReport()">
-
-        <button class="smallBtn greenBtn"
-                onclick="exportCSV()">
-          Export CSV
-        </button>
-
-      </div>
-
-      <div class="tableWrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Employee ID</th>
-              <th>Name</th>
-              <th>IN</th>
-              <th>OUT</th>
-              <th>GPS Distance</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody id="attendanceTable">
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-
-    <!-- ADMIN HOLIDAYS -->
-
-    <section id="adminHolidays" class="page hidden">
-
-      <div class="pageTitle">
-        Holidays
-      </div>
-
-      <div class="card">
-
-        <div class="toolbar">
-
-          <input id="holidayDate"
-                 type="date">
-
-          <input id="holidayName"
-                 type="text"
-                 placeholder="Holiday name">
-
-          <button class="smallBtn redBtn"
-                  onclick="addHoliday()">
-            Add Holiday
-          </button>
-
-        </div>
-
-      </div>
-
-      <div class="tableWrap"
-           style="margin-top:15px">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Holiday</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="holidayTable">
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-
-    <!-- ADMIN LEAVES -->
-
-    <section id="adminLeaves" class="page hidden">
-
-      <div class="pageTitle">
-        Leave Requests
-      </div>
-
-      <div class="tableWrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Employee</th>
-              <th>Date</th>
-              <th>Reason</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="leaveTable">
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-
-    <!-- OFFICE SETTINGS -->
-
-    <section id="adminOffice" class="page hidden">
-
-      <div class="pageTitle">
-        Office GPS Settings
-      </div>
-
-      <div class="card">
-
-        <div class="formGroup">
-          <label>Office Latitude</label>
-          <input id="officeLat"
-                 type="number"
-                 step="any">
-        </div>
-
-        <div class="formGroup">
-          <label>Office Longitude</label>
-          <input id="officeLng"
-                 type="number"
-                 step="any">
-        </div>
-
-        <div class="formGroup">
-          <label>Allowed Radius (meters)</label>
-          <input id="officeRadius"
-                 type="number"
-                 min="1"
-                 value="100">
-        </div>
-
-        <div class="toolbar">
-
-          <button class="smallBtn blueBtn"
-                  onclick="getOfficeGPS()">
-            📍 Use Current GPS
-          </button>
-
-          <button class="smallBtn redBtn"
-                  onclick="saveOfficeSettings()">
-            Save Settings
-          </button>
-
-        </div>
-
-        <div id="officeGpsMessage"
-             class="gpsInfo">
-          Office location not loaded.
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ADMIN SALARY -->
-
-    <section id="adminSalary" class="page hidden">
-
-      <div class="pageTitle">
-        Monthly Salary
-      </div>
-
-      <div class="toolbar">
-
-        <select id="salaryMonth"
-                onchange="loadSalaryReport()">
-        </select>
-
-      </div>
-
-      <div class="tableWrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Employee ID</th>
-              <th>Name</th>
-              <th>Post</th>
-              <th>Salary</th>
-              <th>Present</th>
-              <th>Leave</th>
-              <th>Estimated</th>
-            </tr>
-          </thead>
-
-          <tbody id="salaryTable">
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-  </main>
-
-</div>
-
-
-<!-- EMPLOYEE MODAL -->
-
-<div id="employeeModal"
-     class="modal hidden">
-
-  <div class="modalBox">
-
-    <div class="modalHead">
-
-      <h2 id="employeeModalTitle">
-        Add Employee
-      </h2>
-
-      <button class="closeBtn"
-              onclick="closeEmployeeModal()">
-        ×
-      </button>
-
-    </div>
-
-    <div class="formGroup">
-      <label>Employee ID</label>
-      <input id="empId"
-             type="text"
-             placeholder="Example: payol01">
-    </div>
-
-    <div class="formGroup">
-      <label>Name</label>
-      <input id="empName"
-             type="text"
-             placeholder="Employee name">
-    </div>
-
-    <div class="formGroup">
-      <label>Password</label>
-      <input id="empPassword"
-             type="text"
-             placeholder="Password">
-    </div>
-
-    <div class="formGroup">
-      <label>Post / Designation</label>
-      <input id="empPost"
-             type="text"
-             placeholder="Example: Sales Executive">
-    </div>
-
-    <div class="formGroup">
-      <label>Salary</label>
-      <input id="empSalary"
-             type="number"
-             placeholder="Monthly salary">
-    </div>
-
-    <button class="mainBtn"
-            onclick="saveEmployee()">
-      Save Employee
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- TOAST -->
-
-<div id="toast"
-     class="toast hidden">
-</div>
-
-
 <script>
 
 /* =========================================================
@@ -1275,6 +52,7 @@ function $(id){
   return document.getElementById(id);
 }
 
+
 function todayString(){
 
   const d = new Date();
@@ -1284,11 +62,13 @@ function todayString(){
     String(d.getDate()).padStart(2,"0");
 }
 
+
 function monthString(date){
 
   return date.getFullYear() + "-" +
     String(date.getMonth()+1).padStart(2,"0");
 }
+
 
 function formatDate(date){
 
@@ -1303,6 +83,7 @@ function formatDate(date){
     d.getFullYear();
 }
 
+
 function formatTime(t){
 
   if(!t) return "-";
@@ -1310,11 +91,13 @@ function formatTime(t){
   return String(t).slice(0,5);
 }
 
+
 function money(n){
 
   return "₹" +
     Number(n || 0).toLocaleString("en-IN");
 }
+
 
 function showToast(message,type=""){
 
@@ -1330,6 +113,7 @@ function showToast(message,type=""){
   },3500);
 }
 
+
 function showPage(id){
 
   document
@@ -1344,17 +128,20 @@ function showPage(id){
 
 /* =========================================================
    LOGIN
+   CUSTOM LOGIN ID = employees.employee_id
+   INTERNAL UUID = employees.id
 ========================================================= */
 
 async function login(){
 
-  const id =
+  const loginId =
     $("loginId").value.trim();
 
   const password =
     $("loginPassword").value.trim();
 
-  if(!id || !password){
+
+  if(!loginId || !password){
 
     showToast(
       "ID aur password enter kijiye",
@@ -1364,10 +151,11 @@ async function login(){
     return;
   }
 
+
   /* ADMIN */
 
   if(
-    id === ADMIN_USERNAME &&
+    loginId === ADMIN_USERNAME &&
     password === ADMIN_PASSWORD
   ){
 
@@ -1392,14 +180,21 @@ async function login(){
   }
 
 
-  /* EMPLOYEE */
+  /* EMPLOYEE
+     IMPORTANT:
+     Login ID employee_id column me hai
+  */
 
   const result =
     await db
       .from("employees")
       .select("*")
-      .eq("id",id)
+      .eq(
+        "employee_id",
+        loginId
+      )
       .maybeSingle();
+
 
   if(result.error){
 
@@ -1414,6 +209,7 @@ async function login(){
     return;
   }
 
+
   if(
     !result.data ||
     String(result.data.password) !== password
@@ -1427,9 +223,12 @@ async function login(){
     return;
   }
 
+
   isAdmin = false;
 
-  currentUser = result.data;
+  currentUser =
+    result.data;
+
 
   localStorage.setItem(
     "payol_session",
@@ -1438,6 +237,7 @@ async function login(){
       user:currentUser
     })
   );
+
 
   await startApp();
 }
@@ -1452,12 +252,16 @@ async function checkSession(){
   const saved =
     localStorage.getItem("payol_session");
 
-  if(!saved) return;
+
+  if(!saved)
+    return;
+
 
   try{
 
     const session =
       JSON.parse(saved);
+
 
     if(session.admin){
 
@@ -1470,12 +274,30 @@ async function checkSession(){
 
     }else{
 
+      const loginId =
+        session.user?.employee_id;
+
+
+      if(!loginId){
+
+        localStorage.removeItem(
+          "payol_session"
+        );
+
+        return;
+      }
+
+
       const result =
         await db
           .from("employees")
           .select("*")
-          .eq("id",session.user.id)
+          .eq(
+            "employee_id",
+            loginId
+          )
           .maybeSingle();
+
 
       if(result.data){
 
@@ -1498,6 +320,8 @@ async function checkSession(){
 
   }catch(e){
 
+    console.error(e);
+
     localStorage.removeItem(
       "payol_session"
     );
@@ -1518,23 +342,28 @@ async function startApp(){
   $("app")
     .classList.remove("hidden");
 
+
   $("userBadge").textContent =
     isAdmin
       ? "Admin"
       : currentUser.name +
         " (" +
-        currentUser.id +
+        currentUser.employee_id +
         ")";
 
+
   buildNav();
+
 
   if(isAdmin){
 
     await loadAllEmployees();
+
     await loadOfficeSettings();
+
     await loadHolidays();
 
-    loadAdminDashboard();
+    await loadAdminDashboard();
 
     showPage("adminHome");
 
@@ -1542,7 +371,9 @@ async function startApp(){
 
     await loadOfficeSettings();
 
-    loadEmployeeDashboard();
+    await loadHolidays();
+
+    await loadEmployeeDashboard();
 
     showPage("employeeHome");
 
@@ -1561,6 +392,7 @@ function logout(){
   );
 
   currentUser = null;
+
   isAdmin = false;
 
   location.reload();
@@ -1577,24 +409,34 @@ function buildNav(){
 
   nav.innerHTML = "";
 
+
   if(isAdmin){
 
     addNav("Dashboard","adminHome");
+
     addNav("Employees","adminEmployees");
+
     addNav("Attendance","adminAttendance");
+
     addNav("Holidays","adminHolidays");
+
     addNav("Leaves","adminLeaves");
+
     addNav("Office GPS","adminOffice");
+
     addNav("Salary","adminSalary");
 
   }else{
 
     addNav("Dashboard","employeeHome");
+
     addNav("My Attendance","employeeCalendar");
+
     addNav("Leave Request","employeeLeave");
 
   }
 }
+
 
 function addNav(text,page){
 
@@ -1603,49 +445,82 @@ function addNav(text,page){
 
   btn.textContent = text;
 
+
   btn.onclick = async ()=>{
 
     showPage(page);
 
+
     if(page === "adminHome"){
+
       await loadAdminDashboard();
+
     }
+
 
     if(page === "adminEmployees"){
+
       await loadAllEmployees();
+
       renderEmployees();
+
     }
+
 
     if(page === "adminAttendance"){
+
+      await loadAllEmployees();
+
       await loadAttendanceReport();
+
     }
+
 
     if(page === "adminHolidays"){
+
       await loadHolidays();
+
     }
+
 
     if(page === "adminLeaves"){
+
       await loadLeaves();
+
     }
+
 
     if(page === "adminOffice"){
+
       await loadOfficeSettings();
+
     }
+
 
     if(page === "adminSalary"){
+
       setupSalaryMonths();
+
       await loadSalaryReport();
+
     }
+
 
     if(page === "employeeCalendar"){
+
       await renderCalendar();
+
     }
 
+
     if(page === "employeeLeave"){
+
       await loadMyLeaves();
+
     }
 
   };
+
 
   $("nav").appendChild(btn);
 }
@@ -1661,7 +536,11 @@ async function loadAllEmployees(){
     await db
       .from("employees")
       .select("*")
-      .order("id");
+      .order(
+        "employee_id",
+        {ascending:true}
+      );
+
 
   if(result.error){
 
@@ -1676,6 +555,7 @@ async function loadAllEmployees(){
     return;
   }
 
+
   employees =
     result.data || [];
 }
@@ -1688,10 +568,11 @@ function renderEmployees(){
       .trim()
       .toLowerCase() || "";
 
+
   const list =
     employees.filter(e=>{
 
-      return String(e.id)
+      return String(e.employee_id || "")
         .toLowerCase()
         .includes(search) ||
 
@@ -1705,13 +586,17 @@ function renderEmployees(){
 
     });
 
+
   $("employeesTable").innerHTML =
+
     list.map(e=>`
 
       <tr>
 
         <td>
-          <b>${escapeHtml(e.id)}</b>
+          <b>
+            ${escapeHtml(e.employee_id || "")}
+          </b>
         </td>
 
         <td>
@@ -1728,13 +613,15 @@ function renderEmployees(){
 
         <td>
 
-          <button class="actionBtn editBtn"
-                  onclick='editEmployee(${JSON.stringify(e).replace(/'/g,"&#39;")})'>
+          <button
+            class="actionBtn editBtn"
+            onclick='editEmployee(${JSON.stringify(e).replace(/'/g,"&#39;")})'>
             Edit
           </button>
 
-          <button class="actionBtn deleteBtn"
-                  onclick="deleteEmployee('${escapeJs(e.id)}')">
+          <button
+            class="actionBtn deleteBtn"
+            onclick="deleteEmployee('${escapeJs(e.id)}')">
             Delete
           </button>
 
@@ -1743,6 +630,26 @@ function renderEmployees(){
       </tr>
 
     `).join("");
+
+
+  if(!list.length){
+
+    $("employeesTable").innerHTML = `
+
+      <tr>
+
+        <td colspan="5"
+            style="text-align:center">
+
+          No employees found
+
+        </td>
+
+      </tr>
+
+    `;
+
+  }
 }
 
 
@@ -1754,57 +661,78 @@ function openEmployeeModal(emp=null){
 
   oldEmp = emp;
 
+
   $("employeeModalTitle").textContent =
     emp
       ? "Edit Employee"
       : "Add Employee";
 
+
   $("empId").value =
-    emp?.id || "";
+    emp?.employee_id || "";
+
 
   $("empName").value =
     emp?.name || "";
 
+
   $("empPassword").value =
     emp?.password || "";
+
 
   $("empPost").value =
     emp?.post || "";
 
+
   $("empSalary").value =
     emp?.salary || "";
 
+
+  /* Login ID edit nahi hoga */
+
   $("empId").disabled =
     !!emp;
+
 
   $("employeeModal")
     .classList.remove("hidden");
 }
 
+
 function closeEmployeeModal(){
 
   oldEmp = null;
 
+
   $("employeeModal")
     .classList.add("hidden");
 
+
   $("empId").disabled = false;
 
+
   $("empId").value = "";
+
   $("empName").value = "";
+
   $("empPassword").value = "";
+
   $("empPost").value = "";
+
   $("empSalary").value = "";
 }
 
 
 /* =========================================================
-   SAVE EMPLOYEE — FIXED
+   SAVE EMPLOYEE
+   IMPORTANT FIX:
+   id = UUID -> database generates it
+   employee_id = custom text Login ID
 ========================================================= */
 
 async function saveEmployee(){
 
-  const id =
+  const loginId =
     $("empId").value.trim();
 
   const name =
@@ -1820,7 +748,7 @@ async function saveEmployee(){
     Number($("empSalary").value) || 0;
 
 
-  if(!id){
+  if(!loginId){
 
     showToast(
       "Employee ID डालिए",
@@ -1829,6 +757,7 @@ async function saveEmployee(){
 
     return;
   }
+
 
   if(!name){
 
@@ -1839,6 +768,7 @@ async function saveEmployee(){
 
     return;
   }
+
 
   if(!password){
 
@@ -1851,11 +781,13 @@ async function saveEmployee(){
   }
 
 
-  /* ID हमेशा text/string */
-
   const cleanId =
-    String(id).trim();
+    String(loginId).trim();
 
+
+  /* =====================================================
+     EDIT EMPLOYEE
+  ===================================================== */
 
   if(oldEmp){
 
@@ -1865,20 +797,27 @@ async function saveEmployee(){
         .update({
 
           name:name,
+
           password:password,
+
           post:post,
+
           salary:salary
 
         })
         .eq(
           "id",
-          String(oldEmp.id)
+          oldEmp.id
         );
 
 
     if(result.error){
 
-      console.error(result.error);
+      console.error(
+        "EMPLOYEE UPDATE ERROR:",
+        result.error
+      );
+
 
       showToast(
         "Save failed: " +
@@ -1889,16 +828,28 @@ async function saveEmployee(){
       return;
     }
 
-  }else{
 
-    /* पहले check करें कि ID मौजूद तो नहीं */
+  }
+
+
+  /* =====================================================
+     ADD EMPLOYEE
+  ===================================================== */
+
+  else{
+
+    /* Check custom Login ID */
 
     const check =
       await db
         .from("employees")
-        .select("id")
-        .eq("id",cleanId)
+        .select("id,employee_id")
+        .eq(
+          "employee_id",
+          cleanId
+        )
         .maybeSingle();
+
 
     if(check.error){
 
@@ -1911,6 +862,7 @@ async function saveEmployee(){
       return;
     }
 
+
     if(check.data){
 
       showToast(
@@ -1922,17 +874,32 @@ async function saveEmployee(){
     }
 
 
+    /*
+      VERY IMPORTANT:
+
+      id ko bilkul nahi bhejna.
+      Supabase/database apna UUID banayega.
+
+      employee_id me PAYOL01 / ABC123 / kuch bhi
+      text ID jayegi.
+    */
+
     const employeeObject = {
 
-      id:cleanId,
+      employee_id:
+        cleanId,
 
-      name:name,
+      name:
+        name,
 
-      password:password,
+      password:
+        password,
 
-      post:post,
+      post:
+        post,
 
-      salary:salary
+      salary:
+        salary
 
     };
 
@@ -1940,7 +907,9 @@ async function saveEmployee(){
     const result =
       await db
         .from("employees")
-        .insert([employeeObject]);
+        .insert([
+          employeeObject
+        ]);
 
 
     if(result.error){
@@ -1949,6 +918,7 @@ async function saveEmployee(){
         "EMPLOYEE INSERT ERROR:",
         result.error
       );
+
 
       showToast(
         "Save failed: " +
@@ -1969,7 +939,9 @@ async function saveEmployee(){
     "success"
   );
 
+
   closeEmployeeModal();
+
 
   await loadAllEmployees();
 
@@ -1982,9 +954,12 @@ async function saveEmployee(){
 function editEmployee(emp){
 
   openEmployeeModal(emp);
-
 }
 
+
+/* =========================================================
+   DELETE EMPLOYEE
+========================================================= */
 
 async function deleteEmployee(id){
 
@@ -1995,18 +970,27 @@ async function deleteEmployee(id){
   ){
 
     return;
-
   }
 
+
+  /*
+    Employee ka internal UUID delete hoga.
+    Isse custom Login ID par koi UUID problem nahi hogi.
+  */
 
   const result =
     await db
       .from("employees")
       .delete()
-      .eq("id",String(id));
+      .eq(
+        "id",
+        id
+      );
 
 
   if(result.error){
+
+    console.error(result.error);
 
     showToast(
       "Delete failed: " +
@@ -2022,6 +1006,7 @@ async function deleteEmployee(id){
     "Employee deleted",
     "success"
   );
+
 
   await loadAllEmployees();
 
@@ -2044,6 +1029,7 @@ async function loadOfficeSettings(){
       .eq("id",1)
       .maybeSingle();
 
+
   if(result.error){
 
     console.error(result.error);
@@ -2051,12 +1037,18 @@ async function loadOfficeSettings(){
     return;
   }
 
+
   officeSettings =
     result.data || {
+
       id:1,
+
       latitude:null,
+
       longitude:null,
+
       radius_meters:100
+
     };
 
 
@@ -2106,6 +1098,7 @@ function getOfficeGPS(){
       $("officeLat").value =
         lat.toFixed(8);
 
+
       $("officeLng").value =
         lng.toFixed(8);
 
@@ -2118,11 +1111,13 @@ function getOfficeGPS(){
 
     },
 
+
     error=>{
 
       $("officeGpsMessage").textContent =
         "GPS Error: " +
         error.message;
+
 
       showToast(
         "GPS permission/location check kijiye",
@@ -2131,9 +1126,12 @@ function getOfficeGPS(){
 
     },
 
+
     {
       enableHighAccuracy:true,
+
       timeout:15000,
+
       maximumAge:0
     }
 
@@ -2213,6 +1211,7 @@ async function saveOfficeSettings(){
 
   await loadOfficeSettings();
 
+
   showToast(
     "Office GPS settings saved",
     "success"
@@ -2236,11 +1235,14 @@ function distanceMeters(
   const toRad =
     deg => deg * Math.PI / 180;
 
+
   const dLat =
     toRad(lat2-lat1);
 
+
   const dLon =
     toRad(lon2-lon1);
+
 
   const a =
     Math.sin(dLat/2) *
@@ -2252,12 +1254,14 @@ function distanceMeters(
     Math.sin(dLon/2) *
     Math.sin(dLon/2);
 
+
   const c =
     2 *
     Math.atan2(
       Math.sqrt(a),
       Math.sqrt(1-a)
     );
+
 
   return R*c;
 }
@@ -2272,17 +1276,23 @@ async function loadEmployeeDashboard(){
   $("empDashName").textContent =
     currentUser.name || "-";
 
+
   $("empDashPost").textContent =
     currentUser.post || "-";
+
 
   $("empDashSalary").textContent =
     money(currentUser.salary);
 
 
   await updateTodayAttendanceStatus();
-
 }
 
+
+/* =========================================================
+   TODAY ATTENDANCE
+   Attendance employee_id = employees.id UUID
+========================================================= */
 
 async function updateTodayAttendanceStatus(){
 
@@ -2312,6 +1322,9 @@ async function updateTodayAttendanceStatus(){
     $("attendanceStatus").textContent =
       "Attendance status unavailable";
 
+    $("attendanceSub").textContent =
+      result.error.message;
+
     return;
   }
 
@@ -2322,6 +1335,7 @@ async function updateTodayAttendanceStatus(){
 
   const inDone =
     !!row?.in_time;
+
 
   const outDone =
     !!row?.out_time;
@@ -2340,6 +1354,7 @@ async function updateTodayAttendanceStatus(){
     $("attendanceStatus").textContent =
       "Not Marked";
 
+
     $("attendanceSub").textContent =
       "Aaj attendance mark kijiye";
 
@@ -2351,6 +1366,7 @@ async function updateTodayAttendanceStatus(){
     $("attendanceStatus").textContent =
       "IN Marked";
 
+
     $("attendanceSub").textContent =
       "IN: " +
       formatTime(row.in_time) +
@@ -2360,6 +1376,7 @@ async function updateTodayAttendanceStatus(){
 
     $("attendanceStatus").textContent =
       "Attendance Complete";
+
 
     $("attendanceSub").textContent =
       "IN: " +
@@ -2373,6 +1390,7 @@ async function updateTodayAttendanceStatus(){
   $("inButton").disabled =
     inDone;
 
+
   $("outButton").disabled =
     !inDone || outDone;
 
@@ -2383,12 +1401,12 @@ async function updateTodayAttendanceStatus(){
       inDone
     );
 
+
   $("outButton")
     .classList.toggle(
       "disabledBtn",
       !inDone || outDone
     );
-
 }
 
 
@@ -2406,8 +1424,6 @@ async function markAttendance(type){
     return;
   }
 
-
-  /* Office GPS must exist */
 
   await loadOfficeSettings();
 
@@ -2427,11 +1443,20 @@ async function markAttendance(type){
   }
 
 
-  /* First DB check */
-
   const today =
     todayString();
 
+
+  /*
+    Attendance me employee_id:
+    employees.id ka UUID
+  */
+
+  const employeeUUID =
+    String(currentUser.id);
+
+
+  /* First DB check */
 
   const existingResult =
     await db
@@ -2439,7 +1464,7 @@ async function markAttendance(type){
       .select("*")
       .eq(
         "employee_id",
-        String(currentUser.id)
+        employeeUUID
       )
       .eq(
         "attendance_date",
@@ -2533,7 +1558,6 @@ async function markAttendance(type){
       const lng =
         position.coords.longitude;
 
-
       const accuracy =
         position.coords.accuracy;
 
@@ -2562,7 +1586,9 @@ async function markAttendance(type){
 
       if(
         distance >
-        Number(officeSettings.radius_meters || 100)
+        Number(
+          officeSettings.radius_meters || 100
+        )
       ){
 
         showToast(
@@ -2576,7 +1602,7 @@ async function markAttendance(type){
       }
 
 
-      /* SECOND DB CHECK — duplicate protection */
+      /* SECOND CHECK */
 
       const secondCheck =
         await db
@@ -2584,7 +1610,7 @@ async function markAttendance(type){
           .select("*")
           .eq(
             "employee_id",
-            String(currentUser.id)
+            employeeUUID
           )
           .eq(
             "attendance_date",
@@ -2596,7 +1622,8 @@ async function markAttendance(type){
       if(secondCheck.error){
 
         showToast(
-          "Attendance verification failed",
+          "Attendance verification failed: " +
+          secondCheck.error.message,
           "error"
         );
 
@@ -2672,12 +1699,14 @@ async function markAttendance(type){
 
                 latitude:lat,
 
-                longitude:lng
+                longitude:lng,
+
+                attendance_type:"IN"
 
               })
               .eq(
                 "employee_id",
-                String(currentUser.id)
+                employeeUUID
               )
               .eq(
                 "attendance_date",
@@ -2696,7 +1725,7 @@ async function markAttendance(type){
               .insert([{
 
                 employee_id:
-                  String(currentUser.id),
+                  employeeUUID,
 
                 attendance_date:
                   today,
@@ -2707,13 +1736,16 @@ async function markAttendance(type){
                 in_time:
                   time,
 
+                out_time:
+                  null,
+
                 latitude:
                   lat,
 
                 longitude:
                   lng
 
-              }]);
+              ]);
 
         }
 
@@ -2729,16 +1761,19 @@ async function markAttendance(type){
             .from("attendance")
             .update({
 
-              out_time:time,
+              out_time:
+                time,
 
-              latitude:lat,
+              latitude:
+                lat,
 
-              longitude:lng
+              longitude:
+                lng
 
             })
             .eq(
               "employee_id",
-              String(currentUser.id)
+              employeeUUID
             )
             .eq(
               "attendance_date",
@@ -2751,6 +1786,7 @@ async function markAttendance(type){
             )
             .is(
               "out_time",
+              "is",
               null
             );
 
@@ -2764,8 +1800,6 @@ async function markAttendance(type){
           result.error
         );
 
-
-        /* Duplicate error */
 
         if(
           result.error.code === "23505"
@@ -2801,11 +1835,13 @@ async function markAttendance(type){
 
     },
 
+
     error=>{
 
       $("gpsInfo").textContent =
         "GPS Error: " +
         error.message;
+
 
       showToast(
         "GPS permission ON kijiye",
@@ -2814,14 +1850,16 @@ async function markAttendance(type){
 
     },
 
+
     {
       enableHighAccuracy:true,
+
       timeout:20000,
+
       maximumAge:0
     }
 
   );
-
 }
 
 
@@ -2832,6 +1870,7 @@ async function markAttendance(type){
 async function loadAdminDashboard(){
 
   await loadAllEmployees();
+
 
   const today =
     todayString();
@@ -2850,7 +1889,8 @@ async function loadAdminDashboard(){
   if(result.error){
 
     showToast(
-      "Dashboard load failed",
+      "Dashboard load failed: " +
+      result.error.message,
       "error"
     );
 
@@ -2867,22 +1907,21 @@ async function loadAdminDashboard(){
 
 
   $("statPresent").textContent =
-    rows.filter(r=>r.in_time).length;
+    rows.filter(
+      r=>r.in_time
+    ).length;
 
 
   $("statIn").textContent =
-    rows.filter(r=>r.in_time).length;
+    rows.filter(
+      r=>r.in_time
+    ).length;
 
 
   $("statOut").textContent =
-    rows.filter(r=>r.out_time).length;
-
-
-  const employeeMap = {};
-
-  employees.forEach(e=>{
-    employeeMap[String(e.id)] = e;
-  });
+    rows.filter(
+      r=>r.out_time
+    ).length;
 
 
   $("todayTable").innerHTML = `
@@ -2915,19 +1954,37 @@ async function loadAdminDashboard(){
                     String(e.id)
                 );
 
+
               return `
 
                 <tr>
 
-                  <td>${escapeHtml(e.id)}</td>
-
-                  <td>${escapeHtml(e.name || "")}</td>
-
-                  <td>${formatTime(r?.in_time)}</td>
-
-                  <td>${formatTime(r?.out_time)}</td>
+                  <td>
+                    ${escapeHtml(
+                      e.employee_id || ""
+                    )}
+                  </td>
 
                   <td>
+                    ${escapeHtml(
+                      e.name || ""
+                    )}
+                  </td>
+
+                  <td>
+                    ${formatTime(
+                      r?.in_time
+                    )}
+                  </td>
+
+                  <td>
+                    ${formatTime(
+                      r?.out_time
+                    )}
+                  </td>
+
+                  <td>
+
                     ${
                       r?.out_time
                         ? "Complete"
@@ -2935,6 +1992,7 @@ async function loadAdminDashboard(){
                           ? "IN"
                           : "Absent"
                     }
+
                   </td>
 
                 </tr>
@@ -2942,7 +2000,6 @@ async function loadAdminDashboard(){
               `;
 
             }).join("")
-
           }
 
         </tbody>
@@ -2952,7 +2009,6 @@ async function loadAdminDashboard(){
     </div>
 
   `;
-
 }
 
 
@@ -2962,7 +2018,8 @@ async function loadAdminDashboard(){
 
 async function loadAttendanceReport(){
 
-  if(!$("reportDate")) return;
+  if(!$("reportDate"))
+    return;
 
 
   if(!$("reportDate").value){
@@ -3006,23 +2063,21 @@ async function loadAttendanceReport(){
     result.data || [];
 
 
-  const map = {};
-
-  employees.forEach(e=>{
-    map[String(e.id)] = e;
-  });
-
-
   $("attendanceTable").innerHTML =
 
     lastAttendanceRows.map(r=>{
 
       const e =
-        map[String(r.employee_id)] || {};
+        employees.find(
+          x =>
+            String(x.id) ===
+            String(r.employee_id)
+        ) || {};
 
 
       let status =
         "IN";
+
 
       if(r.out_time)
         status = "Complete";
@@ -3032,23 +2087,46 @@ async function loadAttendanceReport(){
 
         <tr>
 
-          <td>${formatDate(date)}</td>
-
-          <td>${escapeHtml(r.employee_id)}</td>
-
-          <td>${escapeHtml(e.name || "-")}</td>
-
-          <td>${formatTime(r.in_time)}</td>
-
-          <td>${formatTime(r.out_time)}</td>
+          <td>
+            ${formatDate(date)}
+          </td>
 
           <td>
+            ${escapeHtml(
+              e.employee_id ||
+              "-"
+            )}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              e.name ||
+              "-"
+            )}
+          </td>
+
+          <td>
+            ${formatTime(
+              r.in_time
+            )}
+          </td>
+
+          <td>
+            ${formatTime(
+              r.out_time
+            )}
+          </td>
+
+          <td>
+
             ${
               r.latitude &&
               r.longitude &&
-              officeSettings?.latitude &&
-              officeSettings?.longitude
+              officeSettings?.latitude !== null &&
+              officeSettings?.longitude !== null
+
               ?
+
               Math.round(
                 distanceMeters(
                   Number(r.latitude),
@@ -3057,12 +2135,18 @@ async function loadAttendanceReport(){
                   Number(officeSettings.longitude)
                 )
               ) + " m"
+
               :
+
               "-"
+
             }
+
           </td>
 
-          <td>${status}</td>
+          <td>
+            ${status}
+          </td>
 
         </tr>
 
@@ -3076,16 +2160,20 @@ async function loadAttendanceReport(){
     $("attendanceTable").innerHTML = `
 
       <tr>
-        <td colspan="7"
-            style="text-align:center">
+
+        <td
+          colspan="7"
+          style="text-align:center">
+
           No attendance found
+
         </td>
+
       </tr>
 
     `;
 
   }
-
 }
 
 
@@ -3106,13 +2194,6 @@ function exportCSV(){
   }
 
 
-  const map = {};
-
-  employees.forEach(e=>{
-    map[String(e.id)] = e;
-  });
-
-
   let csv =
     "Date,Employee ID,Name,IN,OUT,Status\n";
 
@@ -3120,7 +2201,11 @@ function exportCSV(){
   lastAttendanceRows.forEach(r=>{
 
     const e =
-      map[String(r.employee_id)] || {};
+      employees.find(
+        x =>
+          String(x.id) ===
+          String(r.employee_id)
+      ) || {};
 
 
     const status =
@@ -3133,12 +2218,19 @@ function exportCSV(){
 
     csv +=
       [
+
         r.attendance_date,
-        r.employee_id,
+
+        e.employee_id || "",
+
         e.name || "",
+
         r.in_time || "",
+
         r.out_time || "",
+
         status
+
       ]
       .map(csvEscape)
       .join(",") +
@@ -3151,7 +2243,8 @@ function exportCSV(){
     new Blob(
       [csv],
       {
-        type:"text/csv;charset=utf-8;"
+        type:
+          "text/csv;charset=utf-8;"
       }
     );
 
@@ -3166,6 +2259,7 @@ function exportCSV(){
 
   a.href = url;
 
+
   a.download =
     "payol-attendance-" +
     todayString() +
@@ -3176,7 +2270,6 @@ function exportCSV(){
 
 
   URL.revokeObjectURL(url);
-
 }
 
 
@@ -3184,6 +2277,7 @@ function csvEscape(value){
 
   const s =
     String(value ?? "");
+
 
   return '"' +
     s.replace(/"/g,'""') +
@@ -3203,7 +2297,9 @@ async function loadHolidays(){
       .select("*")
       .order(
         "holiday_date",
-        {ascending:true}
+        {
+          ascending:true
+        }
       );
 
 
@@ -3236,7 +2332,9 @@ async function loadHolidays(){
           <tr>
 
             <td>
-              ${formatDate(h.holiday_date)}
+              ${formatDate(
+                h.holiday_date
+              )}
             </td>
 
             <td>
@@ -3248,7 +2346,9 @@ async function loadHolidays(){
               <button
                 class="actionBtn deleteBtn"
                 onclick="deleteHoliday('${escapeJs(h.id)}')">
+
                 Delete
+
               </button>
 
             </td>
@@ -3260,7 +2360,6 @@ async function loadHolidays(){
       }).join("");
 
   }
-
 }
 
 
@@ -3268,6 +2367,7 @@ async function addHoliday(){
 
   const date =
     $("holidayDate").value;
+
 
   const name =
     $("holidayName").value.trim();
@@ -3289,11 +2389,14 @@ async function addHoliday(){
       .from("holidays")
       .insert([{
 
-        holiday_date:date,
+        holiday_date:
+          date,
 
-        name:name,
+        name:
+          name,
 
-        holiday_name:name
+        holiday_name:
+          name
 
       }]);
 
@@ -3311,6 +2414,7 @@ async function addHoliday(){
 
 
   $("holidayDate").value = "";
+
   $("holidayName").value = "";
 
 
@@ -3326,7 +2430,11 @@ async function addHoliday(){
 
 async function deleteHoliday(id){
 
-  if(!confirm("Holiday delete karein?"))
+  if(
+    !confirm(
+      "Holiday delete karein?"
+    )
+  )
     return;
 
 
@@ -3334,7 +2442,10 @@ async function deleteHoliday(id){
     await db
       .from("holidays")
       .delete()
-      .eq("id",id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if(result.error){
@@ -3361,12 +2472,14 @@ async function deleteHoliday(id){
 
 /* =========================================================
    LEAVE REQUEST
+   employee_id = employees.id UUID
 ========================================================= */
 
 async function submitLeave(){
 
   const date =
     $("leaveDate").value;
+
 
   const reason =
     $("leaveReason").value.trim();
@@ -3419,6 +2532,7 @@ async function submitLeave(){
 
 
   $("leaveDate").value = "";
+
   $("leaveReason").value = "";
 
 
@@ -3444,7 +2558,9 @@ async function loadMyLeaves(){
       )
       .order(
         "leave_date",
-        {ascending:false}
+        {
+          ascending:false
+        }
       );
 
 
@@ -3469,9 +2585,13 @@ async function loadMyLeaves(){
         <thead>
 
           <tr>
+
             <th>Date</th>
+
             <th>Reason</th>
+
             <th>Status</th>
+
           </tr>
 
         </thead>
@@ -3484,15 +2604,21 @@ async function loadMyLeaves(){
               <tr>
 
                 <td>
-                  ${formatDate(r.leave_date)}
+                  ${formatDate(
+                    r.leave_date
+                  )}
                 </td>
 
                 <td>
-                  ${escapeHtml(r.reason)}
+                  ${escapeHtml(
+                    r.reason
+                  )}
                 </td>
 
                 <td>
-                  ${escapeHtml(r.status)}
+                  ${escapeHtml(
+                    r.status
+                  )}
                 </td>
 
               </tr>
@@ -3507,7 +2633,6 @@ async function loadMyLeaves(){
     </div>
 
   `;
-
 }
 
 
@@ -3519,7 +2644,9 @@ async function loadLeaves(){
       .select("*")
       .order(
         "leave_date",
-        {ascending:false}
+        {
+          ascending:false
+        }
       );
 
 
@@ -3541,70 +2668,106 @@ async function loadLeaves(){
 
   $("leaveTable").innerHTML =
 
-    rows.map(r=>`
+    rows.map(r=>{
 
-      <tr>
-
-        <td>
-
-          ${escapeHtml(r.employee_name || "")}
-
-          <br>
-
-          <small>
-            ${escapeHtml(r.employee_id)}
-          </small>
-
-        </td>
-
-        <td>
-          ${formatDate(r.leave_date)}
-        </td>
-
-        <td>
-          ${escapeHtml(r.reason)}
-        </td>
-
-        <td>
-          ${escapeHtml(r.status)}
-        </td>
-
-        <td>
-
-          ${
-            r.status === "PENDING"
-
-            ?
-
-            `
-
-            <button
-              class="actionBtn approveBtn"
-              onclick="updateLeave('${escapeJs(r.id)}','APPROVED')">
-              Approve
-            </button>
-
-            <button
-              class="actionBtn rejectBtn"
-              onclick="updateLeave('${escapeJs(r.id)}','REJECTED')">
-              Reject
-            </button>
-
-            `
-
-            :
-
-            "-"
-
-          }
-
-        </td>
-
-      </tr>
-
-    `).join("");
+      const e =
+        employees.find(
+          x =>
+            String(x.id) ===
+            String(r.employee_id)
+        );
 
 
+      const displayId =
+        e?.employee_id ||
+        r.employee_id ||
+        "";
+
+
+      const displayName =
+        e?.name ||
+        r.employee_name ||
+        "";
+
+
+      return `
+
+        <tr>
+
+          <td>
+
+            ${escapeHtml(
+              displayName
+            )}
+
+            <br>
+
+            <small>
+              ${escapeHtml(
+                displayId
+              )}
+            </small>
+
+          </td>
+
+          <td>
+            ${formatDate(
+              r.leave_date
+            )}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              r.reason
+            )}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              r.status
+            )}
+          </td>
+
+          <td>
+
+            ${
+              r.status === "PENDING"
+
+              ?
+
+              `
+
+              <button
+                class="actionBtn approveBtn"
+                onclick="updateLeave('${escapeJs(r.id)}','APPROVED')">
+
+                Approve
+
+              </button>
+
+              <button
+                class="actionBtn rejectBtn"
+                onclick="updateLeave('${escapeJs(r.id)}','REJECTED')">
+
+                Reject
+
+              </button>
+
+              `
+
+              :
+
+              "-"
+
+            }
+
+          </td>
+
+        </tr>
+
+      `;
+
+    }).join("");
 }
 
 
@@ -3614,9 +2777,15 @@ async function updateLeave(id,status){
     await db
       .from("leave_requests")
       .update({
-        status:status
+
+        status:
+          status
+
       })
-      .eq("id",id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if(result.error){
@@ -3653,6 +2822,7 @@ async function changeMonth(direction){
     direction
   );
 
+
   await renderCalendar();
 }
 
@@ -3661,6 +2831,7 @@ async function renderCalendar(){
 
   const year =
     calendarDate.getFullYear();
+
 
   const month =
     calendarDate.getMonth();
@@ -3727,13 +2898,17 @@ async function renderCalendar(){
     String(totalDays).padStart(2,"0");
 
 
+  const employeeUUID =
+    String(currentUser.id);
+
+
   const result =
     await db
       .from("attendance")
       .select("*")
       .eq(
         "employee_id",
-        String(currentUser.id)
+        employeeUUID
       )
       .gte(
         "attendance_date",
@@ -3755,7 +2930,7 @@ async function renderCalendar(){
       .select("*")
       .eq(
         "employee_id",
-        String(currentUser.id)
+        employeeUUID
       )
       .gte(
         "leave_date",
@@ -3848,12 +3023,14 @@ async function renderCalendar(){
     let cls =
       "calDay";
 
+
     let mark = "";
 
 
     if(h){
 
       cls += " holiday";
+
 
       mark =
         "🎉 " +
@@ -3874,9 +3051,11 @@ async function renderCalendar(){
 
       cls += " present";
 
+
       mark =
         "IN " +
         formatTime(a.in_time) +
+
         (
           a.out_time
             ? "<br>OUT " +
@@ -3915,7 +3094,6 @@ async function renderCalendar(){
 
   $("calendarGrid").innerHTML =
     html;
-
 }
 
 
@@ -3972,15 +3150,16 @@ function setupSalaryMonths(){
       document.createElement("option");
 
 
-    option.value = value;
+    option.value =
+      value;
 
-    option.textContent = text;
+
+    option.textContent =
+      text;
 
 
     select.appendChild(option);
-
   }
-
 }
 
 
@@ -4010,12 +3189,15 @@ async function loadSalaryReport(){
 
 
   const start =
-    selected + "-01";
+    selected +
+    "-01";
 
 
   const end =
-    selected + "-" +
-    String(days).padStart(2,"0");
+    selected +
+    "-" +
+    String(days)
+      .padStart(2,"0");
 
 
   const attendanceResult =
@@ -4062,7 +3244,7 @@ async function loadSalaryReport(){
 
     employees.map(e=>{
 
-      const empId =
+      const employeeUUID =
         String(e.id);
 
 
@@ -4070,7 +3252,7 @@ async function loadSalaryReport(){
         att.filter(
           r =>
             String(r.employee_id) ===
-            empId &&
+            employeeUUID &&
             !!r.in_time
         ).length;
 
@@ -4079,12 +3261,14 @@ async function loadSalaryReport(){
         leaves.filter(
           r =>
             String(r.employee_id) ===
-            empId
+            employeeUUID
         ).length;
 
 
       const salary =
-        Number(e.salary || 0);
+        Number(
+          e.salary || 0
+        );
 
 
       const estimated =
@@ -4102,15 +3286,21 @@ async function loadSalaryReport(){
         <tr>
 
           <td>
-            ${escapeHtml(e.id)}
+            ${escapeHtml(
+              e.employee_id || ""
+            )}
           </td>
 
           <td>
-            ${escapeHtml(e.name || "")}
+            ${escapeHtml(
+              e.name || ""
+            )}
           </td>
 
           <td>
-            ${escapeHtml(e.post || "-")}
+            ${escapeHtml(
+              e.post || "-"
+            )}
           </td>
 
           <td>
@@ -4126,7 +3316,9 @@ async function loadSalaryReport(){
           </td>
 
           <td>
-            <b>${money(estimated)}</b>
+            <b>
+              ${money(estimated)}
+            </b>
           </td>
 
         </tr>
@@ -4134,7 +3326,6 @@ async function loadSalaryReport(){
       `;
 
     }).join("");
-
 }
 
 
@@ -4150,15 +3341,14 @@ function escapeHtml(value){
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
 }
+
 
 function escapeJs(value){
 
   return String(value ?? "")
     .replace(/\\/g,"\\\\")
     .replace(/'/g,"\\'");
-
 }
 
 
@@ -4170,9 +3360,12 @@ document.addEventListener(
   "DOMContentLoaded",
   async ()=>{
 
-    if($("reportDate"))
+    if($("reportDate")){
+
       $("reportDate").value =
         todayString();
+
+    }
 
 
     await checkSession();
@@ -4181,6 +3374,3 @@ document.addEventListener(
 );
 
 </script>
-
-</body>
-</html>
