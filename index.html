@@ -15,130 +15,476 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+
 :root{
---red:#a40000;--red2:#6d0000;--bg:#080808;
---card:#151515;--line:#303030;--text:#fff;--muted:#aaa
+--red:#a40000;
+--red2:#6d0000;
+--bg:#080808;
+--card:#151515;
+--line:#303030;
+--text:#fff;
+--muted:#aaa
 }
+
 body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 background:linear-gradient(160deg,#080808,#180606 55%,#080808);
-color:#fff;min-height:100vh;padding-bottom:20px
+color:#fff;
+min-height:100vh;
+padding-bottom:20px
 }
+
 button,input,select,textarea{font:inherit}
+
 .header{
-position:sticky;top:0;z-index:50;padding:16px 15px;text-align:center;
+position:sticky;
+top:0;
+z-index:50;
+padding:16px 15px;
+text-align:center;
 background:linear-gradient(135deg,#570000,#b00000);
 box-shadow:0 5px 25px #0008
 }
-.header h1{font-size:21px;letter-spacing:1px}
-.header p{font-size:11px;color:#ffd5d5;margin-top:3px}
-.container{max-width:1100px;margin:auto;padding:12px}
+
+.header h1{
+font-size:21px;
+letter-spacing:1px
+}
+
+.header p{
+font-size:11px;
+color:#ffd5d5;
+margin-top:3px
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:12px
+}
+
 .card{
 background:linear-gradient(145deg,#191919,#111);
-border:1px solid #303030;border-radius:18px;padding:16px;
-margin-bottom:14px;box-shadow:0 8px 25px #0007
+border:1px solid #303030;
+border-radius:18px;
+padding:16px;
+margin-bottom:14px;
+box-shadow:0 8px 25px #0007
 }
-.login{max-width:430px;margin:45px auto}
+
+.login{
+max-width:430px;
+margin:45px auto
+}
+
 .logo{
-width:78px;height:78px;border-radius:24px;
-background:linear-gradient(145deg,#fff,#eee);color:#8d0000;
-display:grid;place-items:center;font-weight:900;font-size:15px;
-margin:0 auto 15px;box-shadow:0 8px 25px #0009
+width:78px;
+height:78px;
+border-radius:24px;
+background:linear-gradient(145deg,#fff,#eee);
+color:#8d0000;
+display:grid;
+place-items:center;
+font-weight:900;
+font-size:15px;
+margin:0 auto 15px;
+box-shadow:0 8px 25px #0009
 }
-h2{font-size:19px}h3{font-size:16px}
-label{display:block;font-size:12px;color:#bbb;margin:12px 0 5px}
+
+h2{font-size:19px}
+h3{font-size:16px}
+
+label{
+display:block;
+font-size:12px;
+color:#bbb;
+margin:12px 0 5px
+}
+
 input,select,textarea{
-width:100%;padding:12px 13px;background:#0d0d0d;color:#fff;
-border:1px solid #3a3a3a;border-radius:11px;outline:none
+width:100%;
+padding:12px 13px;
+background:#0d0d0d;
+color:#fff;
+border:1px solid #3a3a3a;
+border-radius:11px;
+outline:none
 }
+
 input:focus,select:focus,textarea:focus{
-border-color:#c00000;box-shadow:0 0 0 2px #c0000025
+border-color:#c00000;
+box-shadow:0 0 0 2px #c0000025
 }
-textarea{min-height:90px;resize:vertical}
+
+textarea{
+min-height:90px;
+resize:vertical
+}
+
 button{
-border:0;border-radius:11px;padding:12px 15px;color:#fff;
-font-weight:800;cursor:pointer;background:linear-gradient(135deg,#b00000,#790000)
+border:0;
+border-radius:11px;
+padding:12px 15px;
+color:#fff;
+font-weight:800;
+cursor:pointer;
+background:linear-gradient(135deg,#b00000,#790000)
 }
-button:active{transform:scale(.97)}
-.green{background:linear-gradient(135deg,#159557,#09663a)}
-.orange{background:linear-gradient(135deg,#e28a00,#a95600)}
-.blue{background:linear-gradient(135deg,#247bd9,#12509a)}
-.red{background:linear-gradient(135deg,#b00000,#720000)}
-.gray{background:#383838}
-.hidden{display:none!important}
-.row{display:flex;gap:9px;flex-wrap:wrap}
-.row button{flex:1;min-width:130px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+button:active{
+transform:scale(.97)
+}
+
+.green{
+background:linear-gradient(135deg,#159557,#09663a)
+}
+
+.orange{
+background:linear-gradient(135deg,#e28a00,#a95600)
+}
+
+.blue{
+background:linear-gradient(135deg,#247bd9,#12509a)
+}
+
+.red{
+background:linear-gradient(135deg,#b00000,#720000)
+}
+
+.gray{
+background:#383838
+}
+
+.hidden{
+display:none!important
+}
+
+.row{
+display:flex;
+gap:9px;
+flex-wrap:wrap
+}
+
+.row button{
+flex:1;
+min-width:130px
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px
+}
+
+.grid3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px
+}
+
 .section{
-display:flex;justify-content:space-between;align-items:center;
-gap:10px;margin-bottom:13px
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:13px
 }
-.section button{width:auto}
+
+.section button{
+width:auto
+}
+
 .stats{
-display:grid;grid-template-columns:repeat(5,1fr);
-gap:9px;margin-bottom:14px
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:9px;
+margin-bottom:14px
 }
+
 .stat{
 background:linear-gradient(145deg,#1c1c1c,#101010);
-border:1px solid #333;border-radius:15px;text-align:center;padding:14px 7px
+border:1px solid #333;
+border-radius:15px;
+text-align:center;
+padding:14px 7px
 }
-.stat b{display:block;font-size:24px}.stat span{font-size:11px;color:#aaa}
-.notice{font-size:11px;color:#999;line-height:1.5;margin-top:10px}
-.msg{display:none;padding:11px;border-radius:10px;margin-top:10px;background:#222;font-size:13px}
-.msg.show{display:block}.ok{border:1px solid #198754;background:#092719}
-.err{border:1px solid #a00000;background:#290909}
-.table{overflow:auto}table{width:100%;border-collapse:collapse}
-th,td{border-bottom:1px solid #303030;padding:10px 8px;text-align:left;font-size:12px;white-space:nowrap}
-th{color:#ffb1b1}
-.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:bold}
-.present{background:#145b35}.half{background:#69470b}.leave{background:#174879}
-.absent{background:#601717}.holiday{background:#52256d}.sunday{background:#444}
-.pending{background:#69500b}.approved{background:#145b35}.rejected{background:#601717}
-.profile{display:flex;align-items:center;gap:12px}
+
+.stat b{
+display:block;
+font-size:24px
+}
+
+.stat span{
+font-size:11px;
+color:#aaa
+}
+
+.notice{
+font-size:11px;
+color:#999;
+line-height:1.5;
+margin-top:10px
+}
+
+.msg{
+display:none;
+padding:11px;
+border-radius:10px;
+margin-top:10px;
+background:#222;
+font-size:13px
+}
+
+.msg.show{
+display:block
+}
+
+.ok{
+border:1px solid #198754;
+background:#092719
+}
+
+.err{
+border:1px solid #a00000;
+background:#290909
+}
+
+.table{
+overflow:auto
+}
+
+table{
+width:100%;
+border-collapse:collapse
+}
+
+th,td{
+border-bottom:1px solid #303030;
+padding:10px 8px;
+text-align:left;
+font-size:12px;
+white-space:nowrap
+}
+
+th{
+color:#ffb1b1
+}
+
+.badge{
+display:inline-block;
+padding:5px 9px;
+border-radius:20px;
+font-size:10px;
+font-weight:bold
+}
+
+.present{background:#145b35}
+.half{background:#69470b}
+.leave{background:#174879}
+.absent{background:#601717}
+.holiday{background:#52256d}
+.sunday{background:#444}
+.pending{background:#69500b}
+.approved{background:#145b35}
+.rejected{background:#601717}
+
+.profile{
+display:flex;
+align-items:center;
+gap:12px
+}
+
 .avatar{
-width:48px;height:48px;border-radius:15px;
+width:48px;
+height:48px;
+border-radius:15px;
 background:linear-gradient(145deg,#b00000,#610000);
-display:grid;place-items:center;font-weight:900;font-size:18px
+display:grid;
+place-items:center;
+font-weight:900;
+font-size:18px
 }
-.profile small{color:#999}
-.attendance-box{text-align:center;padding:8px 0 4px}
-.attendance-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.attendance-buttons button{min-height:70px;font-size:14px}
-.attendance-buttons span{display:block;font-size:25px;margin-bottom:4px}
+
+.profile small{
+color:#999
+}
+
+.attendance-box{
+text-align:center;
+padding:8px 0 4px
+}
+
+.attendance-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:14px
+}
+
+.attendance-buttons button{
+min-height:70px;
+font-size:14px
+}
+
+.attendance-buttons span{
+display:block;
+font-size:25px;
+margin-bottom:4px
+}
+
+/* ================================
+CALENDAR
+================================ */
+
 .calendar-title{
-display:flex;justify-content:space-between;align-items:center;
-gap:8px;margin-bottom:12px;position:relative
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:8px;
+margin-bottom:12px
 }
-.month-btn{width:48px;height:42px;padding:0;font-size:22px;z-index:30}
+
+.month-btn{
+width:48px;
+height:42px;
+padding:0;
+font-size:22px;
+flex-shrink:0
+}
+
 .month-label{
-flex:1;text-align:center;font-size:16px;font-weight:bold;
-padding:12px;cursor:pointer;border-radius:10px;background:#191919
+flex:1;
+text-align:center;
+font-size:16px;
+font-weight:bold;
+padding:12px;
+cursor:pointer;
+border-radius:10px;
+background:#191919;
+color:#fff;
+border:1px solid #303030
 }
-.month-label:active{background:#300707}
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.calhead{text-align:center;color:#999;font-size:10px;padding:4px 0}
+
+.month-label:active{
+background:#300707
+}
+
+/* hidden real month picker */
+#employeeMonth{
+position:absolute;
+width:1px;
+height:1px;
+opacity:0;
+pointer-events:none
+}
+
+.calendar{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:5px
+}
+
+.calhead{
+text-align:center;
+color:#999;
+font-size:10px;
+padding:4px 0
+}
+
 .day{
-min-height:68px;background:#101010;border:1px solid #292929;
-border-radius:10px;padding:6px 4px;text-align:center
+min-height:68px;
+background:#101010;
+border:1px solid #292929;
+border-radius:10px;
+padding:6px 4px;
+text-align:center
 }
-.day b{font-size:12px}.day small{display:block;margin-top:7px}
-.day.today{border:2px solid #d00000;background:#210707}
-.day.empty{background:transparent;border:0}
-.calendar-legend{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+
+.day b{
+font-size:12px
+}
+
+.day small{
+display:block;
+margin-top:7px
+}
+
+.day.today{
+border:2px solid #d00000;
+background:#210707
+}
+
+.day.empty{
+background:transparent;
+border:0
+}
+
+.calendar-legend{
+display:flex;
+gap:5px;
+flex-wrap:wrap;
+margin-top:12px
+}
+
 .install-box{
 background:linear-gradient(135deg,#3a0000,#160000);
-border:1px solid #7b0000;border-radius:15px;padding:13px;
-margin-bottom:14px;display:none
+border:1px solid #7b0000;
+border-radius:15px;
+padding:13px;
+margin-bottom:14px;
+display:none
 }
-.install-box.show{display:block}.install-box p{font-size:12px;color:#ddd;margin-bottom:9px}
-.admin-title{background:linear-gradient(135deg,#250000,#170000);border:1px solid #4c1717}
+
+.install-box.show{
+display:block
+}
+
+.install-box p{
+font-size:12px;
+color:#ddd;
+margin-bottom:9px
+}
+
+.admin-title{
+background:linear-gradient(135deg,#250000,#170000);
+border:1px solid #4c1717
+}
+
 @media(max-width:700px){
-.container{padding:8px}.grid,.grid3{grid-template-columns:1fr}
-.stats{grid-template-columns:repeat(2,1fr)}
-.stats .stat:last-child{grid-column:span 2}
-.section button{padding:9px 12px}.day{min-height:62px}
-th,td{font-size:11px}
+
+.container{
+padding:8px
+}
+
+.grid,.grid3{
+grid-template-columns:1fr
+}
+
+.stats{
+grid-template-columns:repeat(2,1fr)
+}
+
+.stats .stat:last-child{
+grid-column:span 2
+}
+
+.section button{
+padding:9px 12px
+}
+
+.day{
+min-height:62px
+}
+
+th,td{
+font-size:11px
+}
+
+.month-label{
+font-size:15px;
+padding:11px 5px
+}
+
 }
 </style>
 </head>
@@ -150,327 +496,723 @@ th,td{font-size:11px}
 <p>Smart GPS Attendance System</p>
 </div>
 
+
 <!-- LOGIN -->
+
 <div id="loginPage" class="container">
+
 <div class="card login">
+
 <div class="logo">PAYOL</div>
 
-<h2 style="text-align:center;margin-bottom:15px">Welcome 👋</h2>
+<h2 style="text-align:center;margin-bottom:15px">
+Welcome 👋
+</h2>
 
 <div id="loginMsg" class="msg"></div>
 
 <label>Login Type</label>
+
 <select id="loginType" onchange="changeLogin()">
+
 <option value="employee">Employee</option>
 <option value="admin">Admin</option>
+
 </select>
 
 <div id="employeeLogin">
+
 <label>Employee ID</label>
-<input id="employeeId" placeholder="EMP001" autocomplete="username">
+
+<input
+id="employeeId"
+placeholder="EMP001"
+autocomplete="username"
+>
 
 <label>Password</label>
-<input id="employeePassword" type="password" autocomplete="current-password">
+
+<input
+id="employeePassword"
+type="password"
+autocomplete="current-password"
+>
+
 </div>
 
 <div id="adminLogin" class="hidden">
+
 <label>Admin Username</label>
+
 <input id="adminUser">
 
 <label>Admin Password</label>
-<input id="adminPassword" type="password">
+
+<input
+id="adminPassword"
+type="password"
+>
+
 </div>
 
-<button style="width:100%;margin-top:16px" onclick="login()">LOGIN</button>
+<button
+style="width:100%;margin-top:16px"
+onclick="login()"
+>
+LOGIN
+</button>
 
-<p class="notice" style="text-align:center">
+<p
+class="notice"
+style="text-align:center"
+>
 📍 Attendance ke liye GPS/Location ON rakhein.
 </p>
+
 </div>
 </div>
 
+
 <!-- EMPLOYEE -->
+
 <div id="employeePage" class="container hidden">
 
 <div id="installBox" class="install-box">
-<p>📲 Payol Attendance ko phone me app ki tarah install karein.</p>
-<button class="blue" onclick="installApp()" id="installBtn">INSTALL APP</button>
+
+<p>
+📲 Payol Attendance ko phone me app ki tarah install karein.
+</p>
+
+<button
+class="blue"
+onclick="installApp()"
+id="installBtn"
+>
+INSTALL APP
+</button>
+
 </div>
 
+
 <div class="card">
+
 <div class="section">
+
 <div class="profile">
-<div class="avatar" id="avatar">P</div>
+
+<div class="avatar" id="avatar">
+P
+</div>
+
 <div>
-<h2 id="empName">Employee</h2>
+
+<h2 id="empName">
+Employee
+</h2>
+
 <small id="empDetails"></small>
+
 </div>
+
 </div>
-<button class="gray" onclick="logout()">Logout</button>
+
+<button
+class="gray"
+onclick="logout()"
+>
+Logout
+</button>
+
 </div>
+
 </div>
+
 
 <div id="employeeStats" class="stats"></div>
 
+
 <div class="card attendance-box">
+
 <h2>📍 Today's Attendance</h2>
 
 <div class="attendance-buttons">
-<button class="green" onclick="attendance('IN')">
-<span>🟢</span>MARK IN
+
+<button
+class="green"
+onclick="attendance('IN')"
+>
+
+<span>🟢</span>
+MARK IN
+
 </button>
 
-<button class="orange" onclick="attendance('OUT')">
-<span>🟠</span>MARK OUT
+<button
+class="orange"
+onclick="attendance('OUT')"
+>
+
+<span>🟠</span>
+MARK OUT
+
 </button>
+
 </div>
 
 <div id="attendanceMsg" class="msg"></div>
+
 </div>
 
+
 <!-- LEAVE -->
+
 <div class="card">
+
 <h2>📝 Apply Leave</h2>
 
 <label>Leave Date</label>
-<input type="date" id="leaveDate">
+
+<input
+type="date"
+id="leaveDate"
+>
 
 <label>Reason</label>
-<textarea id="leaveReason" placeholder="Personal reason, medical problem etc."></textarea>
 
-<button class="blue" style="width:100%;margin-top:10px" onclick="applyLeave()">
+<textarea
+id="leaveReason"
+placeholder="Personal reason, medical problem etc."
+></textarea>
+
+<button
+class="blue"
+style="width:100%;margin-top:10px"
+onclick="applyLeave()"
+>
 SUBMIT LEAVE REQUEST
 </button>
 
 <div id="leaveMsg" class="msg"></div>
 
-<h3 style="margin-top:18px">My Leave Requests</h3>
+<h3 style="margin-top:18px">
+My Leave Requests
+</h3>
 
-<div class="table" style="margin-top:8px">
+<div
+class="table"
+style="margin-top:8px"
+>
+
 <table>
+
 <thead>
-<tr><th>Date</th><th>Reason</th><th>Status</th></tr>
+
+<tr>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+</tr>
+
 </thead>
+
 <tbody id="myLeaves"></tbody>
+
 </table>
+
 </div>
+
 </div>
+
 
 <!-- CALENDAR -->
+
 <div class="card">
 
 <div class="calendar-title">
-<button class="month-btn gray" onclick="changeEmployeeMonth(-1)">‹</button>
 
-<div class="month-label" id="employeeMonthLabel"
-onclick="openMonthPicker()">
+<button
+class="month-btn gray"
+onclick="changeEmployeeMonth(-1)"
+>
+‹
+</button>
+
+
+<button
+class="month-label"
+id="employeeMonthLabel"
+onclick="openMonthPicker()"
+>
+📅 <span id="monthText">September 2026</span>
+</button>
+
+
+<button
+class="month-btn gray"
+onclick="changeEmployeeMonth(1)"
+>
+›
+</button>
+
+
+<input
+type="month"
+id="employeeMonth"
+onchange="employeeCalendar"
+>
+
 </div>
 
-<button class="month-btn gray" onclick="changeEmployeeMonth(1)">›</button>
 
-<input type="month" id="employeeMonth"
-onchange="employeeCalendar()"
-style="position:absolute;left:50%;transform:translateX(-50%);
-width:180px;height:45px;opacity:.01;z-index:20;cursor:pointer">
-</div>
+<div
+id="calendar"
+class="calendar"
+></div>
 
-<div id="calendar" class="calendar"></div>
 
 <div class="calendar-legend">
-<span class="badge present">Present</span>
-<span class="badge half">Half Day</span>
-<span class="badge leave">Leave</span>
-<span class="badge holiday">Holiday</span>
-<span class="badge sunday">Sunday</span>
-<span class="badge absent">Absent</span>
-</div>
+
+<span class="badge present">
+Present
+</span>
+
+<span class="badge half">
+Half Day
+</span>
+
+<span class="badge leave">
+Leave
+</span>
+
+<span class="badge holiday">
+Holiday
+</span>
+
+<span class="badge sunday">
+Sunday
+</span>
+
+<span class="badge absent">
+Absent
+</span>
+
 </div>
 
 </div>
+
+</div>
+
 
 <!-- ADMIN -->
+
 <div id="adminPage" class="container hidden">
 
+
 <div class="card admin-title">
+
 <div class="section">
+
 <div>
-<h2>👨‍💼 Admin Dashboard</h2>
-<p class="notice">Payol Attendance Management</p>
-</div>
-<button class="gray" onclick="logout()">Logout</button>
-</div>
+
+<h2>
+👨‍💼 Admin Dashboard
+</h2>
+
+<p class="notice">
+Payol Attendance Management
+</p>
+
 </div>
 
+<button
+class="gray"
+onclick="logout()"
+>
+Logout
+</button>
+
+</div>
+
+</div>
+
+
 <!-- OFFICE -->
+
 <div class="card">
+
 <h2>📍 Office Location</h2>
 
 <div class="grid">
+
 <div>
+
 <label>Latitude</label>
+
 <input id="officeLat">
+
 </div>
+
 <div>
+
 <label>Longitude</label>
+
 <input id="officeLng">
-</div>
+
 </div>
 
-<div class="row" style="margin-top:8px">
-<button class="green" onclick="currentGPS()">📍 USE CURRENT GPS</button>
-<button class="blue" onclick="saveOffice()">SAVE LOCATION</button>
 </div>
 
-<p class="notice">Attendance radius: <b>100 meter</b></p>
+<div
+class="row"
+style="margin-top:8px"
+>
+
+<button
+class="green"
+onclick="currentGPS()"
+>
+📍 USE CURRENT GPS
+</button>
+
+<button
+class="blue"
+onclick="saveOffice()"
+>
+SAVE LOCATION
+</button>
+
+</div>
+
+<p class="notice">
+Attendance radius:
+<b>100 meter</b>
+</p>
+
 <div id="officeMsg" class="msg"></div>
+
 </div>
+
 
 <!-- EMPLOYEE MANAGEMENT -->
+
 <div class="card">
+
 <h2>👥 Employee Management</h2>
 
 <div class="grid3">
+
 <div>
+
 <label>Employee ID</label>
-<input id="newId" placeholder="EMP001">
+
+<input
+id="newId"
+placeholder="EMP001"
+>
+
 </div>
 
 <div>
+
 <label>Name</label>
-<input id="newName" placeholder="Employee Name">
+
+<input
+id="newName"
+placeholder="Employee Name"
+>
+
 </div>
 
 <div>
+
 <label>Post</label>
-<input id="newPost" placeholder="Manager / Sales Executive">
+
+<input
+id="newPost"
+placeholder="Manager / Sales Executive"
+>
+
 </div>
+
 </div>
 
 <label>Password</label>
-<input id="newPassword" placeholder="Password">
 
-<button class="green" style="margin-top:10px" onclick="addEmployee()">
+<input
+id="newPassword"
+placeholder="Password"
+>
+
+<button
+class="green"
+style="margin-top:10px"
+onclick="addEmployee()"
+>
 + ADD EMPLOYEE
 </button>
 
 <div id="employeeMsg" class="msg"></div>
 
-<div class="table" style="margin-top:10px">
+<div
+class="table"
+style="margin-top:10px"
+>
+
 <table>
+
 <thead>
-<tr><th>ID</th><th>Name</th><th>Post</th><th>Action</th></tr>
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Post</th>
+<th>Action</th>
+</tr>
+
 </thead>
+
 <tbody id="employees"></tbody>
+
 </table>
-</div>
+
 </div>
 
+</div>
+
+
 <!-- HOLIDAY -->
+
 <div class="card">
+
 <h2>🎉 Holiday Calendar</h2>
 
 <div class="grid">
+
 <div>
+
 <label>Date</label>
-<input type="date" id="holidayDate">
+
+<input
+type="date"
+id="holidayDate"
+>
+
 </div>
 
 <div>
+
 <label>Holiday Name</label>
-<input id="holidayName" placeholder="Chhath Puja">
-</div>
+
+<input
+id="holidayName"
+placeholder="Chhath Puja"
+>
+
 </div>
 
-<button class="blue" style="margin-top:10px" onclick="addHoliday()">
+</div>
+
+<button
+class="blue"
+style="margin-top:10px"
+onclick="addHoliday()"
+>
 + ADD HOLIDAY
 </button>
 
 <div id="holidayMsg" class="msg"></div>
 
-<div class="table" style="margin-top:10px">
+<div
+class="table"
+style="margin-top:10px"
+>
+
 <table>
+
 <thead>
-<tr><th>Date</th><th>Holiday</th><th>Action</th></tr>
+
+<tr>
+<th>Date</th>
+<th>Holiday</th>
+<th>Action</th>
+</tr>
+
 </thead>
+
 <tbody id="holidays"></tbody>
+
 </table>
+
 </div>
+
 </div>
+
 
 <!-- LEAVE -->
+
 <div class="card">
+
 <h2>📋 Leave Requests</h2>
 
-<div class="table" style="margin-top:8px">
+<div
+class="table"
+style="margin-top:8px"
+>
+
 <table>
+
 <thead>
+
 <tr>
-<th>Employee</th><th>Date</th><th>Reason</th><th>Status</th><th>Action</th>
+
+<th>Employee</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+<th>Action</th>
+
 </tr>
+
 </thead>
+
 <tbody id="leaveRequests"></tbody>
+
 </table>
+
 </div>
+
 </div>
+
 
 <!-- MONTHLY -->
+
 <div class="card">
-<h2>💰 Monthly Salary Attendance</h2>
+
+<h2>
+💰 Monthly Salary Attendance
+</h2>
 
 <div class="grid3">
+
 <div>
+
 <label>Month</label>
-<input type="month" id="summaryMonth">
+
+<input
+type="month"
+id="summaryMonth"
+>
+
 </div>
 
 <div>
+
 <label>Employee</label>
+
 <select id="summaryEmployee"></select>
+
 </div>
 
-<div style="display:flex;align-items:end">
-<button class="blue" style="width:100%" onclick="monthlySummary()">
+<div
+style="display:flex;align-items:end"
+>
+
+<button
+class="blue"
+style="width:100%"
+onclick="monthlySummary()"
+>
 SHOW SUMMARY
 </button>
+
 </div>
+
 </div>
 
 <p class="notice">
+
 Present = 1 day • Half Day = 0.5 day<br>
-Payable Days = Present + Half Day × 0.5
+
+Payable Days =
+Present + Half Day × 0.5
+
 </p>
 
-<div id="summary" style="margin-top:12px"></div>
+<div
+id="summary"
+style="margin-top:12px"
+></div>
+
 </div>
+
 
 <!-- DAILY -->
+
 <div class="card">
-<h2>📊 Daily Report</h2>
+
+<h2>
+📊 Daily Report
+</h2>
 
 <div class="grid">
+
 <div>
+
 <label>Date</label>
-<input type="date" id="reportDate">
+
+<input
+type="date"
+id="reportDate"
+>
+
 </div>
 
-<div style="display:flex;align-items:end">
-<button class="blue" style="width:100%" onclick="dailyReport()">
+<div
+style="display:flex;align-items:end"
+>
+
+<button
+class="blue"
+style="width:100%"
+onclick="dailyReport()"
+>
 SHOW REPORT
 </button>
-</div>
+
 </div>
 
-<div class="table" style="margin-top:10px">
+</div>
+
+<div
+class="table"
+style="margin-top:10px"
+>
+
 <table>
+
 <thead>
-<tr><th>Employee</th><th>IN</th><th>OUT</th><th>Status</th></tr>
+
+<tr>
+
+<th>Employee</th>
+<th>IN</th>
+<th>OUT</th>
+<th>Status</th>
+
+</tr>
+
 </thead>
+
 <tbody id="daily"></tbody>
+
 </table>
-</div>
+
 </div>
 
 </div>
+
+</div>
+
 
 <script>
 
@@ -580,6 +1322,7 @@ message(
 }
 
 return;
+
 }
 
 let id=$("employeeId").value.trim();
@@ -605,7 +1348,11 @@ let {data,error}=await db
 
 if(error){
 
-message("loginMsg",error.message);
+message(
+"loginMsg",
+error.message
+);
+
 return;
 
 }
@@ -754,8 +1501,6 @@ throw new Error(
 }
 
 
-/* OFFICE */
-
 let {data:office,error:oerr}=await db
 .from("office_settings")
 .select("*")
@@ -776,8 +1521,6 @@ throw new Error(
 
 }
 
-
-/* DISTANCE */
 
 let dist=distance(
 lat,
@@ -801,8 +1544,6 @@ radius+" meter hai."
 }
 
 
-/* DATE */
-
 let date=today();
 
 let now=new Date();
@@ -814,8 +1555,6 @@ String(now.getMinutes()).padStart(2,"0")+
 ":"+
 String(now.getSeconds()).padStart(2,"0");
 
-
-/* TODAY RECORDS */
 
 let {data:old,error:oldError}=await db
 .from("attendance")
@@ -1066,7 +1805,10 @@ let outTime=getTime(OUT,"OUT");
 let inMinutes=timeToMinutes(inTime);
 let outMinutes=timeToMinutes(outTime);
 
-if(inMinutes===null||outMinutes===null)
+if(
+inMinutes===null||
+outMinutes===null
+)
 return "Incomplete";
 
 let duration=
@@ -1155,13 +1897,21 @@ $("myLeaves").innerHTML=
 (leaves||[]).map(x=>`
 
 <tr>
+
 <td>${escapeHTML(x.leave_date)}</td>
+
 <td>${escapeHTML(x.reason)}</td>
+
 <td>
+
 <span class="badge ${String(x.status).toLowerCase()}">
+
 ${escapeHTML(x.status)}
+
 </span>
+
 </td>
+
 </tr>
 
 `).join("")||
@@ -1347,12 +2097,15 @@ absent++;
 }
 
 return{
+
 present,
 half,
 leave,
 absent,
+
 payable:
 present+half*.5
+
 };
 
 }
@@ -1364,6 +2117,7 @@ CALENDAR
 
 let employeeCalendarDate=new Date();
 
+
 function openMonthPicker(){
 
 let input=$("employeeMonth");
@@ -1371,20 +2125,29 @@ let input=$("employeeMonth");
 if(!input.value)
 input.value=month();
 
-if(input.showPicker){
-
 try{
+
+if(typeof input.showPicker==="function"){
 
 input.showPicker();
 return;
 
-}catch(e){}
+}
+
+}catch(e){
+
+console.log(e);
 
 }
 
-input.focus();
+/* iPhone/Safari fallback */
+
+input.click();
 
 }
+
+
+/* Previous / Next */
 
 function changeEmployeeMonth(n){
 
@@ -1407,6 +2170,9 @@ employeeCalendar();
 
 }
 
+
+/* Calendar */
+
 async function employeeCalendar(){
 
 if(!employee)return;
@@ -1421,7 +2187,10 @@ let [y,m]=mon
 employeeCalendarDate=
 new Date(y,m-1,1);
 
-$("employeeMonthLabel").textContent=
+
+/* Month text */
+
+$("monthText").textContent=
 employeeCalendarDate.toLocaleDateString(
 "en-IN",
 {
@@ -1429,6 +2198,7 @@ month:"long",
 year:"numeric"
 }
 );
+
 
 let total=
 new Date(y,m,0).getDate();
@@ -1477,9 +2247,15 @@ x=>[x.holiday_date,x.name]
 
 let html="";
 
+
 [
-"Sun","Mon","Tue","Wed",
-"Thu","Fri","Sat"
+"Sun",
+"Mon",
+"Tue",
+"Wed",
+"Thu",
+"Fri",
+"Sat"
 ].forEach(x=>{
 
 html+=
@@ -1487,12 +2263,14 @@ html+=
 
 });
 
+
 for(let i=0;i<start;i++){
 
 html+=
 `<div class="day empty"></div>`;
 
 }
+
 
 for(let d=1;d<=total;d++){
 
@@ -1507,6 +2285,7 @@ new Date(y,m-1,d).getDay();
 
 let text="Absent";
 let cls="absent";
+
 
 if(
 g[ds]?.IN&&
@@ -1545,6 +2324,7 @@ cls="sunday";
 
 }
 
+
 html+=`
 
 <div class="day ${
@@ -1554,9 +2334,13 @@ ds===today()?"today":""
 <b>${d}</b>
 
 <small>
+
 <span class="badge ${cls}">
+
 ${text}
+
 </span>
+
 </small>
 
 </div>
@@ -1619,7 +2403,9 @@ dailyReport();
 }
 
 
-/* EMPLOYEES */
+/* ================================
+EMPLOYEES
+================================ */
 
 function renderEmployees(){
 
@@ -1628,17 +2414,27 @@ employeeList.map(e=>`
 
 <tr>
 
-<td>${escapeHTML(e.employee_id)}</td>
-
-<td>${escapeHTML(e.name)}</td>
-
-<td>${escapeHTML(e.post||"")}</td>
+<td>
+${escapeHTML(e.employee_id)}
+</td>
 
 <td>
-<button class="red"
-onclick="deleteEmployee('${escapeHTML(e.employee_id)}')">
+${escapeHTML(e.name)}
+</td>
+
+<td>
+${escapeHTML(e.post||"")}
+</td>
+
+<td>
+
+<button
+class="red"
+onclick="deleteEmployee('${escapeHTML(e.employee_id)}')"
+>
 Delete
 </button>
+
 </td>
 
 </tr>
@@ -1647,6 +2443,7 @@ Delete
 "<tr><td colspan='4'>No employees.</td></tr>";
 
 }
+
 
 async function addEmployee(){
 
@@ -1703,11 +2500,13 @@ loadAdmin();
 
 }
 
+
 async function deleteEmployee(id){
 
 if(!confirm(
 "Employee delete karein?"
-))return;
+))
+return;
 
 let {error}=await db
 .from("employees")
@@ -1754,6 +2553,7 @@ e.message
 }
 
 }
+
 
 async function saveOffice(){
 
@@ -1819,14 +2619,20 @@ holidayList.map(h=>`
 
 <tr>
 
-<td>${escapeHTML(h.holiday_date)}</td>
+<td>
+${escapeHTML(h.holiday_date)}
+</td>
 
-<td>${escapeHTML(h.name)}</td>
+<td>
+${escapeHTML(h.name)}
+</td>
 
 <td>
 
-<button class="red"
-onclick="deleteHoliday('${escapeHTML(h.id)}')">
+<button
+class="red"
+onclick="deleteHoliday('${escapeHTML(h.id)}')"
+>
 Delete
 </button>
 
@@ -1838,6 +2644,7 @@ Delete
 "<tr><td colspan='3'>No holidays.</td></tr>";
 
 }
+
 
 async function addHoliday(){
 
@@ -1890,11 +2697,13 @@ loadAdmin();
 
 }
 
+
 async function deleteHoliday(id){
 
 if(!confirm(
 "Holiday delete karein?"
-))return;
+))
+return;
 
 let {error}=await db
 .from("holidays")
@@ -1937,21 +2746,35 @@ $("leaveRequests").innerHTML=
 <tr>
 
 <td>
+
 ${escapeHTML(x.employee_name)}
+
 <br>
-<small>${escapeHTML(x.employee_id)}</small>
+
+<small>
+${escapeHTML(x.employee_id)}
+</small>
+
 </td>
 
-<td>${escapeHTML(x.leave_date)}</td>
-
-<td>${escapeHTML(x.reason)}</td>
+<td>
+${escapeHTML(x.leave_date)}
+</td>
 
 <td>
+${escapeHTML(x.reason)}
+</td>
+
+<td>
+
 <span class="badge ${
 String(x.status).toLowerCase()
 }">
+
 ${escapeHTML(x.status)}
+
 </span>
+
 </td>
 
 <td>
@@ -1959,19 +2782,25 @@ ${escapeHTML(x.status)}
 ${
 x.status==="PENDING"
 ?
+
 `
 
-<button class="green"
-onclick="leaveStatus('${x.id}','APPROVED')">
+<button
+class="green"
+onclick="leaveStatus('${x.id}','APPROVED')"
+>
 Approve
 </button>
 
-<button class="red"
-onclick="leaveStatus('${x.id}','REJECTED')">
+<button
+class="red"
+onclick="leaveStatus('${x.id}','REJECTED')"
+>
 Reject
 </button>
 
 `
+
 :"-"
 }
 
@@ -1983,6 +2812,7 @@ Reject
 "<tr><td colspan='5'>No leave requests.</td></tr>";
 
 }
+
 
 async function leaveStatus(id,status){
 
@@ -2013,15 +2843,18 @@ employeeList.map(e=>
 `
 
 <option value="${escapeHTML(e.employee_id)}">
+
 ${escapeHTML(e.employee_id)}
 -
 ${escapeHTML(e.name)}
+
 </option>
 
 `
 ).join("");
 
 }
+
 
 async function monthlySummary(){
 
@@ -2040,6 +2873,7 @@ let [y,m]=mon
 let total=
 new Date(y,m,0).getDate();
 
+
 let {data:att}=await db
 .from("attendance")
 .select("*")
@@ -2051,6 +2885,7 @@ mon+"-01"
 "attendance_date",
 mon+"-"+String(total).padStart(2,"0")
 );
+
 
 let {data:leaves}=await db
 .from("leave_requests")
@@ -2065,6 +2900,7 @@ mon+"-01"
 mon+"-"+String(total).padStart(2,"0")
 );
 
+
 let {data:hol}=await db
 .from("holidays")
 .select("*")
@@ -2077,11 +2913,15 @@ mon+"-01"
 mon+"-"+String(total).padStart(2,"0")
 );
 
+
 let emps=selected
-?employeeList.filter(
+?
+employeeList.filter(
 e=>e.employee_id===selected
 )
-:employeeList;
+:
+employeeList;
+
 
 let rows=emps.map(e=>{
 
@@ -2108,6 +2948,7 @@ return{
 
 });
 
+
 $("summary").innerHTML=`
 
 <div class="table">
@@ -2117,12 +2958,14 @@ $("summary").innerHTML=`
 <thead>
 
 <tr>
+
 <th>Employee</th>
 <th>Present</th>
 <th>Half</th>
 <th>Leave</th>
 <th>Absent</th>
 <th>Payable</th>
+
 </tr>
 
 </thead>
@@ -2134,18 +2977,37 @@ ${rows.map(r=>`
 <tr>
 
 <td>
+
 ${escapeHTML(r.name)}
+
 <br>
-<small>${escapeHTML(r.employee_id)}</small>
+
+<small>
+${escapeHTML(r.employee_id)}
+</small>
+
 </td>
 
-<td>${r.present}</td>
-<td>${r.half}</td>
-<td>${r.leave}</td>
-<td>${r.absent}</td>
+<td>
+${r.present}
+</td>
 
 <td>
-<b>${r.payable.toFixed(1)}</b>
+${r.half}
+</td>
+
+<td>
+${r.leave}
+</td>
+
+<td>
+${r.absent}
+</td>
+
+<td>
+<b>
+${r.payable.toFixed(1)}
+</b>
 </td>
 
 </tr>
@@ -2194,6 +3056,7 @@ hour12:true
 
 }
 
+
 async function dailyReport(){
 
 let date=
@@ -2218,6 +3081,7 @@ return;
 let groups=
 groupAttendance(att||[]);
 
+
 $("daily").innerHTML=
 employeeList.map(e=>{
 
@@ -2226,48 +3090,76 @@ groups[e.employee_id]||{};
 
 let st=
 x.IN&&x.OUT
-?status(x.IN,x.OUT)
-:x.IN
-?"IN only"
-:"Absent";
+?
+status(x.IN,x.OUT)
+:
+x.IN
+?
+"IN only"
+:
+"Absent";
+
 
 let cls=
 st==="Full Day"
-?"present"
+?
+"present"
 :
 st==="Half Day"
-?"half"
+?
+"half"
 :
 st==="Absent"
-?"absent"
-:"pending";
+?
+"absent"
+:
+"pending";
+
 
 return`
 
 <tr>
 
 <td>
+
 ${escapeHTML(e.name)}
+
 <br>
-<small>${escapeHTML(e.employee_id)}</small>
+
+<small>
+${escapeHTML(e.employee_id)}
+</small>
+
 </td>
 
 <td>
+
 ${x.IN
-?displayTime(x.IN,"IN")
-:"-"}
+?
+displayTime(x.IN,"IN")
+:
+"-"}
+
 </td>
 
 <td>
+
 ${x.OUT
-?displayTime(x.OUT,"OUT")
-:"-"}
+?
+displayTime(x.OUT,"OUT")
+:
+"-"}
+
 </td>
 
 <td>
+
 <span class="badge ${cls}">
+
 ${st}
+
 </span>
+
 </td>
 
 </tr>
@@ -2296,6 +3188,7 @@ $("installBox")
 
 });
 
+
 async function installApp(){
 
 if(!deferredPrompt){
@@ -2319,6 +3212,7 @@ $("installBox")
 
 }
 
+
 window.addEventListener(
 "appinstalled",
 ()=>{
@@ -2334,12 +3228,16 @@ START
 ================================ */
 
 $("leaveDate").value=today();
+
 $("holidayDate").value=today();
+
 $("reportDate").value=today();
+
 $("summaryMonth").value=month();
+
 $("employeeMonth").value=month();
 
-$("employeeMonthLabel").textContent=
+$("monthText").textContent=
 new Date().toLocaleDateString(
 "en-IN",
 {
@@ -2347,6 +3245,7 @@ month:"long",
 year:"numeric"
 }
 );
+
 
 if("serviceWorker" in navigator){
 
