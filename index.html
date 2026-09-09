@@ -9,24 +9,36 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
 box-sizing:border-box;
 margin:0;
 padding:0;
 }
 
+:root{
+--red:#e00000;
+--red2:#ff3131;
+--bg:#080808;
+--card:#141414;
+--card2:#101010;
+--border:#292929;
+--text:#fff;
+--muted:#999;
+--green:#16a34a;
+--orange:#c47700;
+--blue:#1769d2;
+}
+
 body{
 font-family:Arial,Helvetica,sans-serif;
-background:#0b0b0b;
-color:#fff;
+background:
+radial-gradient(circle at top right,rgba(224,0,0,.12),transparent 35%),
+var(--bg);
+color:var(--text);
 min-height:100vh;
 }
 
-button,
-input,
-select,
-textarea{
+button,input,select,textarea{
 font-family:inherit;
 }
 
@@ -34,56 +46,75 @@ button{
 cursor:pointer;
 }
 
+.hidden{
+display:none!important;
+}
+
 .container{
 width:100%;
-max-width:1100px;
+max-width:1150px;
 margin:auto;
-padding:15px;
+padding:18px;
 }
 
 header{
-background:linear-gradient(135deg,#111,#1c1c1c);
-border-bottom:1px solid #333;
-padding:15px;
+background:rgba(12,12,12,.94);
+backdrop-filter:blur(12px);
+border-bottom:1px solid #292929;
+padding:13px 18px;
 position:sticky;
 top:0;
-z-index:10;
+z-index:100;
 }
 
 .header-inner{
-max-width:1100px;
+max-width:1150px;
 margin:auto;
 display:flex;
 align-items:center;
 justify-content:space-between;
-gap:10px;
+gap:15px;
 }
 
 .logo{
-font-size:22px;
-font-weight:bold;
-color:#fff;
+font-size:23px;
+font-weight:800;
+letter-spacing:-.5px;
 }
 
 .logo span{
-color:#e00000;
+color:var(--red);
+}
+
+.logo-sub{
+font-size:10px;
+color:#777;
+display:block;
+margin-top:2px;
+font-weight:normal;
+letter-spacing:1px;
 }
 
 .logout{
-background:#d00000;
-border:0;
+background:#b90000;
+border:1px solid #ef2929;
 color:#fff;
-padding:9px 15px;
-border-radius:8px;
+padding:10px 16px;
+border-radius:10px;
+font-weight:bold;
+}
+
+.logout:hover{
+background:#e00000;
 }
 
 .card{
-background:#151515;
-border:1px solid #292929;
-border-radius:15px;
-padding:18px;
-margin-bottom:15px;
-box-shadow:0 8px 25px rgba(0,0,0,.25);
+background:linear-gradient(145deg,#171717,#111);
+border:1px solid var(--border);
+border-radius:18px;
+padding:20px;
+margin-bottom:16px;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
 }
 
 h1,h2,h3{
@@ -95,33 +126,33 @@ font-size:20px;
 }
 
 h3{
-font-size:17px;
+font-size:16px;
 }
 
 label{
 display:block;
-font-size:13px;
-color:#bbb;
-margin-bottom:6px;
+font-size:12px;
+color:#aaa;
+margin-bottom:7px;
+font-weight:bold;
 }
 
-input,
-select,
-textarea{
+input,select,textarea{
 width:100%;
-background:#0d0d0d;
-border:1px solid #3a3a3a;
+background:#0b0b0b;
+border:1px solid #363636;
 color:#fff;
-padding:12px;
-border-radius:9px;
+padding:12px 13px;
+border-radius:10px;
 outline:none;
-margin-bottom:12px;
+margin-bottom:13px;
 }
 
 input:focus,
 select:focus,
 textarea:focus{
-border-color:#e00000;
+border-color:var(--red);
+box-shadow:0 0 0 2px rgba(224,0,0,.12);
 }
 
 textarea{
@@ -131,32 +162,23 @@ resize:vertical;
 
 .btn{
 border:0;
-border-radius:9px;
-padding:12px 16px;
+border-radius:10px;
+padding:12px 17px;
 font-weight:bold;
 color:#fff;
-background:#d00000;
+background:linear-gradient(135deg,#d00000,#a90000);
+box-shadow:0 5px 15px rgba(224,0,0,.15);
 }
 
 .btn:hover{
-opacity:.9;
+transform:translateY(-1px);
+opacity:.94;
 }
 
-.btn.gray{
-background:#333;
-}
-
-.btn.green{
-background:#168a42;
-}
-
-.btn.orange{
-background:#b66a00;
-}
-
-.btn.blue{
-background:#175bb5;
-}
+.btn.gray{background:#333;}
+.btn.green{background:linear-gradient(135deg,#19a955,#10753a);}
+.btn.orange{background:linear-gradient(135deg,#d88900,#9a5e00);}
+.btn.blue{background:linear-gradient(135deg,#2675dd,#144d9c);}
 
 .btn.small{
 padding:8px 11px;
@@ -166,7 +188,7 @@ font-size:12px;
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:15px;
+gap:14px;
 }
 
 .grid3{
@@ -178,115 +200,173 @@ gap:12px;
 .stats{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-gap:10px;
+gap:11px;
+margin-bottom:16px;
 }
 
 .stat{
-background:#101010;
-border:1px solid #2c2c2c;
-border-radius:12px;
-padding:15px 8px;
+background:linear-gradient(145deg,#151515,#0e0e0e);
+border:1px solid #2b2b2b;
+border-radius:14px;
+padding:17px 8px;
 text-align:center;
+transition:.2s;
+}
+
+.stat:hover{
+border-color:#444;
+transform:translateY(-2px);
 }
 
 .stat b{
-font-size:24px;
+font-size:25px;
 display:block;
-margin-bottom:4px;
+margin-bottom:5px;
 }
 
 .stat span{
-font-size:12px;
-color:#aaa;
+font-size:11px;
+color:#999;
 }
 
 .login-box{
-max-width:430px;
-margin:60px auto;
+max-width:440px;
+margin:65px auto;
 }
 
 .login-logo{
 text-align:center;
-font-size:30px;
-font-weight:bold;
-margin-bottom:25px;
+font-size:34px;
+font-weight:900;
+margin-bottom:8px;
 }
 
 .login-logo span{
-color:#e00000;
+color:var(--red);
+}
+
+.login-sub{
+text-align:center;
+color:#777;
+font-size:12px;
+margin-bottom:25px;
+letter-spacing:1px;
 }
 
 .tabs{
 display:flex;
 gap:8px;
-margin-bottom:18px;
+margin-bottom:20px;
 }
 
 .tab{
 flex:1;
-padding:11px;
+padding:12px;
 border:1px solid #333;
 background:#171717;
-color:#aaa;
-border-radius:9px;
+color:#999;
+border-radius:10px;
+font-weight:bold;
 }
 
 .tab.active{
-background:#d00000;
+background:linear-gradient(135deg,#d90000,#a80000);
 color:#fff;
 border-color:#d00000;
-}
-
-.hidden{
-display:none!important;
 }
 
 .notice{
 background:#211010;
 border:1px solid #4a1b1b;
-padding:10px;
-border-radius:9px;
-color:#ddd;
-font-size:13px;
-margin-bottom:12px;
+padding:11px;
+border-radius:10px;
+color:#ccc;
+font-size:12px;
+margin-bottom:13px;
+}
+
+.dashboard-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px;
+}
+
+.profile{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(135deg,#e00000,#780000);
+font-size:23px;
+font-weight:bold;
+border:2px solid #421010;
+}
+
+.profile-name{
+font-size:20px;
+font-weight:800;
+}
+
+.profile-meta{
+color:#999;
+font-size:12px;
+margin-top:5px;
+line-height:1.6;
 }
 
 .action-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
+gap:14px;
 }
 
 .action{
-padding:20px 10px;
-border-radius:13px;
-border:1px solid #333;
-background:#101010;
+padding:23px 12px;
+border-radius:15px;
+border:1px solid #303030;
+background:#0d0d0d;
 text-align:center;
+}
+
+.action-icon{
+font-size:28px;
+margin-bottom:8px;
+}
+
+.action-title{
+font-size:16px;
+font-weight:bold;
+}
+
+.action-desc{
+font-size:11px;
+color:#777;
+margin-top:5px;
 }
 
 .action button{
 width:100%;
-margin-top:8px;
+margin-top:13px;
 }
 
 .location{
-font-size:13px;
-color:#aaa;
-margin-top:10px;
+font-size:12px;
+color:#999;
+margin-top:8px;
 }
 
-.success{
-color:#4ade80;
-}
-
-.error{
-color:#ff6b6b;
-}
-
-.warning{
-color:#ffc857;
-}
+.success{color:#4ade80;}
+.error{color:#ff6b6b;}
+.warning{color:#ffc857;}
 
 .table-wrap{
 overflow-x:auto;
@@ -298,23 +378,24 @@ border-collapse:collapse;
 font-size:13px;
 }
 
-th,
-td{
-padding:10px 8px;
-border-bottom:1px solid #2d2d2d;
+th,td{
+padding:11px 8px;
+border-bottom:1px solid #2b2b2b;
 text-align:left;
 white-space:nowrap;
 }
 
 th{
-color:#aaa;
-font-weight:normal;
+color:#888;
+font-weight:bold;
+font-size:11px;
+text-transform:uppercase;
 }
 
 .badge{
 display:inline-block;
-padding:4px 7px;
-border-radius:6px;
+padding:5px 8px;
+border-radius:7px;
 font-size:10px;
 font-weight:bold;
 }
@@ -358,18 +439,13 @@ margin-bottom:14px;
 }
 
 .month-btn{
-width:46px;
+width:44px;
 height:42px;
-padding:0;
 font-size:25px;
 border:0;
-border-radius:9px;
-background:#303030;
+border-radius:10px;
+background:#2d2d2d;
 color:#fff;
-}
-
-.month-btn:hover{
-background:#444;
 }
 
 .month-label{
@@ -387,18 +463,18 @@ gap:5px;
 
 .calhead{
 text-align:center;
-font-size:11px;
-color:#999;
+font-size:10px;
+color:#777;
 padding:8px 2px;
 font-weight:bold;
 }
 
 .day{
-min-height:75px;
-background:#101010;
-border:1px solid #292929;
+min-height:78px;
+background:#0d0d0d;
+border:1px solid #282828;
 border-radius:9px;
-padding:7px 4px;
+padding:7px 3px;
 text-align:center;
 display:flex;
 flex-direction:column;
@@ -410,7 +486,7 @@ font-size:14px;
 }
 
 .day small{
-font-size:10px;
+font-size:9px;
 }
 
 .day.empty{
@@ -419,8 +495,8 @@ border:0;
 }
 
 .day.today{
-border:2px solid #d00000;
-background:#260909;
+border:2px solid var(--red);
+background:#240909;
 }
 
 .calendar-legend{
@@ -430,32 +506,64 @@ flex-wrap:wrap;
 margin-top:14px;
 }
 
-.calendar-legend .badge{
-font-size:10px;
-}
-
 .section-title{
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:10px;
-margin-bottom:12px;
+margin-bottom:13px;
+}
+
+.section-title h2{
+margin-bottom:0;
+}
+
+.section-icon{
+font-size:22px;
 }
 
 .employee-row{
 display:flex;
 align-items:center;
 justify-content:space-between;
-gap:10px;
-background:#101010;
-border:1px solid #2d2d2d;
-padding:12px;
-border-radius:10px;
+gap:12px;
+background:#0d0d0d;
+border:1px solid #2b2b2b;
+padding:13px;
+border-radius:12px;
 margin-bottom:8px;
 }
 
+.employee-main{
+display:flex;
+align-items:center;
+gap:11px;
+min-width:0;
+}
+
+.mini-avatar{
+width:39px;
+height:39px;
+border-radius:50%;
+background:#2a0b0b;
+border:1px solid #531515;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+color:#ff7070;
+flex-shrink:0;
+}
+
 .employee-row small{
-color:#aaa;
+color:#888;
+font-size:11px;
+line-height:1.7;
+}
+
+.post{
+color:#ff6b6b!important;
+font-weight:bold;
 }
 
 .flex{
@@ -469,42 +577,59 @@ flex-wrap:wrap;
 text-align:center;
 }
 
-.mt{
-margin-top:12px;
-}
-
-.mb{
-margin-bottom:12px;
-}
+.mt{margin-top:12px;}
+.mb{margin-bottom:12px;}
 
 hr{
 border:0;
 border-top:1px solid #292929;
-margin:15px 0;
+margin:17px 0;
 }
 
 .empty{
-color:#888;
+color:#777;
 text-align:center;
-padding:20px;
+padding:22px;
+font-size:13px;
 }
 
-.loading{
-text-align:center;
-padding:20px;
-color:#aaa;
+.admin-title{
+font-size:25px;
+font-weight:800;
 }
 
-@media(max-width:700px){
+.admin-sub{
+color:#777;
+font-size:12px;
+margin-top:4px;
+}
 
+.section-tag{
+font-size:10px;
+padding:5px 8px;
+background:#251010;
+color:#ff7272;
+border:1px solid #4a1717;
+border-radius:7px;
+font-weight:bold;
+}
+
+@media(max-width:800px){
+.stats{
+grid-template-columns:repeat(3,1fr);
+}
+
+.grid3{
+grid-template-columns:1fr 1fr;
+}
+}
+
+@media(max-width:600px){
 .container{
 padding:10px;
 }
 
-.grid{
-grid-template-columns:1fr;
-}
-
+.grid,
 .grid3{
 grid-template-columns:1fr;
 }
@@ -513,49 +638,87 @@ grid-template-columns:1fr;
 grid-template-columns:repeat(2,1fr);
 }
 
+.card{
+padding:15px;
+border-radius:15px;
+}
+
+.profile-name{
+font-size:18px;
+}
+
+.dashboard-head{
+align-items:flex-start;
+}
+
 .action-grid{
 grid-template-columns:1fr 1fr;
 }
 
+.calendar{
+gap:3px;
+}
+
 .day{
-min-height:65px;
+min-height:64px;
 padding:5px 2px;
-}
-
-.month-label{
-font-size:16px;
-}
-
-.card{
-padding:14px;
-}
-
-}
-
-@media(max-width:430px){
-
-.logo{
-font-size:18px;
-}
-
-.action{
-padding:15px 7px;
-}
-
-.day{
-min-height:60px;
 }
 
 .day b{
 font-size:12px;
 }
 
+.month-label{
+font-size:16px;
+}
+
+.admin-title{
+font-size:21px;
+}
+}
+
+@media(max-width:430px){
+.logo{
+font-size:18px;
+}
+
+.logo-sub{
+display:none;
+}
+
+.logout{
+padding:8px 11px;
+font-size:12px;
+}
+
+.action{
+padding:17px 7px;
+}
+
+.action-icon{
+font-size:23px;
+}
+
+.action-title{
+font-size:14px;
+}
+
+.day{
+min-height:59px;
+}
+
 .day small{
-font-size:9px;
+font-size:8px;
 }
 
+.stat{
+padding:14px 5px;
 }
 
+.stat b{
+font-size:22px;
+}
+}
 </style>
 </head>
 
@@ -563,11 +726,16 @@ font-size:9px;
 
 <header id="mainHeader" class="hidden">
 <div class="header-inner">
-<div class="logo">Payol <span>Attendance</span></div>
+
+<div class="logo">
+Payol <span>Attendance</span>
+<span class="logo-sub">SMART ATTENDANCE MANAGEMENT</span>
+</div>
+
 <button class="logout" onclick="logout()">Logout</button>
+
 </div>
 </header>
-
 
 <div class="container">
 
@@ -579,6 +747,10 @@ font-size:9px;
 Payol <span>Attendance</span>
 </div>
 
+<div class="login-sub">
+SMART EMPLOYEE ATTENDANCE SYSTEM
+</div>
+
 <div class="card">
 
 <div class="tabs">
@@ -586,17 +758,16 @@ Payol <span>Attendance</span>
 <button id="employeeTab"
 class="tab active"
 onclick="showLogin('employee')">
-Employee
+Employee Login
 </button>
 
 <button id="adminTab"
 class="tab"
 onclick="showLogin('admin')">
-Admin
+Admin Login
 </button>
 
 </div>
-
 
 <div id="employeeLogin">
 
@@ -611,30 +782,29 @@ type="password"
 placeholder="Enter Password"
 autocomplete="current-password">
 
-<button class="btn" style="width:100%"
+<button class="btn"
+style="width:100%"
 onclick="employeeLogin()">
-Login
+Login to Attendance
 </button>
 
 </div>
 
-
 <div id="adminLogin" class="hidden">
 
 <label>Admin Username</label>
-
 <input id="adminUsername"
-placeholder="Enter username">
+placeholder="Enter admin username">
 
 <label>Admin Password</label>
-
 <input id="adminPassword"
 type="password"
-placeholder="Enter password">
+placeholder="Enter admin password">
 
-<button class="btn" style="width:100%"
+<button class="btn"
+style="width:100%"
 onclick="adminLogin()">
-Admin Login
+Login as Admin
 </button>
 
 </div>
@@ -642,7 +812,6 @@ Admin Login
 <div id="loginMessage" class="mt"></div>
 
 </div>
-
 </div>
 
 
@@ -652,12 +821,29 @@ Admin Login
 
 <div class="card">
 
-<div class="section-title">
+<div class="dashboard-head">
+
+<div class="profile">
+
+<div id="employeeAvatar" class="avatar">
+E
+</div>
 
 <div>
-<h2 id="employeeWelcome">Welcome</h2>
-<div id="employeeInfo" class="location"></div>
+
+<div id="employeeWelcome" class="profile-name">
+Welcome
 </div>
+
+<div id="employeeInfo" class="profile-meta">
+Employee information
+</div>
+
+</div>
+
+</div>
+
+<span class="section-tag">EMPLOYEE</span>
 
 </div>
 
@@ -694,16 +880,22 @@ Admin Login
 </div>
 
 
+<!-- TODAY -->
+
 <div class="card">
 
+<div class="section-title">
 <h2>Today's Attendance</h2>
+<span class="section-icon">📍</span>
+</div>
 
 <div class="action-grid">
 
 <div class="action">
 
-<div>📍</div>
-<b>Mark IN</b>
+<div class="action-icon">🟢</div>
+<div class="action-title">Mark IN</div>
+<div class="action-desc">Start your work day</div>
 
 <button class="btn green"
 onclick="markAttendance('IN')">
@@ -712,11 +904,11 @@ Mark IN
 
 </div>
 
-
 <div class="action">
 
-<div>📍</div>
-<b>Mark OUT</b>
+<div class="action-icon">🟠</div>
+<div class="action-title">Mark OUT</div>
+<div class="action-desc">End your work day</div>
 
 <button class="btn orange"
 onclick="markAttendance('OUT')">
@@ -745,8 +937,7 @@ onclick="changeEmployeeMonth(-1)">
 ‹
 </button>
 
-<div
-id="employeeMonthLabel"
+<div id="employeeMonthLabel"
 class="month-label">
 Monthly Calendar
 </div>
@@ -783,7 +974,10 @@ style="position:absolute;opacity:0;pointer-events:none">
 
 <div class="card">
 
+<div class="section-title">
 <h2>Apply Leave</h2>
+<span class="section-icon">🏖️</span>
+</div>
 
 <label>Leave Date</label>
 
@@ -798,10 +992,9 @@ onclick="if(this.showPicker)this.showPicker()">
 id="leaveReason"
 placeholder="Enter leave reason"></textarea>
 
-<button
-class="btn blue"
+<button class="btn blue"
 onclick="applyLeave()">
-Apply Leave
+Submit Leave Request
 </button>
 
 <div id="leaveMessage" class="mt"></div>
@@ -823,35 +1016,36 @@ Apply Leave
 
 <div class="card">
 
-<h2>Admin Dashboard</h2>
+<div class="admin-title">
+Admin Dashboard
+</div>
 
-<div class="location">
-Payol Attendance Management
+<div class="admin-sub">
+Payol Attendance Management System
 </div>
 
 </div>
 
 
-<!-- OFFICE LOCATION -->
+<!-- OFFICE -->
 
 <div class="card">
 
-<h2>Office Location</h2>
+<div class="section-title">
+<h2>📍 Office Location</h2>
+<span class="section-tag">GPS SETTINGS</span>
+</div>
 
 <div class="grid">
 
 <div>
-
 <label>Latitude</label>
 <input id="officeLat" type="number" step="any">
-
 </div>
 
 <div>
-
 <label>Longitude</label>
 <input id="officeLng" type="number" step="any">
-
 </div>
 
 </div>
@@ -865,7 +1059,7 @@ value="100">
 
 <button class="btn"
 onclick="saveOfficeSettings()">
-Save Office Location
+Save Office Settings
 </button>
 
 <div id="officeMessage" class="mt"></div>
@@ -873,61 +1067,53 @@ Save Office Location
 </div>
 
 
-<!-- EMPLOYEE MANAGEMENT -->
+<!-- EMPLOYEES -->
 
 <div class="card">
 
-<h2>Employees</h2>
+<div class="section-title">
+<h2>👥 Employee Management</h2>
+<span class="section-tag">STAFF</span>
+</div>
 
 <div class="grid">
 
 <div>
-
 <label>Employee ID</label>
-
-<input
-id="newEmployeeId"
+<input id="newEmployeeId"
 placeholder="Employee ID">
-
 </div>
 
 <div>
-
 <label>Employee Name</label>
-
-<input
-id="newEmployeeName"
-placeholder="Employee Name">
-
+<input id="newEmployeeName"
+placeholder="Full Employee Name">
 </div>
 
 <div>
+<label>Post / Designation</label>
+<input id="newEmployeePost"
+placeholder="e.g. Manager, Accountant, Sales Executive">
+</div>
 
+<div>
 <label>Password</label>
-
-<input
-id="newEmployeePassword"
-placeholder="Password">
-
+<input id="newEmployeePassword"
+placeholder="Login Password">
 </div>
 
 <div>
-
-<label>Salary</label>
-
-<input
-id="newEmployeeSalary"
+<label>Monthly Salary</label>
+<input id="newEmployeeSalary"
 type="number"
 placeholder="Monthly Salary">
-
 </div>
 
 </div>
 
-<button
-class="btn green"
+<button class="btn green"
 onclick="addEmployee()">
-Add Employee
++ Add Employee
 </button>
 
 <div id="employeeAdminMessage" class="mt"></div>
@@ -943,7 +1129,10 @@ Add Employee
 
 <div class="card">
 
-<h2>Holiday Calendar</h2>
+<div class="section-title">
+<h2>📅 Holiday Calendar</h2>
+<span class="section-tag">HOLIDAYS</span>
+</div>
 
 <div class="grid">
 
@@ -964,16 +1153,15 @@ onclick="if(this.showPicker)this.showPicker()">
 
 <input
 id="holidayName"
-placeholder="Holiday name">
+placeholder="e.g. Independence Day">
 
 </div>
 
 </div>
 
-<button
-class="btn blue"
+<button class="btn blue"
 onclick="addHoliday()">
-Add Holiday
++ Add Holiday
 </button>
 
 <div id="holidayMessage" class="mt"></div>
@@ -989,7 +1177,10 @@ Add Holiday
 
 <div class="card">
 
-<h2>Leave Requests</h2>
+<div class="section-title">
+<h2>🏖️ Leave Requests</h2>
+<span class="section-tag">APPROVAL</span>
+</div>
 
 <div id="adminLeaveList"></div>
 
@@ -1000,27 +1191,21 @@ Add Holiday
 
 <div class="card">
 
-<h2>Monthly Salary Summary</h2>
+<div class="section-title">
+<h2>💰 Monthly Salary Summary</h2>
+<span class="section-tag">PAYROLL</span>
+</div>
 
-<div class="grid">
-
-<div>
-
-<label>Month</label>
+<label>Salary Month</label>
 
 <input
 type="month"
 id="salaryMonth"
 onclick="if(this.showPicker)this.showPicker()">
 
-</div>
-
-</div>
-
-<button
-class="btn"
+<button class="btn"
 onclick="loadSalarySummary()">
-Show Salary
+Show Salary Summary
 </button>
 
 <div class="table-wrap mt">
@@ -1030,14 +1215,13 @@ Show Salary
 <thead>
 
 <tr>
-
 <th>Employee</th>
+<th>Post</th>
 <th>Present</th>
 <th>Half</th>
 <th>Leave</th>
 <th>Payable</th>
 <th>Salary</th>
-
 </tr>
 
 </thead>
@@ -1055,19 +1239,21 @@ Show Salary
 
 <div class="card">
 
-<h2>Daily Report</h2>
+<div class="section-title">
+<h2>📊 Daily Attendance Report</h2>
+<span class="section-tag">REPORT</span>
+</div>
 
-<label>Date</label>
+<label>Report Date</label>
 
 <input
 type="date"
 id="reportDate"
 onclick="if(this.showPicker)this.showPicker()">
 
-<button
-class="btn blue"
+<button class="btn blue"
 onclick="loadDailyReport()">
-Show Report
+Show Daily Report
 </button>
 
 <div class="table-wrap mt">
@@ -1077,12 +1263,11 @@ Show Report
 <thead>
 
 <tr>
-
 <th>Employee</th>
+<th>Post</th>
 <th>IN</th>
 <th>OUT</th>
 <th>Status</th>
-
 </tr>
 
 </thead>
@@ -1114,16 +1299,13 @@ SUPABASE_URL,
 SUPABASE_KEY
 );
 
-
 let employee=null;
 let adminLogged=false;
 let employeeCalendarDate=new Date();
 
-
 function $(id){
 return document.getElementById(id);
 }
-
 
 function today(){
 
@@ -1135,7 +1317,6 @@ String(d.getDate()).padStart(2,"0");
 
 }
 
-
 function month(){
 
 let d=new Date();
@@ -1145,33 +1326,23 @@ String(d.getMonth()+1).padStart(2,"0");
 
 }
 
-
 function showLogin(type){
 
 $("employeeLogin").classList.toggle(
-"hidden",
-type!=="employee"
-);
+"hidden",type!=="employee");
 
 $("adminLogin").classList.toggle(
-"hidden",
-type!=="admin"
-);
+"hidden",type!=="admin");
 
 $("employeeTab").classList.toggle(
-"active",
-type==="employee"
-);
+"active",type==="employee");
 
 $("adminTab").classList.toggle(
-"active",
-type==="admin"
-);
+"active",type==="admin");
 
 $("loginMessage").innerHTML="";
 
 }
-
 
 async function employeeLogin(){
 
@@ -1184,9 +1355,7 @@ $("loginMessage").innerHTML=
 '<div class="error">Employee ID and password required.</div>';
 
 return;
-
 }
-
 
 let {data,error}=await db
 .from("employees")
@@ -1195,16 +1364,13 @@ let {data,error}=await db
 .eq("password",password)
 .maybeSingle();
 
-
 if(error){
 
 $("loginMessage").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+escapeHtml(error.message)+"</div>";
 
 return;
-
 }
-
 
 if(!data){
 
@@ -1212,21 +1378,17 @@ $("loginMessage").innerHTML=
 '<div class="error">Invalid Employee ID or Password.</div>';
 
 return;
-
 }
-
 
 employee=data;
 
 localStorage.setItem(
 "payol_employee_id",
-employee.employee_id
-);
+employee.employee_id);
 
 openEmployee();
 
 }
-
 
 async function adminLogin(){
 
@@ -1241,9 +1403,7 @@ password==="123456789"
 adminLogged=true;
 
 localStorage.setItem(
-"payol_admin",
-"1"
-);
+"payol_admin","1");
 
 openAdmin();
 
@@ -1256,6 +1416,14 @@ $("loginMessage").innerHTML=
 
 }
 
+function getInitial(name){
+
+return String(name||"E")
+.trim()
+.charAt(0)
+.toUpperCase();
+
+}
 
 function openEmployee(){
 
@@ -1264,11 +1432,27 @@ $("adminPage").classList.add("hidden");
 $("employeePage").classList.remove("hidden");
 $("mainHeader").classList.remove("hidden");
 
-$("employeeWelcome").textContent=
-"Welcome, "+(employee.name||employee.employee_name||employee.employee_id);
+let name=
+employee.name||
+employee.employee_name||
+employee.employee_id;
 
-$("employeeInfo").textContent=
-"Employee ID: "+employee.employee_id;
+let post=
+employee.post||
+"Employee";
+
+$("employeeWelcome").textContent=
+name;
+
+$("employeeInfo").innerHTML=
+"Employee ID: "+
+escapeHtml(employee.employee_id)+
+" &nbsp; • &nbsp; <span class='post'>"+
+escapeHtml(post)+
+"</span>";
+
+$("employeeAvatar").textContent=
+getInitial(name);
 
 $("employeeMonth").value=month();
 
@@ -1277,7 +1461,6 @@ employeeCalendarDate=new Date();
 loadEmployeeData();
 
 }
-
 
 function openAdmin(){
 
@@ -1296,7 +1479,6 @@ loadAdminLeaves();
 
 }
 
-
 function logout(){
 
 employee=null;
@@ -1312,7 +1494,6 @@ $("loginPage").classList.remove("hidden");
 
 }
 
-
 async function loadEmployeeData(){
 
 await employeeCalendar();
@@ -1321,7 +1502,6 @@ await loadTodayAttendance();
 await loadEmployeeStats();
 
 }
-
 
 async function getOfficeSettings(){
 
@@ -1335,13 +1515,8 @@ return data;
 
 }
 
-
 function distanceMeters(
-lat1,
-lon1,
-lat2,
-lon2
-){
+lat1,lon1,lat2,lon2){
 
 const R=6371000;
 
@@ -1360,44 +1535,36 @@ Math.sin(dl/2)**2;
 const c=
 2*Math.atan2(
 Math.sqrt(a),
-Math.sqrt(1-a)
-);
+Math.sqrt(1-a));
 
 return R*c;
 
 }
 
-
 async function markAttendance(type){
 
 if(!employee)return;
 
-
 $("attendanceMessage").innerHTML=
-'<div class="warning">Getting your location...</div>';
-
+'<div class="warning">📍 Getting your current location...</div>';
 
 if(!navigator.geolocation){
 
 $("attendanceMessage").innerHTML=
-'<div class="error">GPS is not supported.</div>';
+'<div class="error">GPS is not supported on this device.</div>';
 
 return;
-
 }
-
 
 let office=await getOfficeSettings();
 
 if(!office){
 
 $("attendanceMessage").innerHTML=
-'<div class="error">Office location not configured.</div>';
+'<div class="error">Office location is not configured.</div>';
 
 return;
-
 }
-
 
 navigator.geolocation.getCurrentPosition(
 
@@ -1410,25 +1577,21 @@ let distance=distanceMeters(
 lat,
 lng,
 office.latitude,
-office.longitude
-);
+office.longitude);
 
 let radius=office.radius_meters||100;
-
 
 if(distance>radius){
 
 $("attendanceMessage").innerHTML=
-'<div class="error">You are '+Math.round(distance)+' meters away. Attendance allowed within '+radius+' meters.</div>';
+'<div class="error">You are '+Math.round(distance)+
+' meters away. Allowed radius: '+radius+' meters.</div>';
 
 return;
-
 }
-
 
 let date=today();
 let time=new Date().toTimeString().slice(0,8);
-
 
 let {data:existing}=await db
 .from("attendance")
@@ -1438,52 +1601,41 @@ let {data:existing}=await db
 .order("id",{ascending:false})
 .limit(1);
 
-
 let row=existing&&existing[0];
-
 
 if(type==="IN" && row?.in_time){
 
 $("attendanceMessage").innerHTML=
-'<div class="warning">IN already marked today.</div>';
+'<div class="warning">IN is already marked today.</div>';
 
 return;
-
 }
-
 
 if(type==="OUT" && !row?.in_time){
 
 $("attendanceMessage").innerHTML=
-'<div class="error">First mark IN.</div>';
+'<div class="error">Please mark IN first.</div>';
 
 return;
-
 }
-
 
 let payload={
 employee_id:employee.employee_id,
-employee_name:employee.name||employee.employee_name,
+employee_name:
+employee.name||
+employee.employee_name,
 attendance_date:date,
 latitude:lat,
 longitude:lng
 };
 
-
 if(type==="IN"){
-
 payload.in_time=time;
-
 }else{
-
 payload.out_time=time;
-
 }
 
-
 let result;
-
 
 if(row){
 
@@ -1500,19 +1652,20 @@ result=await db
 
 }
 
-
 if(result.error){
 
 $("attendanceMessage").innerHTML=
-'<div class="error">'+result.error.message+"</div>";
+'<div class="error">'+
+escapeHtml(result.error.message)+
+"</div>";
 
 return;
-
 }
 
-
 $("attendanceMessage").innerHTML=
-'<div class="success">Attendance '+type+' marked successfully. Distance: '+Math.round(distance)+' m</div>';
+'<div class="success">✓ Attendance '+type+
+' marked successfully. Distance: '+
+Math.round(distance)+' meters.</div>';
 
 await loadEmployeeData();
 
@@ -1521,7 +1674,7 @@ await loadEmployeeData();
 error=>{
 
 $("attendanceMessage").innerHTML=
-'<div class="error">Location permission is required.</div>';
+'<div class="error">Location permission is required for attendance.</div>';
 
 },
 
@@ -1535,16 +1688,13 @@ maximumAge:0
 
 }
 
-
 function status(inTime,outTime){
 
 if(!inTime||!outTime)
 return null;
 
-
 let inMinutes=timeMinutes(inTime);
 let outMinutes=timeMinutes(outTime);
-
 
 if(inMinutes>=720)
 return "Half Day";
@@ -1555,7 +1705,6 @@ return "Half Day";
 if(inMinutes<720 && outMinutes>=1080)
 return "Full Day";
 
-
 let diff=outMinutes-inMinutes;
 
 if(diff>=480)
@@ -1565,7 +1714,6 @@ return "Half Day";
 
 }
 
-
 function timeMinutes(t){
 
 let parts=t.split(":").map(Number);
@@ -1573,7 +1721,6 @@ let parts=t.split(":").map(Number);
 return parts[0]*60+parts[1];
 
 }
-
 
 function groupAttendance(rows){
 
@@ -1596,11 +1743,9 @@ return g;
 
 }
 
-
 async function employeeCalendar(){
 
 if(!employee)return;
-
 
 let mon=$("employeeMonth").value||month();
 
@@ -1614,9 +1759,7 @@ employeeCalendarDate.toLocaleDateString(
 {
 month:"long",
 year:"numeric"
-}
-);
-
+});
 
 let total=
 new Date(y,m,0).getDate();
@@ -1624,20 +1767,14 @@ new Date(y,m,0).getDate();
 let start=
 new Date(y,m-1,1).getDay();
 
-
 let {data:att}=await db
 .from("attendance")
 .select("*")
 .eq("employee_id",employee.employee_id)
-.gte(
-"attendance_date",
-mon+"-01"
-)
+.gte("attendance_date",mon+"-01")
 .lte(
 "attendance_date",
-mon+"-"+String(total).padStart(2,"0")
-);
-
+mon+"-"+String(total).padStart(2,"0"));
 
 let {data:leave}=await db
 .from("leave_requests")
@@ -1645,56 +1782,30 @@ let {data:leave}=await db
 .eq("employee_id",employee.employee_id)
 .eq("status","APPROVED");
 
-
 let {data:hol}=await db
 .from("holidays")
 .select("*");
 
-
 let g=groupAttendance(att||[]);
 
-
 let ls=new Set(
-(leave||[]).map(x=>x.leave_date)
-);
-
+(leave||[]).map(x=>x.leave_date));
 
 let hs=new Map(
 (hol||[]).map(x=>[
 x.holiday_date,
-x.name
-])
-);
-
+x.name]));
 
 let html="";
 
-
-[
-"Sun",
-"Mon",
-"Tue",
-"Wed",
-"Thu",
-"Fri",
-"Sat"
-].forEach(x=>{
-
-html+=`
-<div class="calhead">${x}</div>
-`;
-
+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+.forEach(x=>{
+html+=`<div class="calhead">${x}</div>`;
 });
 
-
 for(let i=0;i<start;i++){
-
-html+=`
-<div class="day empty"></div>
-`;
-
+html+=`<div class="day empty"></div>`;
 }
-
 
 for(let d=1;d<=total;d++){
 
@@ -1703,24 +1814,17 @@ y+"-"+
 String(m).padStart(2,"0")+"-"+
 String(d).padStart(2,"0");
 
-
 let dow=
 new Date(y,m-1,d).getDay();
-
 
 let text="Absent";
 let cls="absent";
 
-
-if(
-g[ds]?.IN &&
-g[ds]?.OUT
-){
+if(g[ds]?.IN && g[ds]?.OUT){
 
 let st=status(
 g[ds].IN,
-g[ds].OUT
-);
+g[ds].OUT);
 
 text=
 st==="Full Day"
@@ -1732,77 +1836,58 @@ st==="Full Day"
 ?"present"
 :"half";
 
-}
-
-else if(ls.has(ds)){
+}else if(ls.has(ds)){
 
 text="Leave";
 cls="leave";
 
-}
-
-else if(hs.has(ds)){
+}else if(hs.has(ds)){
 
 text=hs.get(ds)||"Holiday";
 cls="holiday";
 
-}
-
-else if(dow===0){
+}else if(dow===0){
 
 text="Sunday";
 cls="sunday";
 
 }
 
-
 html+=`
 
 <div class="day ${ds===today()?"today":""}">
-
 <b>${d}</b>
-
 <small>
-
 <span class="badge ${cls}">
-${text}
+${escapeHtml(text)}
 </span>
-
 </small>
-
 </div>
 
 `;
 
 }
 
-
 $("calendar").innerHTML=html;
 
 }
 
-
 function changeEmployeeMonth(n){
 
 employeeCalendarDate.setMonth(
-employeeCalendarDate.getMonth()+n
-);
+employeeCalendarDate.getMonth()+n);
 
-let y=
-employeeCalendarDate.getFullYear();
+let y=employeeCalendarDate.getFullYear();
 
 let m=
 String(employeeCalendarDate.getMonth()+1)
 .padStart(2,"0");
 
-
-$("employeeMonth").value=
-y+"-"+m;
+$("employeeMonth").value=y+"-"+m;
 
 employeeCalendar();
 
 }
-
 
 async function loadTodayAttendance(){
 
@@ -1814,9 +1899,7 @@ let {data}=await db
 .order("id",{ascending:false})
 .limit(1);
 
-
 let row=data&&data[0];
-
 
 if(!row){
 
@@ -1824,17 +1907,15 @@ $("todayAttendance").textContent=
 "No attendance marked today.";
 
 return;
-
 }
 
-
 $("todayAttendance").innerHTML=
-"IN: "+(row.in_time||"--")+
+"Today's record → IN: "+
+(row.in_time||"--")+
 " &nbsp; | &nbsp; OUT: "+
 (row.out_time||"--");
 
 }
-
 
 async function loadEmployeeStats(){
 
@@ -1847,7 +1928,6 @@ Number(mon.split("-")[1]),
 0
 ).getDate();
 
-
 let {data:att}=await db
 .from("attendance")
 .select("*")
@@ -1855,9 +1935,7 @@ let {data:att}=await db
 .gte("attendance_date",mon+"-01")
 .lte(
 "attendance_date",
-mon+"-"+String(total).padStart(2,"0")
-);
-
+mon+"-"+String(total).padStart(2,"0"));
 
 let {data:leave}=await db
 .from("leave_requests")
@@ -1865,12 +1943,10 @@ let {data:leave}=await db
 .eq("employee_id",employee.employee_id)
 .eq("status","APPROVED");
 
-
 let g=groupAttendance(att||[]);
 
 let present=0;
 let half=0;
-
 
 Object.values(g).forEach(x=>{
 
@@ -1885,24 +1961,17 @@ half++;
 
 });
 
-
 let leaveDays=new Set(
-(leave||[]).map(x=>x.leave_date)
-);
-
+(leave||[]).map(x=>x.leave_date));
 
 let leaveCount=0;
 
 leaveDays.forEach(d=>{
-
 if(d.startsWith(mon))
 leaveCount++;
-
 });
 
-
 let workingDays=0;
-
 
 for(let d=1;d<=total;d++){
 
@@ -1910,27 +1979,22 @@ let dt=
 new Date(
 Number(mon.split("-")[0]),
 Number(mon.split("-")[1])-1,
-d
-);
+d);
 
 if(dt.getDay()!==0)
 workingDays++;
 
 }
 
-
 let absent=
 Math.max(
 0,
-workingDays-present-half-leaveCount
-);
-
+workingDays-present-half-leaveCount);
 
 let payable=
 present+
 half*.5+
 leaveCount;
-
 
 $("presentCount").textContent=present;
 $("halfCount").textContent=half;
@@ -1940,15 +2004,12 @@ $("payableCount").textContent=payable;
 
 }
 
-
 async function applyLeave(){
 
 if(!employee)return;
 
-
 let date=$("leaveDate").value;
 let reason=$("leaveReason").value.trim();
-
 
 if(!date||!reason){
 
@@ -1956,45 +2017,41 @@ $("leaveMessage").innerHTML=
 '<div class="error">Date and reason are required.</div>';
 
 return;
-
 }
-
 
 let {error}=await db
 .from("leave_requests")
 .insert({
 
 employee_id:employee.employee_id,
-employee_name:employee.name||employee.employee_name,
+employee_name:
+employee.name||
+employee.employee_name,
 leave_date:date,
 reason:reason,
 status:"PENDING"
 
 });
 
-
 if(error){
 
 $("leaveMessage").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 $("leaveDate").value="";
 $("leaveReason").value="";
 
-
 $("leaveMessage").innerHTML=
-'<div class="success">Leave request submitted.</div>';
-
+'<div class="success">✓ Leave request submitted successfully.</div>';
 
 loadMyLeaves();
 
 }
-
 
 async function loadMyLeaves(){
 
@@ -2004,16 +2061,15 @@ let {data,error}=await db
 .eq("employee_id",employee.employee_id)
 .order("leave_date",{ascending:false});
 
-
 if(error){
 
 $("myLeaves").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 if(!data||!data.length){
 
@@ -2021,12 +2077,9 @@ $("myLeaves").innerHTML=
 '<div class="empty">No leave requests.</div>';
 
 return;
-
 }
 
-
 let html="";
-
 
 data.forEach(x=>{
 
@@ -2037,14 +2090,13 @@ x.status==="REJECTED"
 ?"absent":
 "half";
 
-
 html+=`
 
 <div class="employee-row">
 
 <div>
 
-<b>${x.leave_date}</b>
+<b>${escapeHtml(x.leave_date)}</b>
 
 <br>
 
@@ -2053,7 +2105,7 @@ html+=`
 </div>
 
 <span class="badge ${cls}">
-${x.status}
+${escapeHtml(x.status)}
 </span>
 
 </div>
@@ -2062,14 +2114,12 @@ ${x.status}
 
 });
 
-
 $("myLeaves").innerHTML=html;
 
 }
 
 
 /* ADMIN */
-
 
 async function loadOfficeSettings(){
 
@@ -2083,13 +2133,11 @@ $("officeRadius").value=data.radius_meters||100;
 
 }
 
-
 async function saveOfficeSettings(){
 
 let latitude=parseFloat($("officeLat").value);
 let longitude=parseFloat($("officeLng").value);
 let radius=parseInt($("officeRadius").value)||100;
-
 
 if(
 isNaN(latitude)||
@@ -2100,9 +2148,7 @@ $("officeMessage").innerHTML=
 '<div class="error">Latitude and Longitude required.</div>';
 
 return;
-
 }
-
 
 let {error}=await db
 .from("office_settings")
@@ -2115,40 +2161,36 @@ radius_meters:radius
 
 });
 
-
 if(error){
 
 $("officeMessage").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 $("officeMessage").innerHTML=
-'<div class="success">Office location saved.</div>';
+'<div class="success">✓ Office location saved successfully.</div>';
 
 }
-
 
 async function addEmployee(){
 
 let id=$("newEmployeeId").value.trim();
 let name=$("newEmployeeName").value.trim();
+let post=$("newEmployeePost").value.trim();
 let password=$("newEmployeePassword").value;
 let salary=parseFloat($("newEmployeeSalary").value)||0;
 
-
-if(!id||!name||!password){
+if(!id||!name||!post||!password){
 
 $("employeeAdminMessage").innerHTML=
-'<div class="error">Employee ID, name and password required.</div>';
+'<div class="error">Employee ID, name, post and password are required.</div>';
 
 return;
-
 }
-
 
 let {error}=await db
 .from("employees")
@@ -2156,36 +2198,34 @@ let {error}=await db
 
 employee_id:id,
 name:name,
+post:post,
 password:password,
 salary:salary
 
 });
 
-
 if(error){
 
 $("employeeAdminMessage").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 $("newEmployeeId").value="";
 $("newEmployeeName").value="";
+$("newEmployeePost").value="";
 $("newEmployeePassword").value="";
 $("newEmployeeSalary").value="";
 
-
 $("employeeAdminMessage").innerHTML=
-'<div class="success">Employee added.</div>';
-
+'<div class="success">✓ Employee added successfully.</div>';
 
 loadEmployees();
 
 }
-
 
 async function loadEmployees(){
 
@@ -2194,16 +2234,15 @@ let {data,error}=await db
 .select("*")
 .order("employee_id");
 
-
 if(error){
 
 $("employeeList").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 if(!data||!data.length){
 
@@ -2211,30 +2250,46 @@ $("employeeList").innerHTML=
 '<div class="empty">No employees found.</div>';
 
 return;
-
 }
-
 
 let html="";
 
-
 data.forEach(x=>{
+
+let name=
+x.name||
+x.employee_name||
+x.employee_id;
+
+let post=
+x.post||
+"Employee";
 
 html+=`
 
 <div class="employee-row">
 
+<div class="employee-main">
+
+<div class="mini-avatar">
+${escapeHtml(getInitial(name))}
+</div>
+
 <div>
 
-<b>${escapeHtml(x.name||x.employee_name||"")}</b>
+<b>${escapeHtml(name)}</b>
 
 <br>
 
 <small>
 ID: ${escapeHtml(x.employee_id)}
-&nbsp; | &nbsp;
+<br>
+<span class="post">${escapeHtml(post)}</span>
+&nbsp; • &nbsp;
 Salary: ₹${Number(x.salary||0).toLocaleString("en-IN")}
 </small>
+
+</div>
 
 </div>
 
@@ -2250,42 +2305,34 @@ Delete
 
 });
 
-
 $("employeeList").innerHTML=html;
 
 }
-
 
 async function deleteEmployee(id){
 
 if(!confirm("Delete this employee?"))
 return;
 
-
 let {error}=await db
 .from("employees")
 .delete()
 .eq("employee_id",id);
 
-
 if(error){
 
 alert(error.message);
 return;
-
 }
-
 
 loadEmployees();
 
 }
 
-
 async function addHoliday(){
 
 let date=$("holidayDate").value;
 let name=$("holidayName").value.trim();
-
 
 if(!date||!name){
 
@@ -2293,9 +2340,7 @@ $("holidayMessage").innerHTML=
 '<div class="error">Date and holiday name required.</div>';
 
 return;
-
 }
-
 
 let {error}=await db
 .from("holidays")
@@ -2306,29 +2351,25 @@ name:name
 
 });
 
-
 if(error){
 
 $("holidayMessage").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 $("holidayDate").value="";
 $("holidayName").value="";
 
-
 $("holidayMessage").innerHTML=
-'<div class="success">Holiday added.</div>';
-
+'<div class="success">✓ Holiday added successfully.</div>';
 
 loadHolidays();
 
 }
-
 
 async function loadHolidays(){
 
@@ -2337,16 +2378,15 @@ let {data,error}=await db
 .select("*")
 .order("holiday_date");
 
-
 if(error){
 
 $("holidayList").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 if(!data||!data.length){
 
@@ -2354,12 +2394,9 @@ $("holidayList").innerHTML=
 '<div class="empty">No holidays added.</div>';
 
 return;
-
 }
 
-
 let html="";
-
 
 data.forEach(x=>{
 
@@ -2373,7 +2410,7 @@ html+=`
 
 <br>
 
-<small>${x.holiday_date}</small>
+<small>${escapeHtml(x.holiday_date)}</small>
 
 </div>
 
@@ -2389,36 +2426,29 @@ Delete
 
 });
 
-
 $("holidayList").innerHTML=html;
 
 }
-
 
 async function deleteHoliday(id){
 
 if(!confirm("Delete this holiday?"))
 return;
 
-
 let {error}=await db
 .from("holidays")
 .delete()
 .eq("id",id);
 
-
 if(error){
 
 alert(error.message);
 return;
-
 }
-
 
 loadHolidays();
 
 }
-
 
 async function loadAdminLeaves(){
 
@@ -2427,16 +2457,15 @@ let {data,error}=await db
 .select("*")
 .order("created_at",{ascending:false});
 
-
 if(error){
 
 $("adminLeaveList").innerHTML=
-'<div class="error">'+error.message+"</div>";
+'<div class="error">'+
+escapeHtml(error.message)+
+"</div>";
 
 return;
-
 }
-
 
 if(!data||!data.length){
 
@@ -2444,12 +2473,9 @@ $("adminLeaveList").innerHTML=
 '<div class="empty">No leave requests.</div>';
 
 return;
-
 }
 
-
 let html="";
-
 
 data.forEach(x=>{
 
@@ -2464,13 +2490,19 @@ html+=`
 <br>
 
 <small>
-${x.leave_date} — ${escapeHtml(x.reason)}
+${escapeHtml(x.leave_date)} — 
+${escapeHtml(x.reason)}
 </small>
 
 <br>
 
-<span class="badge ${x.status==="APPROVED"?"present":x.status==="REJECTED"?"absent":"half"}">
-${x.status}
+<span class="badge ${
+x.status==="APPROVED"
+?"present":
+x.status==="REJECTED"
+?"absent":
+"half"}">
+${escapeHtml(x.status)}
 </span>
 
 </div>
@@ -2480,7 +2512,6 @@ ${x.status}
 ${
 x.status==="PENDING"
 ?
-
 `
 
 <button
@@ -2496,9 +2527,7 @@ Reject
 </button>
 
 `
-
 :""
-
 }
 
 </div>
@@ -2509,11 +2538,9 @@ Reject
 
 });
 
-
 $("adminLeaveList").innerHTML=html;
 
 }
-
 
 async function updateLeave(id,statusValue){
 
@@ -2524,19 +2551,15 @@ status:statusValue
 })
 .eq("id",id);
 
-
 if(error){
 
 alert(error.message);
 return;
-
 }
-
 
 loadAdminLeaves();
 
 }
-
 
 async function loadSalarySummary(){
 
@@ -2547,42 +2570,29 @@ let [y,m]=mon.split("-").map(Number);
 let total=
 new Date(y,m,0).getDate();
 
-
 let {data:employees}=await db
 .from("employees")
 .select("*")
 .order("employee_id");
 
-
 let {data:att}=await db
 .from("attendance")
 .select("*")
-.gte(
-"attendance_date",
-mon+"-01"
-)
+.gte("attendance_date",mon+"-01")
 .lte(
 "attendance_date",
-mon+"-"+String(total).padStart(2,"0")
-);
-
+mon+"-"+String(total).padStart(2,"0"));
 
 let {data:leaves}=await db
 .from("leave_requests")
 .select("*")
 .eq("status","APPROVED")
-.gte(
-"leave_date",
-mon+"-01"
-)
+.gte("leave_date",mon+"-01")
 .lte(
 "leave_date",
-mon+"-"+String(total).padStart(2,"0")
-);
-
+mon+"-"+String(total).padStart(2,"0"));
 
 let groups={};
-
 
 (att||[]).forEach(x=>{
 
@@ -2593,9 +2603,7 @@ groups[x.employee_id][x.attendance_date]=x;
 
 });
 
-
 let leaveGroups={};
-
 
 (leaves||[]).forEach(x=>{
 
@@ -2606,9 +2614,7 @@ leaveGroups[x.employee_id].add(x.leave_date);
 
 });
 
-
 let html="";
-
 
 (employees||[]).forEach(emp=>{
 
@@ -2616,7 +2622,6 @@ let g=groups[emp.employee_id]||{};
 
 let present=0;
 let half=0;
-
 
 Object.values(g).forEach(x=>{
 
@@ -2631,37 +2636,40 @@ half++;
 
 });
 
-
 let leave=leaveGroups[emp.employee_id]
 ?leaveGroups[emp.employee_id].size
 :0;
-
 
 let payable=
 present+
 half*.5+
 leave;
 
-
 let salary=
 Number(emp.salary||0);
-
 
 let daily=
 salary/
 new Date(y,m,0).getDate();
 
-
 let payableSalary=
 daily*payable;
-
 
 html+=`
 
 <tr>
 
 <td>
-${escapeHtml(emp.name||emp.employee_name||emp.employee_id)}
+${escapeHtml(
+emp.name||
+emp.employee_name||
+emp.employee_id)}
+</td>
+
+<td>
+<span class="post">
+${escapeHtml(emp.post||"Employee")}
+</span>
 </td>
 
 <td>${present}</td>
@@ -2684,41 +2692,33 @@ maximumFractionDigits:0
 
 });
 
-
 $("salaryTable").innerHTML=
 html||
-'<tr><td colspan="6">No data</td></tr>';
+'<tr><td colspan="7">No data</td></tr>';
 
 }
-
 
 async function loadDailyReport(){
 
 let date=$("reportDate").value||today();
-
 
 let {data:employees}=await db
 .from("employees")
 .select("*")
 .order("employee_id");
 
-
 let {data:att}=await db
 .from("attendance")
 .select("*")
 .eq("attendance_date",date);
 
-
 let map={};
-
 
 (att||[]).forEach(x=>{
 map[x.employee_id]=x;
 });
 
-
 let html="";
-
 
 (employees||[]).forEach(emp=>{
 
@@ -2729,7 +2729,6 @@ x?.in_time&&x?.out_time
 ?status(x.in_time,x.out_time)
 :"Absent";
 
-
 let cls=
 st==="Full Day"
 ?"present":
@@ -2737,13 +2736,21 @@ st==="Half Day"
 ?"half":
 "absent";
 
-
 html+=`
 
 <tr>
 
 <td>
-${escapeHtml(emp.name||emp.employee_name||emp.employee_id)}
+${escapeHtml(
+emp.name||
+emp.employee_name||
+emp.employee_id)}
+</td>
+
+<td>
+<span class="post">
+${escapeHtml(emp.post||"Employee")}
+</span>
 </td>
 
 <td>${x?.in_time||"--"}</td>
@@ -2751,9 +2758,11 @@ ${escapeHtml(emp.name||emp.employee_name||emp.employee_id)}
 <td>${x?.out_time||"--"}</td>
 
 <td>
+
 <span class="badge ${cls}">
 ${st==="Full Day"?"Present":st}
 </span>
+
 </td>
 
 </tr>
@@ -2762,13 +2771,11 @@ ${st==="Full Day"?"Present":st}
 
 });
 
-
 $("dailyTable").innerHTML=
 html||
-'<tr><td colspan="4">No data</td></tr>';
+'<tr><td colspan="5">No data</td></tr>';
 
 }
-
 
 function escapeHtml(str){
 
@@ -2780,7 +2787,6 @@ return String(str??"")
 .replace(/'/g,"&#039;");
 
 }
-
 
 function escapeJs(str){
 
@@ -2801,7 +2807,6 @@ localStorage.getItem("payol_employee_id");
 let adm=
 localStorage.getItem("payol_admin");
 
-
 if(adm==="1"){
 
 adminLogged=true;
@@ -2810,7 +2815,6 @@ return;
 
 }
 
-
 if(empId){
 
 let {data}=await db
@@ -2818,7 +2822,6 @@ let {data}=await db
 .select("*")
 .eq("employee_id",empId)
 .maybeSingle();
-
 
 if(data){
 
@@ -2830,11 +2833,9 @@ return;
 
 }
 
-
 $("employeeMonth").value=month();
 
 }
-
 
 autoLogin();
 
