@@ -2,67 +2,64 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909">
 <title>Payol Attendance</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --red:#e50914;
+  --red2:#ff3340;
+  --bg:#080808;
+  --card:#151515;
+  --line:#292929;
+  --muted:#8f8f8f;
 }
 
 body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#090909;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:var(--bg);
   color:#fff;
   min-height:100vh;
 }
 
-:root{
-  --red:#e50914;
-  --red2:#ff1e2d;
-  --black:#090909;
-  --card:#151515;
-  --border:#2b2b2b;
-}
-
 header{
-  background:#0d0d0d;
-  border-bottom:1px solid #292929;
-  padding:18px 25px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
   position:sticky;
   top:0;
-  z-index:10;
+  z-index:50;
+  background:rgba(10,10,10,.95);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .logo{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:10px;
 }
 
 .logo-box{
-  width:48px;
-  height:48px;
+  width:42px;
+  height:42px;
   border-radius:12px;
-  background:linear-gradient(135deg,#ff1825,#a50008);
+  background:linear-gradient(135deg,#ff1725,#920008);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:22px;
-  font-weight:bold;
+  font-weight:800;
 }
 
 .logo-text{
-  font-size:21px;
-  font-weight:bold;
+  font-weight:800;
+  font-size:19px;
 }
 
 .logo-text span{
@@ -71,20 +68,26 @@ header{
 
 .header-title{
   color:#aaa;
-  font-size:13px;
+  font-size:12px;
 }
 
 .container{
   width:94%;
-  max-width:1100px;
-  margin:30px auto;
+  max-width:1150px;
+  margin:24px auto;
 }
 
-#loginPage{
-  min-height:calc(100vh - 85px);
+.hidden{
+  display:none!important;
+}
+
+/* LOGIN */
+
+.login-wrap{
+  min-height:calc(100vh - 72px);
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
 }
 
 .login-card{
@@ -92,66 +95,78 @@ header{
   max-width:430px;
   background:linear-gradient(145deg,#181818,#0f0f0f);
   border:1px solid #303030;
-  border-radius:22px;
-  padding:35px;
-  box-shadow:0 25px 70px rgba(0,0,0,.6);
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 25px 70px rgba(0,0,0,.55);
 }
 
 .login-logo{
-  width:70px;
-  height:70px;
-  background:linear-gradient(135deg,#ff1825,#a50008);
+  width:68px;
+  height:68px;
   border-radius:20px;
+  background:linear-gradient(135deg,#ff1725,#920008);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:30px;
-  font-weight:bold;
-  margin:0 auto 18px;
+  font-size:28px;
+  font-weight:800;
+  margin:0 auto 16px;
 }
 
 .login-card h1{
   text-align:center;
-  font-size:27px;
 }
 
-.login-card .sub{
+.sub{
   text-align:center;
   color:#888;
-  margin:8px 0 28px;
-  font-size:14px;
+  font-size:13px;
+  margin:8px 0 22px;
 }
+
+/* INPUT */
 
 label{
   display:block;
-  margin:15px 0 7px;
   color:#bbb;
   font-size:13px;
+  margin:13px 0 7px;
 }
 
-input,select{
+input,
+select,
+textarea{
   width:100%;
-  padding:14px 15px;
   background:#0b0b0b;
+  color:#fff;
   border:1px solid #333;
   border-radius:11px;
-  color:#fff;
+  padding:13px;
   outline:none;
-  font-size:15px;
+  font:inherit;
 }
 
-input:focus,select:focus{
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
   border-color:var(--red);
 }
 
+/* BUTTON */
+
 button{
   border:0;
-  cursor:pointer;
-  color:white;
-  font-weight:bold;
+  color:#fff;
   border-radius:11px;
-  padding:13px 18px;
-  font-size:14px;
+  padding:12px 16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.15s;
 }
 
 button:hover{
@@ -159,8 +174,6 @@ button:hover{
 }
 
 .primary{
-  width:100%;
-  margin-top:22px;
   background:linear-gradient(135deg,#ff1b29,#b50009);
 }
 
@@ -177,14 +190,24 @@ button:hover{
   background:#08752d;
 }
 
+.blue{
+  background:#155e9c;
+}
+
+.yellow{
+  background:#805b00;
+}
+
+/* STATUS */
+
 .status{
-  margin-top:15px;
-  padding:12px;
+  margin-top:14px;
+  padding:11px 12px;
   border-radius:10px;
   background:#171717;
   border:1px solid #303030;
   color:#ddd;
-  font-size:14px;
+  font-size:13px;
 }
 
 .status.success{
@@ -199,94 +222,86 @@ button:hover{
   color:#ff8c91;
 }
 
-.panel{
-  background:linear-gradient(145deg,#171717,#101010);
-  border:1px solid #292929;
-  border-radius:18px;
-  padding:24px;
-  margin-bottom:22px;
-}
-
-.panel h2{
-  font-size:22px;
-  margin-bottom:5px;
-}
-
-.panel-sub{
-  color:#888;
-  font-size:13px;
-  margin-bottom:20px;
-}
+/* DASHBOARD */
 
 .dashboard-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:15px;
-  margin-bottom:22px;
+  gap:14px;
+  margin-bottom:20px;
 }
 
 .dashboard-head h1{
-  font-size:28px;
+  font-size:27px;
 }
 
 .dashboard-head p{
   color:#888;
-  margin-top:5px;
+  margin-top:4px;
+}
+
+.panel{
+  background:linear-gradient(145deg,#171717,#101010);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.panel h2{
+  font-size:20px;
+  margin-bottom:5px;
+}
+
+.panel-sub{
+  font-size:12px;
+  color:#888;
+  margin-bottom:16px;
 }
 
 .cards{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-  margin-bottom:22px;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+  margin-bottom:20px;
 }
 
 .card{
   background:#151515;
-  border:1px solid #292929;
+  border:1px solid var(--line);
   border-radius:16px;
-  padding:20px;
+  padding:17px;
 }
 
 .card .icon{
-  font-size:25px;
-  margin-bottom:10px;
+  font-size:22px;
 }
 
 .card .number{
-  font-size:28px;
-  font-weight:bold;
-}
-
-.card .label{
-  color:#888;
-  font-size:13px;
+  font-size:26px;
+  font-weight:800;
   margin-top:5px;
 }
 
-.employee-name{
-  font-size:24px;
-  font-weight:bold;
-  margin-bottom:4px;
+.card .label{
+  font-size:12px;
+  color:#888;
+  margin-top:4px;
 }
 
-.employee-id{
-  color:#888;
-  font-size:13px;
-}
+/* ATTENDANCE */
 
 .attendance-buttons{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-top:25px;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:18px;
 }
 
 .att-btn{
-  padding:28px 15px;
-  font-size:20px;
-  border-radius:16px;
+  padding:22px 8px;
+  font-size:17px;
 }
 
 .in-btn{
@@ -294,200 +309,350 @@ button:hover{
 }
 
 .out-btn{
-  background:#202020;
+  background:#222;
   border:1px solid #444;
 }
 
+.half-btn{
+  background:#805b00;
+}
+
 .gps-box{
-  margin-top:20px;
-  padding:15px;
-  border-radius:13px;
+  margin-top:16px;
+  padding:14px;
   background:#0b0b0b;
-  border:1px solid #292929;
+  border:1px solid var(--line);
+  border-radius:13px;
   color:#bbb;
+  font-size:13px;
 }
 
-.admin-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:15px;
-}
+/* GRID */
 
-.admin-actions button{
-  background:#202020;
-  border:1px solid #3a3a3a;
-}
-
-.form-grid{
+.grid3{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:14px;
+  gap:12px;
 }
 
+.grid4{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.form-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+/* TABLE */
+
 .table-wrap{
-  width:100%;
   overflow-x:auto;
+  margin-top:12px;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:15px;
-  min-width:650px;
+  min-width:700px;
 }
 
 th{
   background:#8f0008;
-  color:#fff;
-  padding:13px 10px;
+  padding:11px 9px;
   text-align:left;
-  font-size:13px;
+  font-size:12px;
 }
 
 td{
-  padding:13px 10px;
-  border-bottom:1px solid #292929;
+  padding:11px 9px;
+  border-bottom:1px solid var(--line);
+  font-size:12px;
   color:#ddd;
-  font-size:13px;
 }
 
-tr:hover td{
-  background:#191919;
-}
+/* BADGE */
 
 .badge{
   display:inline-block;
-  padding:5px 9px;
+  padding:5px 8px;
   border-radius:20px;
-  font-size:11px;
-  font-weight:bold;
+  font-size:10px;
+  font-weight:800;
 }
 
-.badge-in{
-  background:#142b1b;
-  color:#72ee93;
+.b-present{
+  background:#12351c;
+  color:#73ef96;
 }
 
-.badge-out{
-  background:#301214;
-  color:#ff8b91;
+.b-half{
+  background:#44320a;
+  color:#ffd36a;
 }
 
-.badge-leave{
-  background:#3a2d10;
+.b-leave{
+  background:#3c2b08;
   color:#ffd76a;
 }
 
-.badge-working{
-  background:#182b3d;
-  color:#75c7ff;
+.b-holiday{
+  background:#43243b;
+  color:#ff91d6;
 }
 
-.badge-holiday{
-  background:#38202f;
-  color:#ff8bd0;
-}
-
-.badge-sunday{
-  background:#242424;
+.b-sunday{
+  background:#292929;
   color:#bbb;
 }
 
-hr{
-  border:0;
-  border-top:1px solid #292929;
-  margin:28px 0;
+.b-absent{
+  background:#421418;
+  color:#ff8c91;
 }
 
-.hidden{
-  display:none!important;
+.b-upcoming{
+  background:#182d40;
+  color:#79caff;
 }
 
-.small-input{
-  padding:9px 10px;
-  min-width:120px;
+.b-pending{
+  background:#3d300b;
+  color:#ffd86d;
 }
 
-.summary-info{
-  margin-top:15px;
-  padding:15px;
-  background:#0b0b0b;
-  border:1px solid #292929;
+.b-approved{
+  background:#12351c;
+  color:#73ef96;
+}
+
+.b-rejected{
+  background:#421418;
+  color:#ff8c91;
+}
+
+/* CALENDAR */
+
+.calendar-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.month-title{
+  font-size:21px;
+  font-weight:800;
+}
+
+.month-buttons{
+  display:flex;
+  gap:7px;
+}
+
+.month-buttons button{
+  width:44px;
+  height:40px;
+  padding:0;
+  font-size:20px;
+}
+
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:7px;
+}
+
+.dow{
+  color:#777;
+  font-size:11px;
+  text-align:center;
+  padding:4px;
+}
+
+.day{
+  min-height:83px;
+  background:#0d0d0d;
+  border:1px solid #252525;
   border-radius:12px;
+  padding:8px;
+  position:relative;
 }
 
-.holiday-box{
-  margin-top:18px;
-  padding:16px;
-  background:#0b0b0b;
-  border:1px solid #292929;
-  border-radius:13px;
+.day.empty{
+  background:transparent;
+  border-color:transparent;
 }
 
-.holiday-box h3{
-  font-size:17px;
-  margin-bottom:10px;
+.daynum{
+  font-size:12px;
+  font-weight:800;
 }
 
-.holiday-item{
-  padding:10px 0;
-  border-bottom:1px solid #292929;
-  color:#ddd;
+.day-status{
+  margin-top:8px;
+  font-size:9px;
+  font-weight:800;
+  border-radius:8px;
+  padding:5px 3px;
+  text-align:center;
 }
 
-.holiday-item:last-child{
+.day.present{border-color:#1c6331}
+.day.half{border-color:#75560c}
+.day.leave{border-color:#75570c}
+.day.holiday{border-color:#713d61}
+.day.sunday{border-color:#444}
+.day.absent{border-color:#6e2026}
+.day.upcoming{border-color:#254764}
+
+.calendar-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:13px;
+}
+
+.legend{
+  font-size:10px;
+  padding:5px 8px;
+  border-radius:10px;
+  background:#202020;
+}
+
+/* EMPLOYEE LIST */
+
+.employee-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.employee-row:last-child{
   border-bottom:0;
 }
 
-@media(max-width:750px){
+.employee-row small{
+  color:#888;
+}
 
-  header{
-    padding:14px 15px;
-  }
+.row-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
 
-  .header-title{
-    display:none;
-  }
+.row-actions button{
+  padding:8px 10px;
+  font-size:11px;
+}
 
-  .container{
-    width:94%;
-    margin:20px auto;
-  }
+/* SUMMARY */
 
-  .login-card{
-    padding:25px 20px;
-  }
+.summary-box{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:9px;
+  margin-top:12px;
+}
+
+.mini{
+  background:#0b0b0b;
+  border:1px solid var(--line);
+  padding:12px;
+  border-radius:12px;
+}
+
+.mini b{
+  display:block;
+  font-size:19px;
+}
+
+.mini span{
+  font-size:10px;
+  color:#888;
+}
+
+.empty-msg{
+  color:#777;
+  padding:15px 0;
+  text-align:center;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
 
   .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid3,
+  .grid4{
     grid-template-columns:1fr;
   }
 
-  .form-grid{
-    grid-template-columns:1fr;
+  .calendar{
+    gap:4px;
+  }
+
+  .day{
+    min-height:70px;
+    padding:6px;
+  }
+
+  .day-status{
+    font-size:8px;
+    padding:4px 2px;
   }
 
   .dashboard-head{
     align-items:flex-start;
     flex-direction:column;
   }
+}
 
-  .dashboard-head h1{
-    font-size:23px;
+@media(max-width:520px){
+
+  header{
+    padding:12px 14px;
   }
 
-  .attendance-buttons{
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-
-  .att-btn{
-    padding:23px 8px;
-    font-size:17px;
+  .container{
+    width:94%;
+    margin:16px auto;
   }
 
   .panel{
-    padding:18px;
+    padding:15px;
+  }
+
+  .login-card{
+    padding:24px 18px;
+  }
+
+  .attendance-buttons{
+    grid-template-columns:1fr;
+  }
+
+  .cards{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .month-title{
+    font-size:18px;
+  }
+
+  .header-title{
+    display:none;
   }
 }
 </style>
@@ -496,82 +661,59 @@ hr{
 <body>
 
 <header>
-
   <div class="logo">
-
-    <div class="logo-box">
-      PA
-    </div>
-
-    <div class="logo-text">
-      Payol <span>Attendance</span>
-    </div>
-
+    <div class="logo-box">P</div>
+    <div class="logo-text">Payol <span>Attendance</span></div>
   </div>
-
-  <div class="header-title">
-    GPS Attendance • 100 Meter Security
-  </div>
-
+  <div class="header-title">GPS • Calendar • Salary</div>
 </header>
-
 
 <!-- LOGIN -->
 
-<div id="loginPage">
+<div id="loginPage" class="login-wrap">
 
   <div class="login-card">
 
-    <div class="login-logo">
-      PA
-    </div>
+    <div class="login-logo">P</div>
 
-    <h1>
-      Payol Attendance
-    </h1>
+    <h1>Payol Attendance</h1>
 
     <div class="sub">
-      Secure Employee Attendance System
+      Employee & Admin Login
     </div>
 
-    <label>
-      Login Type
-    </label>
+    <label>Login Type</label>
 
-    <select id="loginType"
-      onchange="changeLoginType()">
-
-      <option value="employee">
-        Employee Login
-      </option>
-
-      <option value="admin">
-        Admin Login
-      </option>
-
+    <select id="loginType" onchange="changeLoginType()">
+      <option value="employee">Employee</option>
+      <option value="admin">Admin</option>
     </select>
 
     <label id="usernameLabel">
       Employee ID
     </label>
 
-    <input id="username"
-      type="text"
-      placeholder="Enter Employee ID">
+    <input
+      id="loginUsername"
+      placeholder="PAYOL01"
+      autocomplete="username"
+    >
 
-    <label>
-      Password
-    </label>
+    <label>Password</label>
 
-    <input id="password"
+    <input
+      id="loginPassword"
       type="password"
-      placeholder="Enter Password">
+      placeholder="Password"
+      autocomplete="current-password"
+    >
 
-    <button class="primary"
-      onclick="login()">
-
-      LOGIN
-
+    <button
+      class="primary"
+      style="width:100%;margin-top:20px"
+      onclick="login()"
+    >
+      Login
     </button>
 
     <div id="loginStatus"></div>
@@ -581,30 +723,19 @@ hr{
 </div>
 
 
-<!-- EMPLOYEE -->
+<!-- EMPLOYEE PAGE -->
 
-<div id="employeePage"
-  class="container hidden">
+<div id="employeePage" class="container hidden">
 
   <div class="dashboard-head">
 
     <div>
-
-      <h1>
-        Employee Dashboard
-      </h1>
-
-      <p>
-        Office ke 100 meter ke andar attendance mark karein.
-      </p>
-
+      <h1 id="empWelcome">Employee</h1>
+      <p id="empMeta"></p>
     </div>
 
-    <button class="secondary"
-      onclick="logout()">
-
+    <button class="secondary" onclick="logout()">
       Logout
-
     </button>
 
   </div>
@@ -613,101 +744,179 @@ hr{
   <div class="cards">
 
     <div class="card">
+      <div class="icon">📅</div>
+      <div class="number" id="todayStatus">-</div>
+      <div class="label">Today</div>
+    </div>
 
-      <div class="icon">
-        👤
-      </div>
+    <div class="card">
+      <div class="icon">🟢</div>
+      <div class="number" id="empPresent">0</div>
+      <div class="label">Present</div>
+    </div>
 
-      <div class="number"
-        id="empNameCard">
-        -
-      </div>
+    <div class="card">
+      <div class="icon">🟡</div>
+      <div class="number" id="empHalf">0</div>
+      <div class="label">Half Day</div>
+    </div>
 
-      <div class="label">
-        Employee
+    <div class="card">
+      <div class="icon">📝</div>
+      <div class="number" id="empLeave">0</div>
+      <div class="label">Approved Leave</div>
+    </div>
+
+  </div>
+
+
+  <!-- ATTENDANCE -->
+
+  <div class="panel">
+
+    <h2>📍 Attendance</h2>
+
+    <div class="panel-sub">
+      Attendance ke liye office location se 50 meter ke andar hona zaroori hai.
+    </div>
+
+    <div class="attendance-buttons">
+
+      <button
+        class="att-btn in-btn"
+        onclick="markAttendance('IN')"
+      >
+        🟢 CHECK IN
+      </button>
+
+      <button
+        class="att-btn half-btn"
+        onclick="markAttendance('HALF_DAY')"
+      >
+        🟡 HALF DAY
+      </button>
+
+      <button
+        class="att-btn out-btn"
+        onclick="markAttendance('OUT')"
+      >
+        🔴 CHECK OUT
+      </button>
+
+    </div>
+
+    <div id="gpsStatus" class="gps-box">
+      GPS ready.
+    </div>
+
+  </div>
+
+
+  <!-- EMPLOYEE CALENDAR -->
+
+  <div class="panel">
+
+    <div class="calendar-top">
+
+      <div
+        class="month-title"
+        id="empMonthTitle"
+      ></div>
+
+      <div class="month-buttons">
+
+        <button
+          class="secondary"
+          onclick="changeEmployeeMonth(-1)"
+        >
+          ‹
+        </button>
+
+        <button
+          class="secondary"
+          onclick="changeEmployeeMonth(1)"
+        >
+          ›
+        </button>
+
       </div>
 
     </div>
 
+    <div
+      id="employeeCalendar"
+      class="calendar"
+    ></div>
 
-    <div class="card">
+    <div class="calendar-legend">
 
-      <div class="icon">
-        🏷️
-      </div>
-
-      <div class="number"
-        id="empPostCard">
-        -
-      </div>
-
-      <div class="label">
-        Post
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="icon">
-        📍
-      </div>
-
-      <div class="number">
-        100m
-      </div>
-
-      <div class="label">
-        GPS Radius
-      </div>
+      <span class="legend">🟢 Present</span>
+      <span class="legend">🟡 Half Day</span>
+      <span class="legend">🟠 Leave</span>
+      <span class="legend">🎉 Holiday</span>
+      <span class="legend">⚫ Sunday</span>
+      <span class="legend">🔴 Absent</span>
 
     </div>
 
   </div>
 
 
+  <!-- LEAVE -->
+
   <div class="panel">
 
-    <div class="employee-name"
-      id="employeeName">
-      Employee
+    <h2>📝 Apply Leave</h2>
+
+    <div class="grid3">
+
+      <div>
+        <label>From</label>
+        <input id="leaveFrom" type="date">
+      </div>
+
+      <div>
+        <label>To</label>
+        <input id="leaveTo" type="date">
+      </div>
+
+      <div>
+        <label>Reason</label>
+        <textarea
+          id="leaveReason"
+          placeholder="Leave reason"
+        ></textarea>
+      </div>
+
     </div>
 
-    <div class="employee-id"
-      id="employeeId">
-      EMP000
-    </div>
+    <div class="form-actions">
 
-
-    <div class="attendance-buttons">
-
-      <button class="att-btn in-btn"
-        onclick="markAttendance('IN')">
-
-        🟢
-        <br>
-        MARK IN
-
+      <button
+        class="primary"
+        onclick="applyLeave()"
+      >
+        Submit Leave
       </button>
 
-
-      <button class="att-btn out-btn"
-        onclick="markAttendance('OUT')">
-
-        🔴
-        <br>
-        MARK OUT
-
-      </button>
-
     </div>
 
+    <div class="table-wrap">
 
-    <div id="gpsStatus"
-      class="gps-box">
+      <table>
 
-      📍 GPS status: Ready
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Reason</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody id="myLeaveTable"></tbody>
+
+      </table>
 
     </div>
 
@@ -716,55 +925,106 @@ hr{
 </div>
 
 
-<!-- ADMIN -->
+<!-- ADMIN PAGE -->
 
-<div id="adminPage"
-  class="container hidden">
-
+<div id="adminPage" class="container hidden">
 
   <div class="dashboard-head">
 
     <div>
-
-      <h1>
-        Admin Dashboard
-      </h1>
-
+      <h1>Admin Dashboard</h1>
       <p>
-        Employee aur attendance management
+        Employees • Attendance • Leave • Holiday • Salary • Reports
       </p>
-
     </div>
 
-
-    <button class="secondary"
-      onclick="logout()">
-
+    <button class="secondary" onclick="logout()">
       Logout
-
     </button>
 
   </div>
 
 
-  <!-- OFFICE -->
+  <div class="cards">
+
+    <div class="card">
+      <div class="icon">👥</div>
+      <div class="number" id="adminEmpCount">0</div>
+      <div class="label">Employees</div>
+    </div>
+
+    <div class="card">
+      <div class="icon">🟢</div>
+      <div class="number" id="adminTodayPresent">0</div>
+      <div class="label">Today Present</div>
+    </div>
+
+    <div class="card">
+      <div class="icon">📝</div>
+      <div class="number" id="adminPendingLeave">0</div>
+      <div class="label">Pending Leave</div>
+    </div>
+
+    <div class="card">
+      <div class="icon">🎉</div>
+      <div class="number" id="adminHolidayCount">0</div>
+      <div class="label">Holidays</div>
+    </div>
+
+  </div>
+
+
+  <!-- OFFICE GPS -->
 
   <div class="panel">
 
-    <h2>
-      📍 Office Location
-    </h2>
+    <h2>📍 Office GPS</h2>
 
     <div class="panel-sub">
-      Current location ko office location ke roop mein save karein.
+      Attendance radius automatically 50 meter rahega.
     </div>
 
-    <button class="primary"
-      onclick="saveOfficeLocation()">
+    <div class="grid3">
 
-      📍 Save Current Office Location
+      <div>
+        <label>Latitude</label>
+        <input id="officeLat" type="number" step="any">
+      </div>
 
-    </button>
+      <div>
+        <label>Longitude</label>
+        <input id="officeLng" type="number" step="any">
+      </div>
+
+      <div>
+        <label>Radius (meter)</label>
+        <input
+          id="officeRadius"
+          type="number"
+          value="50"
+          readonly
+        >
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        class="blue"
+        onclick="useCurrentOfficeLocation()"
+      >
+        📍 Use Current Location
+      </button>
+
+      <button
+        class="save-btn"
+        onclick="saveOfficeLocation()"
+      >
+        Save Office Location
+      </button>
+
+    </div>
 
     <div id="officeStatus"></div>
 
@@ -775,269 +1035,347 @@ hr{
 
   <div class="panel">
 
-    <h2>
-      👥 Add Employee
-    </h2>
+    <h2>👤 Add Employee</h2>
 
-    <div class="panel-sub">
-      Employee ID, Name, Post aur Password add karein.
-    </div>
-
-
-    <div class="form-grid">
+    <div class="grid4">
 
       <div>
-
-        <label>
-          Employee ID
-        </label>
-
-        <input id="newEmployeeId"
-          placeholder="EMP004">
-
+        <label>Employee ID</label>
+        <input
+          id="newEmpId"
+          placeholder="PAYOL01"
+        >
       </div>
 
-
       <div>
-
-        <label>
-          Employee Name
-        </label>
-
-        <input id="newEmployeeName"
-          placeholder="Employee Name">
-
+        <label>Name</label>
+        <input
+          id="newEmpName"
+          placeholder="Employee name"
+        >
       </div>
 
-
       <div>
-
-        <label>
-          Post / Designation
-        </label>
-
-        <input id="newEmployeePost"
-          placeholder="Executive">
-
+        <label>Post</label>
+        <input
+          id="newEmpPost"
+          placeholder="Sales Executive"
+        >
       </div>
 
-
       <div>
-
-        <label>
-          Password
-        </label>
-
-        <input id="newEmployeePassword"
-          placeholder="Password">
-
+        <label>Monthly Salary</label>
+        <input
+          id="newEmpSalary"
+          type="number"
+          min="0"
+          placeholder="15000"
+        >
       </div>
 
     </div>
 
+    <label>Password</label>
 
-    <button class="primary"
-      onclick="addEmployee()">
+    <input
+      id="newEmpPassword"
+      placeholder="Login password"
+    >
 
-      ➕ Add Employee
+    <div class="form-actions">
 
-    </button>
+      <button
+        class="primary"
+        onclick="addEmployee()"
+      >
+        Add Employee
+      </button>
 
+    </div>
 
     <div id="employeeAddStatus"></div>
 
   </div>
 
 
-  <!-- EMPLOYEE MANAGEMENT -->
+  <!-- EMPLOYEE LIST -->
 
   <div class="panel">
 
-    <h2>
-      👤 Employee Management
-    </h2>
+    <h2>👥 Employees</h2>
 
-    <div class="panel-sub">
-      Name aur Post ko yahin se edit kar sakte hain.
+    <div id="employeeList"></div>
+
+  </div>
+
+
+  <!-- HOLIDAY -->
+
+  <div class="panel">
+
+    <h2>🎉 Holiday Management</h2>
+
+    <div class="grid3">
+
+      <div>
+        <label>Date</label>
+        <input id="holidayDate" type="date">
+      </div>
+
+      <div>
+        <label>Holiday Name</label>
+        <input
+          id="holidayName"
+          placeholder="Republic Day"
+        >
+      </div>
+
+      <div
+        class="form-actions"
+        style="align-items:end"
+      >
+        <button
+          class="primary"
+          onclick="addHoliday()"
+        >
+          Add Holiday
+        </button>
+      </div>
+
     </div>
 
+    <div id="holidayList"></div>
 
-    <div class="admin-actions">
-
-      <button onclick="loadEmployeeList()">
-        🔄 Refresh Employee List
-      </button>
-
-    </div>
+  </div>
 
 
-    <div id="employeeList">
-      Loading...
+  <!-- LEAVE REQUESTS -->
+
+  <div class="panel">
+
+    <h2>📝 Leave Requests</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="leaveAdminTable"></tbody>
+
+      </table>
+
     </div>
 
   </div>
 
 
-  <!-- HOLIDAYS -->
+  <!-- ADMIN CALENDAR -->
 
   <div class="panel">
 
-    <h2>
-      🎉 Holiday Management
-    </h2>
-
-    <div class="panel-sub">
-
-      Yahan add ki gayi dates working day mein count nahi hongi.
-      Sunday automatically holiday rahega.
-
-    </div>
-
-
-    <div class="form-grid">
+    <div class="calendar-top">
 
       <div>
+        <h2>📅 Monthly Calendar</h2>
 
-        <label>
-          Holiday Date
-        </label>
-
-        <input type="date"
-          id="holidayDate">
+        <div
+          class="panel-sub"
+          style="margin:3px 0 0"
+        >
+          iPhone-style monthly calendar
+        </div>
 
       </div>
 
+      <div class="month-buttons">
 
-      <div>
+        <button
+          class="secondary"
+          onclick="changeAdminMonth(-1)"
+        >
+          ‹
+        </button>
 
-        <label>
-          Holiday Name
-        </label>
-
-        <input id="holidayName"
-          placeholder="Diwali">
+        <button
+          class="secondary"
+          onclick="changeAdminMonth(1)"
+        >
+          ›
+        </button>
 
       </div>
 
     </div>
 
+    <label>Employee</label>
 
-    <button class="primary"
-      onclick="addHoliday()">
+    <select
+      id="adminCalendarEmployee"
+      onchange="renderAdminCalendar()"
+    >
+      <option value="">
+        All Employees
+      </option>
+    </select>
 
-      🎉 Add Holiday
+    <div
+      class="month-title"
+      id="adminMonthTitle"
+      style="margin:15px 0"
+    ></div>
 
-    </button>
+    <div
+      id="adminCalendar"
+      class="calendar"
+    ></div>
 
+    <div class="calendar-legend">
 
-    <div id="holidayStatus"></div>
+      <span class="legend">🟢 Present</span>
+      <span class="legend">🟡 Half Day</span>
+      <span class="legend">🟠 Leave</span>
+      <span class="legend">🎉 Holiday</span>
+      <span class="legend">⚫ Sunday</span>
+      <span class="legend">🔴 Absent</span>
 
-
-    <div id="holidayList">
-      Loading...
     </div>
 
   </div>
 
 
-  <!-- MONTHLY SUMMARY -->
+  <!-- ATTENDANCE REPORT -->
 
   <div class="panel">
 
-    <h2>
-      📅 Employee Attendance Summary
-    </h2>
+    <h2>📊 Attendance Report</h2>
 
-    <div class="panel-sub">
-
-      Calendar se koi bhi date select karein.
-      Us date ke poore month ka summary dikhega.
-      IN + OUT dono hone par Present count hoga.
-      Sunday aur added Holiday working day mein count nahi honge.
-
-    </div>
-
-
-    <div class="form-grid">
+    <div class="grid4">
 
       <div>
+        <label>Employee</label>
+        <select id="reportEmployee"></select>
+      </div>
 
-        <label>
-          Select Any Date of Month
-        </label>
+      <div>
+        <label>From</label>
+        <input id="reportFrom" type="date">
+      </div>
 
-        <input type="date"
-          id="summaryMonth">
+      <div>
+        <label>To</label>
+        <input id="reportTo" type="date">
+      </div>
 
+      <div
+        class="form-actions"
+        style="align-items:end"
+      >
+        <button
+          class="blue"
+          onclick="loadReport()"
+        >
+          Load Report
+        </button>
       </div>
 
     </div>
 
+    <div
+      class="summary-box"
+      id="reportSummary"
+    ></div>
 
-    <button class="primary"
-      onclick="loadMonthlySummary()">
+    <div class="table-wrap">
 
-      📊 Check Attendance Summary
+      <table>
 
-    </button>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Employee</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Distance</th>
+          </tr>
+        </thead>
 
+        <tbody id="reportTable"></tbody>
 
-    <div id="monthlySummary"></div>
+      </table>
+
+    </div>
 
   </div>
 
 
-  <!-- DAILY REPORT -->
+  <!-- SALARY -->
 
   <div class="panel">
 
-    <h2>
-      📊 Daily Attendance Report
-    </h2>
+    <h2>💰 Salary Report</h2>
 
-
-    <div class="form-grid">
+    <div class="grid3">
 
       <div>
-
-        <label>
-          Date
-        </label>
-
-        <input type="date"
-          id="reportDate">
-
+        <label>Month</label>
+        <input id="salaryMonth" type="month">
       </div>
 
-
-      <div>
-
-        <label>
-          Employee
-        </label>
-
-        <select id="reportEmployee">
-
-          <option value="">
-            All Employees
-          </option>
-
-        </select>
-
+      <div
+        class="form-actions"
+        style="align-items:end"
+      >
+        <button
+          class="blue"
+          onclick="loadSalaryReport()"
+        >
+          Calculate Salary
+        </button>
       </div>
 
     </div>
 
+    <div class="table-wrap">
 
-    <button class="primary"
-      onclick="loadReport()">
+      <table>
 
-      🔎 View Attendance
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Salary</th>
+            <th>Working Days</th>
+            <th>Present</th>
+            <th>Half</th>
+            <th>Leave</th>
+            <th>Absent</th>
+            <th>Payable</th>
+          </tr>
+        </thead>
 
-    </button>
+        <tbody id="salaryTable"></tbody>
 
+      </table>
 
-    <div id="report"></div>
+    </div>
+
+    <div
+      class="panel-sub"
+      style="margin-top:12px"
+    >
+      Salary rule: Sunday/holiday paid, approved leave paid,
+      absent unpaid, half-day = 50%.
+    </div>
 
   </div>
 
@@ -1046,21 +1384,19 @@ hr{
 
 <script>
 
-/* SUPABASE */
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
 "https://nkbbcygtuaejcuquwhpi.supabase.co";
 
-
 /*
- IMPORTANT:
- Apna existing Supabase Publishable Key
- yahan paste karein.
+  YAHAN APNI EXISTING SUPABASE
+  PUBLISHABLE / ANON KEY PASTE KAREIN
 */
-
 const SUPABASE_KEY =
 "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
-
 
 const supabaseClient =
 supabase.createClient(
@@ -1069,100 +1405,237 @@ supabase.createClient(
 );
 
 
-/* VARIABLES */
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+const ADMIN_USER =
+"Baijnathpayol";
+
+const ADMIN_PASS =
+"123456789";
+
+
+/* =========================
+   FIXED GPS RADIUS
+========================= */
+
+const RADIUS_METERS = 50;
+
+
+/* =========================
+   VARIABLES
+========================= */
 
 let currentEmployee = null;
 
+let officeSettings = null;
 
-/* LOCAL DATE */
+let empMonth =
+new Date(
+  new Date().getFullYear(),
+  new Date().getMonth(),
+  1
+);
 
-function getLocalDate(){
+let adminMonth =
+new Date(
+  new Date().getFullYear(),
+  new Date().getMonth(),
+  1
+);
 
-  const d =
-    new Date();
 
-  const year =
-    d.getFullYear();
+/* =========================
+   UUID
+   IMPORTANT FIX
+========================= */
 
-  const month =
-    String(d.getMonth()+1)
-      .padStart(2,"0");
+function generateUUID(){
 
-  const day =
-    String(d.getDate())
-      .padStart(2,"0");
+  if(
+    window.crypto &&
+    typeof window.crypto.randomUUID === "function"
+  ){
+    return window.crypto.randomUUID();
+  }
 
-  return year+"-"+month+"-"+day;
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+  .replace(/[xy]/g,function(c){
+
+    const r =
+    Math.random()*16|0;
+
+    const v =
+    c==="x"
+    ? r
+    : (r&0x3|0x8);
+
+    return v.toString(16);
+
+  });
+
 }
 
 
-/* LOGIN TYPE */
+/* =========================
+   DATE
+========================= */
+
+function localDate(d=new Date()){
+
+  const y =
+  d.getFullYear();
+
+  const m =
+  String(d.getMonth()+1)
+  .padStart(2,"0");
+
+  const day =
+  String(d.getDate())
+  .padStart(2,"0");
+
+  return `${y}-${m}-${day}`;
+
+}
+
+
+function monthKey(d){
+
+  return `${d.getFullYear()}-${
+    String(d.getMonth()+1).padStart(2,"0")
+  }`;
+
+}
+
+
+function monthName(d){
+
+  return d.toLocaleString(
+    "en-IN",
+    {
+      month:"long",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* =========================
+   HTML ESCAPE
+========================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+  .replace(
+    /[&<>"']/g,
+    function(m){
+
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[m];
+
+    }
+  );
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function setStatus(
+  id,
+  message,
+  type=""
+){
+
+  const el =
+  document.getElementById(id);
+
+  if(!el)return;
+
+  el.className =
+  "status " + type;
+
+  el.textContent =
+  message;
+
+}
+
+
+/* =========================
+   LOGIN TYPE
+========================= */
 
 function changeLoginType(){
 
-  const type =
-    document.getElementById("loginType")
-      .value;
+  const isAdmin =
+  document.getElementById(
+    "loginType"
+  ).value === "admin";
 
-  const label =
-    document.getElementById("usernameLabel");
+  document.getElementById(
+    "usernameLabel"
+  ).textContent =
+  isAdmin
+  ? "Admin Username"
+  : "Employee ID";
 
-  const input =
-    document.getElementById("username");
-
-
-  if(type === "admin"){
-
-    label.innerText =
-      "Admin Username";
-
-    input.placeholder =
-      "Enter Admin Username";
-
-  }else{
-
-    label.innerText =
-      "Employee ID";
-
-    input.placeholder =
-      "Enter Employee ID";
-
-  }
+  document.getElementById(
+    "loginUsername"
+  ).placeholder =
+  isAdmin
+  ? "Baijnathpayol"
+  : "PAYOL01";
 
 }
 
 
-/* LOGIN */
+/* =========================
+   LOGIN
+========================= */
 
 async function login(){
 
   const type =
-    document.getElementById("loginType")
-      .value;
+  document.getElementById(
+    "loginType"
+  ).value;
 
   const username =
-    document.getElementById("username")
-      .value.trim();
+  document.getElementById(
+    "loginUsername"
+  ).value.trim();
 
   const password =
-    document.getElementById("password")
-      .value.trim();
+  document.getElementById(
+    "loginPassword"
+  ).value;
 
-  const status =
-    document.getElementById("loginStatus");
-
-
-  status.innerHTML = "";
+  setStatus(
+    "loginStatus",
+    "Checking..."
+  );
 
 
   if(!username || !password){
 
-    status.innerHTML =
-      "<div class='status error'>"+
-      "Username aur password enter karo."+
-      "</div>";
+    setStatus(
+      "loginStatus",
+      "Username aur password required hai.",
+      "error"
+    );
 
     return;
+
   }
 
 
@@ -1171,33 +1644,32 @@ async function login(){
   if(type === "admin"){
 
     if(
-      username === "Baijnathpayol" &&
-      password === "123456789"
+      username === ADMIN_USER &&
+      password === ADMIN_PASS
     ){
 
-      document.getElementById("loginPage")
-        .classList.add("hidden");
+      document
+      .getElementById("loginPage")
+      .classList.add("hidden");
 
-      document.getElementById("adminPage")
-        .classList.remove("hidden");
+      document
+      .getElementById("adminPage")
+      .classList.remove("hidden");
 
-
-      loadEmployeeList();
-      loadEmployeesForReport();
-      loadHolidayList();
-
+      await initAdmin();
 
       return;
 
-    }else{
-
-      status.innerHTML =
-        "<div class='status error'>"+
-        "Admin username ya password galat hai."+
-        "</div>";
-
-      return;
     }
+
+
+    setStatus(
+      "loginStatus",
+      "Wrong admin username/password.",
+      "error"
+    );
+
+    return;
 
   }
 
@@ -1208,90 +1680,74 @@ async function login(){
     data,
     error
   } =
-    await supabaseClient
-      .from("employees")
-      .select("*")
-      .eq("employee_id",username)
-      .eq("password",password)
-      .single();
+  await supabaseClient
+  .from("employees")
+  .select("*")
+  .eq("employee_id",username)
+  .eq("password",password)
+  .maybeSingle();
 
 
-  if(error || !data){
+  if(error){
 
-    status.innerHTML =
-      "<div class='status error'>"+
-      "Employee ID ya password galat hai."+
-      "</div>";
+    setStatus(
+      "loginStatus",
+      error.message,
+      "error"
+    );
 
     return;
+
+  }
+
+
+  if(!data){
+
+    setStatus(
+      "loginStatus",
+      "Wrong Employee ID or password.",
+      "error"
+    );
+
+    return;
+
   }
 
 
   currentEmployee =
-    data;
+  data;
 
 
-  document.getElementById("loginPage")
-    .classList.add("hidden");
+  document
+  .getElementById("loginPage")
+  .classList.add("hidden");
+
+  document
+  .getElementById("employeePage")
+  .classList.remove("hidden");
 
 
-  document.getElementById("employeePage")
-    .classList.remove("hidden");
-
-
-  document.getElementById("employeeName")
-    .innerText =
-    data.name;
-
-
-  document.getElementById("employeeId")
-    .innerText =
-    data.employee_id;
-
-
-  document.getElementById("empNameCard")
-    .innerText =
-    data.name;
-
-
-  document.getElementById("empPostCard")
-    .innerText =
-    data.post || "Not Set";
+  await initEmployee();
 
 }
 
 
-/* LOGOUT */
+/* =========================
+   LOGOUT
+========================= */
 
 function logout(){
 
-  currentEmployee =
-    null;
+  currentEmployee = null;
 
-
-  document.getElementById("employeePage")
-    .classList.add("hidden");
-
-
-  document.getElementById("adminPage")
-    .classList.add("hidden");
-
-
-  document.getElementById("loginPage")
-    .classList.remove("hidden");
-
-
-  document.getElementById("username")
-    .value="";
-
-
-  document.getElementById("password")
-    .value="";
+  location.reload();
 
 }
 
 
-/* DISTANCE */
+/* =========================
+   DISTANCE
+========================= */
 
 function calculateDistance(
   lat1,
@@ -1300,951 +1756,1829 @@ function calculateDistance(
   lon2
 ){
 
-  const R =
-    6371000;
+  const R = 6371000;
 
+  const rad =
+  x => x * Math.PI / 180;
 
   const dLat =
-    (lat2-lat1)
-    *Math.PI/180;
-
+  rad(lat2-lat1);
 
   const dLon =
-    (lon2-lon1)
-    *Math.PI/180;
-
+  rad(lon2-lon1);
 
   const a =
-    Math.sin(dLat/2)**2 +
-
-    Math.cos(lat1*Math.PI/180) *
-    Math.cos(lat2*Math.PI/180) *
-    Math.sin(dLon/2)**2;
-
-
-  const c =
-    2*Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1-a)
-    );
-
-
-  return R*c;
-
-}
-
-
-/* MARK ATTENDANCE */
-
-async function markAttendance(type){
-
-  const gps =
-    document.getElementById("gpsStatus");
-
-
-  gps.innerHTML =
-    "📍 GPS location checking...";
-
-
-  if(!navigator.geolocation){
-
-    gps.innerHTML =
-      "<div class='status error'>"+
-      "GPS supported nahi hai."+
-      "</div>";
-
-    return;
-  }
-
-
-  navigator.geolocation.getCurrentPosition(
-
-    async function(position){
-
-      const lat =
-        position.coords.latitude;
-
-      const lon =
-        position.coords.longitude;
-
-      const today =
-        getLocalDate();
-
-
-      /* DUPLICATE CHECK */
-
-      const {
-        data:alreadyMarked,
-        error:checkError
-      } =
-        await supabaseClient
-          .from("attendance")
-          .select("id")
-          .eq(
-            "employee_id",
-            currentEmployee.employee_id
-          )
-          .eq(
-            "attendance_date",
-            today
-          )
-          .eq(
-            "attendance_type",
-            type
-          )
-          .limit(1);
-
-
-      if(checkError){
-
-        gps.innerHTML =
-          "<div class='status error'>"+
-          checkError.message+
-          "</div>";
-
-        return;
-      }
-
-
-      if(
-        alreadyMarked &&
-        alreadyMarked.length > 0
-      ){
-
-        gps.innerHTML =
-          "<div class='status error'>"+
-          "❌ Aaj ka "+
-          type+
-          " already marked hai."+
-          "</div>";
-
-        return;
-      }
-
-
-      /* OFFICE */
-
-      const {
-        data:office,
-        error
-      } =
-        await supabaseClient
-          .from("office_settings")
-          .select("*")
-          .eq("id",1)
-          .single();
-
-
-      if(
-        error ||
-        !office ||
-        office.latitude === null ||
-        office.longitude === null
-      ){
-
-        gps.innerHTML =
-          "<div class='status error'>"+
-          "Office location set nahi hai."+
-          "</div>";
-
-        return;
-      }
-
-
-      const distance =
-        calculateDistance(
-          lat,
-          lon,
-          office.latitude,
-          office.longitude
-        );
-
-
-      if(distance > 100){
-
-        gps.innerHTML =
-          "<div class='status error'>"+
-          "❌ Aap office ke 100 meter ke andar nahi hain.<br>"+
-          "Distance: "+
-          Math.round(distance)+
-          " meter"+
-          "</div>";
-
-        return;
-      }
-
-
-      /* INSERT */
-
-      const {
-        error:insertError
-      } =
-        await supabaseClient
-          .from("attendance")
-          .insert({
-
-            employee_id:
-              currentEmployee.employee_id,
-
-            employee_name:
-              currentEmployee.name,
-
-            attendance_type:
-              type,
-
-            latitude:
-              lat,
-
-            longitude:
-              lon,
-
-            distance_meters:
-              distance,
-
-            attendance_date:
-              today
-
-          });
-
-
-      if(insertError){
-
-        gps.innerHTML =
-          "<div class='status error'>"+
-          insertError.message+
-          "</div>";
-
-        return;
-      }
-
-
-      gps.innerHTML =
-        "<div class='status success'>"+
-        "✅ "+
-        type+
-        " attendance successfully marked.<br>"+
-        "Distance: "+
-        Math.round(distance)+
-        " meter"+
-        "</div>";
-
-    },
-
-
-    function(){
-
-      gps.innerHTML =
-        "<div class='status error'>"+
-        "GPS permission allow karo aur dobara try karo."+
-        "</div>";
-
-    },
-
-
-    {
-      enableHighAccuracy:true,
-      timeout:15000,
-      maximumAge:0
-    }
-
+  Math.sin(dLat/2)**2 +
+  Math.cos(rad(lat1)) *
+  Math.cos(rad(lat2)) *
+  Math.sin(dLon/2)**2;
+
+  return R *
+  2 *
+  Math.atan2(
+    Math.sqrt(a),
+    Math.sqrt(1-a)
   );
 
 }
 
 
-/* SAVE OFFICE LOCATION */
-
-function saveOfficeLocation(){
-
-  const box =
-    document.getElementById("officeStatus");
-
-
-  box.innerHTML =
-    "📍 Current GPS location checking...";
-
-
-  if(!navigator.geolocation){
-
-    box.innerHTML =
-      "<div class='status error'>"+
-      "GPS supported nahi hai."+
-      "</div>";
-
-    return;
-  }
-
-
-  navigator.geolocation.getCurrentPosition(
-
-    async function(position){
-
-      const lat =
-        position.coords.latitude;
-
-      const lon =
-        position.coords.longitude;
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("office_settings")
-          .update({
-
-            latitude:lat,
-            longitude:lon,
-            radius_meters:100
-
-          })
-          .eq("id",1);
-
-
-      if(error){
-
-        box.innerHTML =
-          "<div class='status error'>"+
-          error.message+
-          "</div>";
-
-        return;
-      }
-
-
-      box.innerHTML =
-        "<div class='status success'>"+
-        "✅ Office location successfully saved.<br>"+
-        "Radius: 100 meters"+
-        "</div>";
-
-    },
-
-
-    function(){
-
-      box.innerHTML =
-        "<div class='status error'>"+
-        "GPS permission allow karo."+
-        "</div>";
-
-    },
-
-
-    {
-      enableHighAccuracy:true,
-      timeout:15000,
-      maximumAge:0
-    }
-
-  );
-
-}
-
-
-/* ADD EMPLOYEE */
-
-async function addEmployee(){
-
-  const id =
-    document.getElementById("newEmployeeId")
-      .value.trim();
-
-  const name =
-    document.getElementById("newEmployeeName")
-      .value.trim();
-
-  const post =
-    document.getElementById("newEmployeePost")
-      .value.trim();
-
-  const password =
-    document.getElementById("newEmployeePassword")
-      .value.trim();
-
-  const box =
-    document.getElementById("employeeAddStatus");
-
-
-  if(
-    !id ||
-    !name ||
-    !post ||
-    !password
-  ){
-
-    box.innerHTML =
-      "<div class='status error'>"+
-      "Sabhi details fill karo."+
-      "</div>";
-
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("employees")
-      .insert({
-
-        employee_id:id,
-        name:name,
-        post:post,
-        password:password
-
-      });
-
-
-  if(error){
-
-    box.innerHTML =
-      "<div class='status error'>"+
-      error.message+
-      "</div>";
-
-    return;
-  }
-
-
-  box.innerHTML =
-    "<div class='status success'>"+
-    "✅ Employee successfully added."+
-    "</div>";
-
-
-  document.getElementById("newEmployeeId")
-    .value="";
-
-
-  document.getElementById("newEmployeeName")
-    .value="";
-
-
-  document.getElementById("newEmployeePost")
-    .value="";
-
-
-  document.getElementById("newEmployeePassword")
-    .value="";
-
-
-  loadEmployeeList();
-  loadEmployeesForReport();
-
-}
-
-
-/* EMPLOYEE LIST */
-
-async function loadEmployeeList(){
-
-  const box =
-    document.getElementById("employeeList");
-
-
-  box.innerHTML =
-    "Loading...";
-
+/* =========================
+   OFFICE SETTINGS
+========================= */
+
+async function getOffice(){
 
   const {
     data,
     error
   } =
+  await supabaseClient
+  .from("office_settings")
+  .select("*")
+  .eq("id",1)
+  .maybeSingle();
+
+
+  if(error)throw error;
+
+  officeSettings =
+  data;
+
+  return data;
+
+}
+
+
+/* =========================
+   GPS POSITION
+========================= */
+
+function getPosition(){
+
+  return new Promise(
+    function(resolve,reject){
+
+      if(
+        !navigator.geolocation
+      ){
+
+        reject(
+          new Error(
+            "GPS is not supported."
+          )
+        );
+
+        return;
+
+      }
+
+
+      navigator.geolocation
+      .getCurrentPosition(
+        resolve,
+        reject,
+        {
+          enableHighAccuracy:true,
+          timeout:15000,
+          maximumAge:0
+        }
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================
+   MARK ATTENDANCE
+========================= */
+
+async function markAttendance(type){
+
+  try{
+
+    setStatus(
+      "gpsStatus",
+      "📍 GPS location checking..."
+    );
+
+
+    const office =
+    officeSettings ||
+    await getOffice();
+
+
+    if(
+      !office ||
+      office.latitude == null ||
+      office.longitude == null
+    ){
+
+      throw new Error(
+        "Admin ne office location set nahi kiya hai."
+      );
+
+    }
+
+
+    const position =
+    await getPosition();
+
+
+    const lat =
+    position.coords.latitude;
+
+    const lng =
+    position.coords.longitude;
+
+
+    const distance =
+    calculateDistance(
+      lat,
+      lng,
+      Number(office.latitude),
+      Number(office.longitude)
+    );
+
+
+    setStatus(
+      "gpsStatus",
+      `Distance: ${Math.round(distance)} meter`
+    );
+
+
+    if(
+      distance > RADIUS_METERS
+    ){
+
+      throw new Error(
+        `Aap office se ${Math.round(distance)} meter door hain. Attendance sirf 50 meter ke andar hogi.`
+      );
+
+    }
+
+
+    const today =
+    localDate();
+
+
+    const {
+      data:existing,
+      error:checkError
+    } =
     await supabaseClient
-      .from("employees")
-      .select("*")
-      .order("employee_id");
+    .from("attendance")
+    .select(
+      "id,attendance_type"
+    )
+    .eq(
+      "employee_id",
+      currentEmployee.employee_id
+    )
+    .eq(
+      "attendance_date",
+      today
+    )
+    .order(
+      "created_at",
+      {ascending:false}
+    );
 
 
-  if(error){
+    if(checkError)
+      throw checkError;
 
-    box.innerHTML =
-      "<div class='status error'>"+
-      error.message+
-      "</div>";
 
-    return;
+    const rows =
+    existing || [];
+
+
+    if(
+      type === "IN" &&
+      rows.some(
+        x => x.attendance_type === "IN"
+      )
+    ){
+
+      throw new Error(
+        "Aaj ka Check In already ho chuka hai."
+      );
+
+    }
+
+
+    if(
+      type === "OUT" &&
+      !rows.some(
+        x => x.attendance_type === "IN"
+      )
+    ){
+
+      throw new Error(
+        "Pehle Check In karein."
+      );
+
+    }
+
+
+    const {
+      error
+    } =
+    await supabaseClient
+    .from("attendance")
+    .insert({
+
+      id:generateUUID(),
+
+      employee_id:
+      currentEmployee.employee_id,
+
+      employee_name:
+      currentEmployee.name,
+
+      attendance_type:
+      type,
+
+      latitude:lat,
+
+      longitude:lng,
+
+      distance_meters:
+      distance,
+
+      attendance_date:
+      today
+
+    });
+
+
+    if(error)
+      throw error;
+
+
+    setStatus(
+      "gpsStatus",
+      `✅ ${
+        type==="IN"
+        ? "Check In"
+        : type==="OUT"
+        ? "Check Out"
+        : "Half Day"
+      } successfully saved. Distance ${Math.round(distance)}m`,
+      "success"
+    );
+
+
+    await loadEmployeeStats();
+
+    await renderEmployeeCalendar();
+
   }
+  catch(error){
+
+    setStatus(
+      "gpsStatus",
+      error.message ||
+      "Attendance failed.",
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   EMPLOYEE INIT
+========================= */
+
+async function initEmployee(){
+
+  document.getElementById(
+    "empWelcome"
+  ).textContent =
+  `Hello, ${currentEmployee.name}`;
+
+
+  document.getElementById(
+    "empMeta"
+  ).textContent =
+  `${currentEmployee.employee_id} • ${currentEmployee.post}`;
+
+
+  document.getElementById(
+    "leaveFrom"
+  ).value =
+  localDate();
+
+
+  document.getElementById(
+    "leaveTo"
+  ).value =
+  localDate();
+
+
+  try{
+
+    await getOffice();
+
+  }
+  catch(error){
+
+    setStatus(
+      "gpsStatus",
+      error.message,
+      "error"
+    );
+
+  }
+
+
+  await loadEmployeeStats();
+
+  await loadMyLeaves();
+
+  await renderEmployeeCalendar();
+
+}
+
+
+/* =========================
+   EMPLOYEE STATS
+========================= */
+
+async function loadEmployeeStats(){
+
+  const start =
+  new Date(
+    empMonth.getFullYear(),
+    empMonth.getMonth(),
+    1
+  );
+
+
+  const end =
+  new Date(
+    empMonth.getFullYear(),
+    empMonth.getMonth()+1,
+    0
+  );
+
+
+  const {
+    data:attendance
+  } =
+  await supabaseClient
+  .from("attendance")
+  .select("*")
+  .eq(
+    "employee_id",
+    currentEmployee.employee_id
+  )
+  .gte(
+    "attendance_date",
+    localDate(start)
+  )
+  .lte(
+    "attendance_date",
+    localDate(end)
+  );
+
+
+  const rows =
+  attendance || [];
+
+
+  const present =
+  new Set(
+    rows
+    .filter(
+      x => x.attendance_type === "IN"
+    )
+    .map(
+      x => x.attendance_date
+    )
+  ).size;
+
+
+  const half =
+  new Set(
+    rows
+    .filter(
+      x => x.attendance_type === "HALF_DAY"
+    )
+    .map(
+      x => x.attendance_date
+    )
+  ).size;
+
+
+  document.getElementById(
+    "empPresent"
+  ).textContent =
+  present;
+
+
+  document.getElementById(
+    "empHalf"
+  ).textContent =
+  half;
+
+
+  const {
+    data:leaves
+  } =
+  await supabaseClient
+  .from("leave_requests")
+  .select("*")
+  .eq(
+    "employee_id",
+    currentEmployee.employee_id
+  )
+  .eq(
+    "status",
+    "APPROVED"
+  )
+  .lte(
+    "from_date",
+    localDate(end)
+  )
+  .gte(
+    "to_date",
+    localDate(start)
+  );
+
+
+  document.getElementById(
+    "empLeave"
+  ).textContent =
+  countLeaveDays(
+    leaves || [],
+    localDate(start),
+    localDate(end)
+  );
+
+
+  const today =
+  localDate();
+
+
+  const todayRows =
+  rows.filter(
+    x => x.attendance_date === today
+  );
+
+
+  let status =
+  "Not Marked";
 
 
   if(
-    !data ||
-    data.length===0
+    todayRows.some(
+      x => x.attendance_type === "HALF_DAY"
+    )
   ){
 
-    box.innerHTML =
-      "<p>No employees found.</p>";
+    status="Half Day";
 
-    return;
+  }
+  else if(
+    todayRows.some(
+      x => x.attendance_type === "IN"
+    )
+  ){
+
+    status="Present";
+
   }
 
 
+  document.getElementById(
+    "todayStatus"
+  ).textContent =
+  status;
+
+}
+
+
+/* =========================
+   LEAVE DAYS
+========================= */
+
+function countLeaveDays(
+  leaves,
+  start,
+  end
+){
+
+  let count=0;
+
+
+  for(
+    const leave of leaves
+  ){
+
+    let a =
+    new Date(
+      leave.from_date+"T00:00:00"
+    );
+
+    let b =
+    new Date(
+      leave.to_date+"T00:00:00"
+    );
+
+    const s =
+    new Date(
+      start+"T00:00:00"
+    );
+
+    const e =
+    new Date(
+      end+"T00:00:00"
+    );
+
+
+    if(a<s)a=s;
+
+    if(b>e)b=e;
+
+
+    if(a<=b){
+
+      count +=
+      Math.floor(
+        (b-a)/86400000
+      ) + 1;
+
+    }
+
+  }
+
+
+  return count;
+
+}
+
+
+/* =========================
+   EMPLOYEE MONTH
+========================= */
+
+function changeEmployeeMonth(delta){
+
+  empMonth =
+  new Date(
+    empMonth.getFullYear(),
+    empMonth.getMonth()+delta,
+    1
+  );
+
+
+  loadEmployeeStats();
+
+  renderEmployeeCalendar();
+
+}
+
+
+/* =========================
+   EMPLOYEE CALENDAR
+========================= */
+
+async function renderEmployeeCalendar(){
+
+  const year =
+  empMonth.getFullYear();
+
+  const month =
+  empMonth.getMonth();
+
+
+  document.getElementById(
+    "empMonthTitle"
+  ).textContent =
+  monthName(empMonth);
+
+
+  const start =
+  new Date(year,month,1);
+
+  const end =
+  new Date(year,month+1,0);
+
+
+  const [
+    attendanceResult,
+    holidayResult,
+    leaveResult
+  ] =
+  await Promise.all([
+
+    supabaseClient
+    .from("attendance")
+    .select("*")
+    .eq(
+      "employee_id",
+      currentEmployee.employee_id
+    )
+    .gte(
+      "attendance_date",
+      localDate(start)
+    )
+    .lte(
+      "attendance_date",
+      localDate(end)
+    ),
+
+    supabaseClient
+    .from("holidays")
+    .select("*")
+    .gte(
+      "holiday_date",
+      localDate(start)
+    )
+    .lte(
+      "holiday_date",
+      localDate(end)
+    ),
+
+    supabaseClient
+    .from("leave_requests")
+    .select("*")
+    .eq(
+      "employee_id",
+      currentEmployee.employee_id
+    )
+    .eq(
+      "status",
+      "APPROVED"
+    )
+    .lte(
+      "from_date",
+      localDate(end)
+    )
+    .gte(
+      "to_date",
+      localDate(start)
+    )
+
+  ]);
+
+
+  const attendance =
+  attendanceResult.data || [];
+
+  const holidays =
+  holidayResult.data || [];
+
+  const leaves =
+  leaveResult.data || [];
+
+
   let html =
-    "<div class='table-wrap'><table>"+
+  [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ]
+  .map(
+    x => `<div class="dow">${x}</div>`
+  )
+  .join("");
 
-    "<tr>"+
-    "<th>Employee ID</th>"+
-    "<th>Name</th>"+
-    "<th>Post</th>"+
-    "<th>Action</th>"+
-    "</tr>";
 
-
-  data.forEach(function(emp){
+  for(
+    let i=0;
+    i<start.getDay();
+    i++
+  ){
 
     html +=
-      "<tr>"+
+    `<div class="day empty"></div>`;
 
-      "<td><b>"+
-      emp.employee_id+
-      "</b></td>"+
-
-      "<td>"+
-
-      "<input class='small-input' id='name_"+
-      emp.id+
-      "' value='"+
-      escapeHtml(emp.name)+
-      "'>"+
-
-      "</td>"+
+  }
 
 
-      "<td>"+
-
-      "<input class='small-input' id='post_"+
-      emp.id+
-      "' value='"+
-      escapeHtml(emp.post || "")+
-      "'>"+
-
-      "</td>"+
+  const today =
+  localDate();
 
 
-      "<td>"+
+  for(
+    let d=1;
+    d<=end.getDate();
+    d++
+  ){
 
-      "<button class='save-btn' onclick=\"saveEmployee('"+
-      emp.id+
-      "')\">"+
-      "💾 Save"+
-      "</button> "+
-
-      "<button class='danger' onclick=\"deleteEmployee('"+
-      emp.id+
-      "','"+
-      emp.employee_id+
-      "')\">"+
-      "Delete"+
-      "</button>"+
-
-      "</td>"+
-
-      "</tr>";
-
-  });
+    const date =
+    new Date(
+      year,
+      month,
+      d
+    );
 
 
-  html +=
-    "</table></div>";
+    const dateString =
+    localDate(date);
 
 
-  box.innerHTML =
-    html;
+    const sunday =
+    date.getDay() === 0;
+
+
+    const holiday =
+    holidays.find(
+      x =>
+      x.holiday_date ===
+      dateString
+    );
+
+
+    const leave =
+    leaves.some(
+      x =>
+      dateString >= x.from_date &&
+      dateString <= x.to_date
+    );
+
+
+    const dayAttendance =
+    attendance.filter(
+      x =>
+      x.attendance_date ===
+      dateString
+    );
+
+
+    let status =
+    "Upcoming";
+
+    let cls =
+    "upcoming";
+
+
+    if(dateString > today){
+
+      status="Upcoming";
+      cls="upcoming";
+
+    }
+    else if(holiday){
+
+      status="Holiday";
+      cls="holiday";
+
+    }
+    else if(sunday){
+
+      status="Sunday";
+      cls="sunday";
+
+    }
+    else if(leave){
+
+      status="Leave";
+      cls="leave";
+
+    }
+    else if(
+      dayAttendance.some(
+        x =>
+        x.attendance_type ===
+        "HALF_DAY"
+      )
+    ){
+
+      status="Half Day";
+      cls="half";
+
+    }
+    else if(
+      dayAttendance.some(
+        x =>
+        x.attendance_type ===
+        "IN"
+      )
+    ){
+
+      status="Present";
+      cls="present";
+
+    }
+    else{
+
+      status="Absent";
+      cls="absent";
+
+    }
+
+
+    html += `
+      <div class="day ${cls}">
+        <div class="daynum">${d}</div>
+        <div class="day-status">${status}</div>
+      </div>
+    `;
+
+  }
+
+
+  document.getElementById(
+    "employeeCalendar"
+  ).innerHTML =
+  html;
 
 }
 
 
-/* ESCAPE */
+/* =========================
+   APPLY LEAVE
+========================= */
 
-function escapeHtml(value){
+async function applyLeave(){
 
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+  const from =
+  document.getElementById(
+    "leaveFrom"
+  ).value;
 
-}
+  const to =
+  document.getElementById(
+    "leaveTo"
+  ).value;
 
-
-/* SAVE EMPLOYEE EDIT */
-
-async function saveEmployee(id){
-
-  const name =
-    document.getElementById(
-      "name_"+id
-    ).value.trim();
+  const reason =
+  document.getElementById(
+    "leaveReason"
+  ).value.trim();
 
 
-  const post =
-    document.getElementById(
-      "post_"+id
-    ).value.trim();
-
-
-  if(!name || !post){
+  if(!from || !to || !reason){
 
     alert(
-      "Name aur Post dono fill karo."
+      "From, To aur Reason bhariye."
     );
 
     return;
+
+  }
+
+
+  if(from > to){
+
+    alert(
+      "From date To date se chhoti honi chahiye."
+    );
+
+    return;
+
   }
 
 
   const {
     error
   } =
-    await supabaseClient
-      .from("employees")
-      .update({
+  await supabaseClient
+  .from("leave_requests")
+  .insert({
 
-        name:name,
-        post:post
+    id:generateUUID(),
 
-      })
-      .eq("id",id);
+    employee_id:
+    currentEmployee.employee_id,
+
+    employee_name:
+    currentEmployee.name,
+
+    from_date:from,
+
+    to_date:to,
+
+    reason:reason,
+
+    status:"PENDING"
+
+  });
 
 
   if(error){
 
-    alert(error.message);
+    alert(
+      "Leave save failed: "+
+      error.message
+    );
 
     return;
+
   }
 
 
+  document.getElementById(
+    "leaveReason"
+  ).value="";
+
+
   alert(
-    "✅ Employee details updated."
+    "Leave request submit ho gaya."
   );
 
 
-  loadEmployeeList();
-  loadEmployeesForReport();
+  await loadMyLeaves();
+
+  await loadEmployeeStats();
+
+  await renderEmployeeCalendar();
 
 }
 
 
-/* DELETE */
+/* =========================
+   MY LEAVE
+========================= */
+
+async function loadMyLeaves(){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+  .from("leave_requests")
+  .select("*")
+  .eq(
+    "employee_id",
+    currentEmployee.employee_id
+  )
+  .order(
+    "created_at",
+    {ascending:false}
+  );
+
+
+  if(error)return;
+
+
+  document.getElementById(
+    "myLeaveTable"
+  ).innerHTML =
+
+  (data || [])
+  .map(
+    x => `
+
+      <tr>
+
+        <td>${escapeHtml(x.from_date)}</td>
+
+        <td>${escapeHtml(x.to_date)}</td>
+
+        <td>${escapeHtml(x.reason)}</td>
+
+        <td>
+          <span class="badge b-${x.status.toLowerCase()}">
+            ${escapeHtml(x.status)}
+          </span>
+        </td>
+
+      </tr>
+
+    `
+  )
+  .join("")
+
+  ||
+
+  `
+    <tr>
+      <td colspan="4" class="empty-msg">
+        No leave request
+      </td>
+    </tr>
+  `;
+
+}
+
+
+/* =========================
+   ADMIN INIT
+========================= */
+
+async function initAdmin(){
+
+  const firstDay =
+  new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1
+  );
+
+
+  document.getElementById(
+    "reportFrom"
+  ).value =
+  localDate(firstDay);
+
+
+  document.getElementById(
+    "reportTo"
+  ).value =
+  localDate();
+
+
+  document.getElementById(
+    "salaryMonth"
+  ).value =
+  monthKey(new Date());
+
+
+  try{
+
+    const office =
+    await getOffice();
+
+
+    if(office){
+
+      document.getElementById(
+        "officeLat"
+      ).value =
+      office.latitude ?? "";
+
+
+      document.getElementById(
+        "officeLng"
+      ).value =
+      office.longitude ?? "";
+
+    }
+
+  }
+  catch(error){}
+
+
+  await loadAdminEmployees();
+
+  await loadHolidayList();
+
+  await loadLeaveRequests();
+
+  await renderAdminCalendar();
+
+  await loadAdminCounts();
+
+}
+
+
+/* =========================
+   ADMIN COUNTS
+========================= */
+
+async function loadAdminCounts(){
+
+  const employeeCount =
+  await supabaseClient
+  .from("employees")
+  .select("*",{count:"exact",head:true});
+
+
+  const holidayCount =
+  await supabaseClient
+  .from("holidays")
+  .select("*",{count:"exact",head:true});
+
+
+  const pendingCount =
+  await supabaseClient
+  .from("leave_requests")
+  .select("*",{count:"exact",head:true})
+  .eq(
+    "status",
+    "PENDING"
+  );
+
+
+  document.getElementById(
+    "adminEmpCount"
+  ).textContent =
+  employeeCount.count || 0;
+
+
+  document.getElementById(
+    "adminHolidayCount"
+  ).textContent =
+  holidayCount.count || 0;
+
+
+  document.getElementById(
+    "adminPendingLeave"
+  ).textContent =
+  pendingCount.count || 0;
+
+
+  const presentCount =
+  await supabaseClient
+  .from("attendance")
+  .select("*",{count:"exact",head:true})
+  .eq(
+    "attendance_date",
+    localDate()
+  )
+  .eq(
+    "attendance_type",
+    "IN"
+  );
+
+
+  document.getElementById(
+    "adminTodayPresent"
+  ).textContent =
+  presentCount.count || 0;
+
+}
+
+
+/* =========================
+   LOAD EMPLOYEES
+========================= */
+
+async function loadAdminEmployees(){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+  .from("employees")
+  .select("*")
+  .order(
+    "employee_id"
+  );
+
+
+  if(error){
+
+    document.getElementById(
+      "employeeList"
+    ).innerHTML =
+    `<div class="status error">
+      ${escapeHtml(error.message)}
+    </div>`;
+
+    return;
+
+  }
+
+
+  const options =
+  `<option value="">
+    All Employees
+  </option>`
+
+  +
+
+  (data || [])
+  .map(
+    employee => `
+
+      <option value="${escapeHtml(employee.employee_id)}">
+        ${escapeHtml(employee.employee_id)}
+        -
+        ${escapeHtml(employee.name)}
+      </option>
+
+    `
+  )
+  .join("");
+
+
+  document.getElementById(
+    "adminCalendarEmployee"
+  ).innerHTML =
+  options;
+
+
+  document.getElementById(
+    "reportEmployee"
+  ).innerHTML =
+  options;
+
+
+  document.getElementById(
+    "employeeList"
+  ).innerHTML =
+
+  (data || [])
+  .map(
+    employee => `
+
+      <div class="employee-row">
+
+        <div>
+
+          <b>
+            ${escapeHtml(employee.name)}
+          </b>
+
+          <br>
+
+          <small>
+            ${escapeHtml(employee.employee_id)}
+            •
+            ${escapeHtml(employee.post)}
+            •
+            ₹${Number(
+              employee.monthly_salary || 0
+            ).toLocaleString("en-IN")}
+          </small>
+
+        </div>
+
+        <div class="row-actions">
+
+          <button
+            class="secondary"
+            onclick="editEmployee('${escapeHtml(employee.id)}')"
+          >
+            Edit
+          </button>
+
+          <button
+            class="danger"
+            onclick="deleteEmployee('${escapeHtml(employee.id)}','${escapeHtml(employee.employee_id)}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `
+  )
+  .join("")
+
+  ||
+
+  `<div class="empty-msg">
+    No employees
+  </div>`;
+
+}
+
+
+/* =========================
+   ADD EMPLOYEE
+   UUID ERROR FIX
+========================= */
+
+async function addEmployee(){
+
+  const employeeId =
+  document.getElementById(
+    "newEmpId"
+  ).value.trim();
+
+
+  const name =
+  document.getElementById(
+    "newEmpName"
+  ).value.trim();
+
+
+  const post =
+  document.getElementById(
+    "newEmpPost"
+  ).value.trim();
+
+
+  const password =
+  document.getElementById(
+    "newEmpPassword"
+  ).value;
+
+
+  const salary =
+  Number(
+    document.getElementById(
+      "newEmpSalary"
+    ).value || 0
+  );
+
+
+  if(
+    !employeeId ||
+    !name ||
+    !post ||
+    !password
+  ){
+
+    setStatus(
+      "employeeAddStatus",
+      "Sabhi employee fields bhariye.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  /* DUPLICATE CHECK */
+
+  const {
+    data:existing,
+    error:checkError
+  } =
+  await supabaseClient
+  .from("employees")
+  .select("id")
+  .eq(
+    "employee_id",
+    employeeId
+  )
+  .maybeSingle();
+
+
+  if(checkError){
+
+    setStatus(
+      "employeeAddStatus",
+      checkError.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(existing){
+
+    setStatus(
+      "employeeAddStatus",
+      "Ye Employee ID already exist karti hai.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  /*
+    IMPORTANT:
+
+    id = UUID
+    employee_id = PAYOL01
+
+    PAYOL01 ko id mein nahi daalna hai.
+  */
+
+  const {
+    error
+  } =
+  await supabaseClient
+  .from("employees")
+  .insert({
+
+    id:generateUUID(),
+
+    employee_id:
+    employeeId,
+
+    name:name,
+
+    post:post,
+
+    password:password,
+
+    monthly_salary:
+    salary
+
+  });
+
+
+  if(error){
+
+    setStatus(
+      "employeeAddStatus",
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "newEmpId"
+  ).value="";
+
+  document.getElementById(
+    "newEmpName"
+  ).value="";
+
+  document.getElementById(
+    "newEmpPost"
+  ).value="";
+
+  document.getElementById(
+    "newEmpPassword"
+  ).value="";
+
+  document.getElementById(
+    "newEmpSalary"
+  ).value="";
+
+
+  setStatus(
+    "employeeAddStatus",
+    "✅ Employee successfully added.",
+    "success"
+  );
+
+
+  await loadAdminEmployees();
+
+  await loadAdminCounts();
+
+}
+
+
+/* =========================
+   EDIT EMPLOYEE
+========================= */
+
+async function editEmployee(id){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+  .from("employees")
+  .select("*")
+  .eq("id",id)
+  .maybeSingle();
+
+
+  if(error || !data){
+
+    alert(
+      error?.message ||
+      "Employee not found."
+    );
+
+    return;
+
+  }
+
+
+  const name =
+  prompt(
+    "Name",
+    data.name
+  );
+
+  if(name===null)return;
+
+
+  const post =
+  prompt(
+    "Post",
+    data.post
+  );
+
+  if(post===null)return;
+
+
+  const salary =
+  prompt(
+    "Monthly Salary",
+    data.monthly_salary || 0
+  );
+
+  if(salary===null)return;
+
+
+  const password =
+  prompt(
+    "Password",
+    data.password
+  );
+
+  if(password===null)return;
+
+
+  const {
+    error:updateError
+  } =
+  await supabaseClient
+  .from("employees")
+  .update({
+
+    name:name.trim(),
+
+    post:post.trim(),
+
+    monthly_salary:
+    Number(salary) || 0,
+
+    password:password
+
+  })
+  .eq(
+    "id",
+    id
+  );
+
+
+  if(updateError){
+
+    alert(
+      updateError.message
+    );
+
+  }
+  else{
+
+    alert(
+      "Employee updated."
+    );
+
+    await loadAdminEmployees();
+
+  }
+
+}
+
+
+/* =========================
+   DELETE EMPLOYEE
+========================= */
 
 async function deleteEmployee(
   id,
   employeeId
 ){
 
-  if(!confirm(
-    "Employee "+
-    employeeId+
-    " ko delete karna hai?"
-  )) return;
+  if(
+    !confirm(
+      `Delete ${employeeId}?`
+    )
+  ){
+
+    return;
+
+  }
 
 
   const {
     error
   } =
-    await supabaseClient
-      .from("employees")
-      .delete()
-      .eq("id",id);
+  await supabaseClient
+  .from("employees")
+  .delete()
+  .eq(
+    "id",
+    id
+  );
 
 
   if(error){
 
-    alert(error.message);
+    alert(
+      error.message
+    );
 
     return;
+
   }
 
 
-  loadEmployeeList();
-  loadEmployeesForReport();
+  await loadAdminEmployees();
+
+  await loadAdminCounts();
 
 }
 
 
-/* REPORT EMPLOYEE DROPDOWN */
+/* =========================
+   CURRENT OFFICE LOCATION
+========================= */
 
-async function loadEmployeesForReport(){
+function useCurrentOfficeLocation(){
 
-  const select =
-    document.getElementById(
-      "reportEmployee"
+  if(!navigator.geolocation){
+
+    setStatus(
+      "officeStatus",
+      "GPS supported nahi hai.",
+      "error"
     );
 
+    return;
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("employees")
-      .select(
-        "employee_id,name,post"
-      )
-      .order("employee_id");
+  }
 
 
-  if(error) return;
+  navigator.geolocation
+  .getCurrentPosition(
+
+    function(position){
+
+      document.getElementById(
+        "officeLat"
+      ).value =
+      position.coords.latitude;
 
 
-  select.innerHTML =
-    "<option value=''>All Employees</option>";
+      document.getElementById(
+        "officeLng"
+      ).value =
+      position.coords.longitude;
 
 
-  data.forEach(function(emp){
+      setStatus(
+        "officeStatus",
+        "Current location loaded. Ab Save Office Location karein.",
+        "success"
+      );
 
-    select.innerHTML +=
-      "<option value='"+
-      emp.employee_id+
-      "'>"+
-      emp.employee_id+
-      " - "+
-      emp.name+
-      (
-        emp.post
-        ? " ("+emp.post+")"
-        : ""
-      )+
-      "</option>";
+    },
 
-  });
+    function(error){
+
+      setStatus(
+        "officeStatus",
+        "GPS error: "+error.message,
+        "error"
+      );
+
+    },
+
+    {
+      enableHighAccuracy:true,
+      timeout:15000
+    }
+
+  );
 
 }
 
 
-/* DAILY REPORT */
+/* =========================
+   SAVE OFFICE
+========================= */
 
-async function loadReport(){
+async function saveOfficeLocation(){
 
-  const report =
+  const latitude =
+  Number(
     document.getElementById(
-      "report"
-    );
+      "officeLat"
+    ).value
+  );
 
 
-  const date =
+  const longitude =
+  Number(
     document.getElementById(
-      "reportDate"
-    ).value;
-
-
-  const employee =
-    document.getElementById(
-      "reportEmployee"
-    ).value;
-
-
-  if(!date){
-
-    report.innerHTML =
-      "<div class='status error'>"+
-      "Date select karo."+
-      "</div>";
-
-    return;
-  }
-
-
-  report.innerHTML =
-    "Loading...";
-
-
-  let query =
-    supabaseClient
-      .from("attendance")
-      .select("*")
-      .eq(
-        "attendance_date",
-        date
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(employee){
-
-    query =
-      query.eq(
-        "employee_id",
-        employee
-      );
-
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await query;
-
-
-  if(error){
-
-    report.innerHTML =
-      "<div class='status error'>"+
-      error.message+
-      "</div>";
-
-    return;
-  }
+      "officeLng"
+    ).value
+  );
 
 
   if(
-    !data ||
-    data.length===0
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude)
   ){
 
-    report.innerHTML =
-      "<p>No attendance found.</p>";
+    setStatus(
+      "officeStatus",
+      "Valid latitude/longitude dijiye.",
+      "error"
+    );
 
     return;
+
   }
 
 
-  let html =
-    "<div class='table-wrap'><table>"+
+  const {
+    error
+  } =
+  await supabaseClient
+  .from("office_settings")
+  .upsert({
 
-    "<tr>"+
-    "<th>Employee</th>"+
-    "<th>Post</th>"+
-    "<th>Type</th>"+
-    "<th>Time</th>"+
-    "<th>Distance</th>"+
-    "</tr>";
+    id:1,
 
+    latitude:latitude,
 
-  data.forEach(function(row){
+    longitude:longitude,
 
-    const badge =
-      row.attendance_type === "IN"
-      ? "badge badge-in"
-      : "badge badge-out";
-
-
-    html +=
-      "<tr>"+
-
-      "<td>"+
-      row.employee_id+
-      "<br>"+
-      row.employee_name+
-      "</td>"+
-
-      "<td>"+
-      "-"+
-      "</td>"+
-
-      "<td>"+
-      "<span class='"+
-      badge+
-      "'>"+
-      row.attendance_type+
-      "</span>"+
-      "</td>"+
-
-      "<td>"+
-      new Date(
-        row.created_at
-      ).toLocaleTimeString()+
-      "</td>"+
-
-      "<td>"+
-      Math.round(
-        row.distance_meters
-      )+
-      " m"+
-      "</td>"+
-
-      "</tr>";
+    radius_meters:50
 
   });
 
 
-  html +=
-    "</table></div>";
+  if(error){
+
+    setStatus(
+      "officeStatus",
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
 
 
-  report.innerHTML =
-    html;
+  officeSettings={
+
+    id:1,
+
+    latitude:latitude,
+
+    longitude:longitude,
+
+    radius_meters:50
+
+  };
+
+
+  setStatus(
+    "officeStatus",
+    "✅ Office location saved. Radius 50 meter.",
+    "success"
+  );
 
 }
 
 
-/* ADD HOLIDAY */
+/* =========================
+   ADD HOLIDAY
+========================= */
 
 async function addHoliday(){
 
   const date =
-    document.getElementById(
-      "holidayDate"
-    ).value;
+  document.getElementById(
+    "holidayDate"
+  ).value;
 
 
   const name =
-    document.getElementById(
-      "holidayName"
-    ).value.trim();
-
-
-  const box =
-    document.getElementById(
-      "holidayStatus"
-    );
+  document.getElementById(
+    "holidayName"
+  ).value.trim();
 
 
   if(!date || !name){
 
-    box.innerHTML =
-      "<div class='status error'>"+
-      "Holiday date aur name fill karo."+
-      "</div>";
+    alert(
+      "Date aur Holiday Name dijiye."
+    );
 
     return;
+
   }
 
 
   const {
     error
   } =
-    await supabaseClient
-      .from("holidays")
-      .insert({
+  await supabaseClient
+  .from("holidays")
+  .insert({
 
-        holiday_date:date,
-        holiday_name:name
+    id:generateUUID(),
 
-      });
+    holiday_date:date,
+
+    holiday_name:name
+
+  });
 
 
   if(error){
 
-    box.innerHTML =
-      "<div class='status error'>"+
-      error.message+
-      "</div>";
+    alert(
+      error.message
+    );
 
     return;
+
   }
-
-
-  box.innerHTML =
-    "<div class='status success'>"+
-    "✅ Holiday added."+
-    "</div>";
-
-
-  document.getElementById(
-    "holidayDate"
-  ).value="";
 
 
   document.getElementById(
@@ -2252,747 +3586,1255 @@ async function addHoliday(){
   ).value="";
 
 
-  loadHolidayList();
+  await loadHolidayList();
+
+  await loadAdminCounts();
+
+  await renderAdminCalendar();
 
 }
 
 
-/* HOLIDAY LIST */
+/* =========================
+   HOLIDAY LIST
+========================= */
 
 async function loadHolidayList(){
 
-  const box =
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+  .from("holidays")
+  .select("*")
+  .order(
+    "holiday_date"
+  );
+
+
+  if(error){
+
     document.getElementById(
       "holidayList"
+    ).innerHTML =
+    `<div class="status error">
+      ${escapeHtml(error.message)}
+    </div>`;
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "holidayList"
+  ).innerHTML =
+
+  (data || [])
+  .map(
+    holiday => `
+
+      <div class="employee-row">
+
+        <div>
+
+          🎉
+
+          <b>
+            ${escapeHtml(
+              holiday.holiday_date
+            )}
+          </b>
+
+          —
+
+          ${escapeHtml(
+            holiday.holiday_name
+          )}
+
+        </div>
+
+        <button
+          class="danger"
+          onclick="deleteHoliday('${escapeHtml(holiday.id)}')"
+        >
+          Delete
+        </button>
+
+      </div>
+
+    `
+  )
+  .join("")
+
+  ||
+
+  `<div class="empty-msg">
+    No holidays
+  </div>`;
+
+}
+
+
+/* =========================
+   DELETE HOLIDAY
+========================= */
+
+async function deleteHoliday(id){
+
+  if(
+    !confirm(
+      "Kya aap is holiday ko delete karna chahte hain?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+  .from("holidays")
+  .delete()
+  .eq(
+    "id",
+    id
+  );
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadHolidayList();
+
+  await loadAdminCounts();
+
+  await renderAdminCalendar();
+
+}
+
+
+/* =========================
+   LEAVE REQUESTS ADMIN
+========================= */
+
+async function loadLeaveRequests(){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+  .from("leave_requests")
+  .select("*")
+  .order(
+    "created_at",
+    {ascending:false}
+  );
+
+
+  if(error)return;
+
+
+  document.getElementById(
+    "leaveAdminTable"
+  ).innerHTML =
+
+  (data || [])
+  .map(
+    leave => `
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            leave.employee_id
+          )}
+
+          <br>
+
+          ${escapeHtml(
+            leave.employee_name
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            leave.from_date
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            leave.to_date
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            leave.reason
+          )}
+        </td>
+
+        <td>
+
+          <span class="badge b-${leave.status.toLowerCase()}">
+            ${escapeHtml(
+              leave.status
+            )}
+          </span>
+
+        </td>
+
+        <td>
+
+          ${
+            leave.status === "PENDING"
+
+            ?
+
+            `
+              <button
+                class="save-btn"
+                onclick="setLeaveStatus('${escapeHtml(leave.id)}','APPROVED')"
+              >
+                Approve
+              </button>
+
+              <button
+                class="danger"
+                onclick="setLeaveStatus('${escapeHtml(leave.id)}','REJECTED')"
+              >
+                Reject
+              </button>
+            `
+
+            :
+
+            "-"
+          }
+
+        </td>
+
+      </tr>
+
+    `
+  )
+  .join("")
+
+  ||
+
+  `
+    <tr>
+      <td colspan="6" class="empty-msg">
+        No leave requests
+      </td>
+    </tr>
+  `;
+
+}
+
+
+/* =========================
+   LEAVE STATUS
+========================= */
+
+async function setLeaveStatus(
+  id,
+  status
+){
+
+  const {
+    error
+  } =
+  await supabaseClient
+  .from("leave_requests")
+  .update({
+    status:status
+  })
+  .eq(
+    "id",
+    id
+  );
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadLeaveRequests();
+
+  await loadAdminCounts();
+
+  await renderAdminCalendar();
+
+}
+
+
+/* =========================
+   ADMIN MONTH
+========================= */
+
+function changeAdminMonth(delta){
+
+  adminMonth =
+  new Date(
+    adminMonth.getFullYear(),
+    adminMonth.getMonth()+delta,
+    1
+  );
+
+
+  renderAdminCalendar();
+
+}
+
+
+/* =========================
+   ADMIN CALENDAR
+========================= */
+
+async function renderAdminCalendar(){
+
+  const year =
+  adminMonth.getFullYear();
+
+  const month =
+  adminMonth.getMonth();
+
+
+  const selected =
+  document.getElementById(
+    "adminCalendarEmployee"
+  )?.value || "";
+
+
+  document.getElementById(
+    "adminMonthTitle"
+  ).textContent =
+  monthName(adminMonth);
+
+
+  const start =
+  new Date(
+    year,
+    month,
+    1
+  );
+
+
+  const end =
+  new Date(
+    year,
+    month+1,
+    0
+  );
+
+
+  let attendanceQuery =
+  supabaseClient
+  .from("attendance")
+  .select("*")
+  .gte(
+    "attendance_date",
+    localDate(start)
+  )
+  .lte(
+    "attendance_date",
+    localDate(end)
+  );
+
+
+  if(selected){
+
+    attendanceQuery =
+    attendanceQuery.eq(
+      "employee_id",
+      selected
+    );
+
+  }
+
+
+  const [
+    attendanceResult,
+    holidayResult,
+    leaveResult
+  ] =
+  await Promise.all([
+
+    attendanceQuery,
+
+    supabaseClient
+    .from("holidays")
+    .select("*")
+    .gte(
+      "holiday_date",
+      localDate(start)
+    )
+    .lte(
+      "holiday_date",
+      localDate(end)
+    ),
+
+    supabaseClient
+    .from("leave_requests")
+    .select("*")
+    .eq(
+      "status",
+      "APPROVED"
+    )
+    .lte(
+      "from_date",
+      localDate(end)
+    )
+    .gte(
+      "to_date",
+      localDate(start)
+    )
+
+  ]);
+
+
+  const attendance =
+  attendanceResult.data || [];
+
+  const holidays =
+  holidayResult.data || [];
+
+  const leaves =
+  leaveResult.data || [];
+
+
+  let html =
+  [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ]
+  .map(
+    x =>
+    `<div class="dow">${x}</div>`
+  )
+  .join("");
+
+
+  for(
+    let i=0;
+    i<start.getDay();
+    i++
+  ){
+
+    html +=
+    `<div class="day empty"></div>`;
+
+  }
+
+
+  const today =
+  localDate();
+
+
+  for(
+    let d=1;
+    d<=end.getDate();
+    d++
+  ){
+
+    const date =
+    new Date(
+      year,
+      month,
+      d
     );
 
 
-  box.innerHTML =
-    "Loading...";
+    const dateString =
+    localDate(date);
+
+
+    const sunday =
+    date.getDay() === 0;
+
+
+    const holiday =
+    holidays.find(
+      x =>
+      x.holiday_date ===
+      dateString
+    );
+
+
+    const leave =
+    leaves.some(
+      x =>
+      dateString >= x.from_date &&
+      dateString <= x.to_date &&
+      (
+        !selected ||
+        x.employee_id === selected
+      )
+    );
+
+
+    const dayAttendance =
+    attendance.filter(
+      x =>
+      x.attendance_date ===
+      dateString
+    );
+
+
+    let status =
+    "Upcoming";
+
+    let cls =
+    "upcoming";
+
+
+    if(dateString > today){
+
+      status="Upcoming";
+      cls="upcoming";
+
+    }
+    else if(holiday){
+
+      status="Holiday";
+      cls="holiday";
+
+    }
+    else if(sunday){
+
+      status="Sunday";
+      cls="sunday";
+
+    }
+    else if(leave){
+
+      status="Leave";
+      cls="leave";
+
+    }
+    else if(
+      dayAttendance.some(
+        x =>
+        x.attendance_type ===
+        "HALF_DAY"
+      )
+    ){
+
+      status="Half Day";
+      cls="half";
+
+    }
+    else if(
+      dayAttendance.some(
+        x =>
+        x.attendance_type ===
+        "IN"
+      )
+    ){
+
+      status="Present";
+      cls="present";
+
+    }
+    else{
+
+      status =
+      selected
+      ? "Absent"
+      : "-";
+
+      cls =
+      selected
+      ? "absent"
+      : "upcoming";
+
+    }
+
+
+    html += `
+
+      <div class="day ${cls}">
+
+        <div class="daynum">
+          ${d}
+        </div>
+
+        <div class="day-status">
+          ${status}
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  document.getElementById(
+    "adminCalendar"
+  ).innerHTML =
+  html;
+
+}
+
+
+/* =========================
+   ATTENDANCE REPORT
+========================= */
+
+async function loadReport(){
+
+  const employee =
+  document.getElementById(
+    "reportEmployee"
+  ).value;
+
+
+  const from =
+  document.getElementById(
+    "reportFrom"
+  ).value;
+
+
+  const to =
+  document.getElementById(
+    "reportTo"
+  ).value;
+
+
+  let query =
+  supabaseClient
+  .from("attendance")
+  .select("*")
+  .gte(
+    "attendance_date",
+    from
+  )
+  .lte(
+    "attendance_date",
+    to
+  )
+  .order(
+    "attendance_date"
+  )
+  .order(
+    "created_at"
+  );
+
+
+  if(employee){
+
+    query =
+    query.eq(
+      "employee_id",
+      employee
+    );
+
+  }
 
 
   const {
     data,
     error
   } =
-    await supabaseClient
-      .from("holidays")
-      .select("*")
-      .order(
-        "holiday_date"
-      );
+  await query;
 
 
   if(error){
 
-    box.innerHTML =
-      "<div class='status error'>"+
-      error.message+
-      "</div>";
+    alert(
+      error.message
+    );
 
     return;
+
   }
+
+
+  const rows =
+  data || [];
+
+
+  const checkIn =
+  rows.filter(
+    x =>
+    x.attendance_type ===
+    "IN"
+  ).length;
+
+
+  const half =
+  rows.filter(
+    x =>
+    x.attendance_type ===
+    "HALF_DAY"
+  ).length;
+
+
+  const checkOut =
+  rows.filter(
+    x =>
+    x.attendance_type ===
+    "OUT"
+  ).length;
+
+
+  document.getElementById(
+    "reportSummary"
+  ).innerHTML = `
+
+    <div class="mini">
+      <b>${checkIn}</b>
+      <span>Check In</span>
+    </div>
+
+    <div class="mini">
+      <b>${half}</b>
+      <span>Half Day</span>
+    </div>
+
+    <div class="mini">
+      <b>${checkOut}</b>
+      <span>Check Out</span>
+    </div>
+
+    <div class="mini">
+      <b>${rows.length}</b>
+      <span>Total Entries</span>
+    </div>
+
+    <div class="mini">
+      <b>${escapeHtml(from)} → ${escapeHtml(to)}</b>
+      <span>Period</span>
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "reportTable"
+  ).innerHTML =
+
+  rows
+  .map(
+    row => `
+
+      <tr>
+
+        <td>
+          ${escapeHtml(
+            row.attendance_date
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            row.employee_id
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            row.attendance_type
+          )}
+        </td>
+
+        <td>
+          ${
+            row.created_at
+            ?
+            new Date(
+              row.created_at
+            ).toLocaleTimeString(
+              "en-IN",
+              {
+                hour:"2-digit",
+                minute:"2-digit"
+              }
+            )
+            :
+            "-"
+          }
+        </td>
+
+        <td>
+          ${Math.round(
+            Number(
+              row.distance_meters || 0
+            )
+          )}m
+        </td>
+
+      </tr>
+
+    `
+  )
+  .join("")
+
+  ||
+
+  `
+    <tr>
+      <td colspan="5" class="empty-msg">
+        No attendance
+      </td>
+    </tr>
+  `;
+
+}
+
+
+/* =========================
+   SALARY
+========================= */
+
+function isSunday(
+  year,
+  month,
+  day
+){
+
+  return new Date(
+    year,
+    month,
+    day
+  ).getDay() === 0;
+
+}
+
+
+async function loadSalaryReport(){
+
+  const value =
+  document.getElementById(
+    "salaryMonth"
+  ).value;
+
+
+  if(!value)return;
+
+
+  const [
+    year,
+    monthNumber
+  ] =
+  value
+  .split("-")
+  .map(Number);
+
+
+  const month =
+  monthNumber - 1;
+
+
+  const monthStart =
+  new Date(
+    year,
+    month,
+    1
+  );
+
+
+  const monthEnd =
+  new Date(
+    year,
+    month+1,
+    0
+  );
+
+
+  const now =
+  new Date();
+
+
+  let lastDay =
+  monthEnd.getDate();
 
 
   if(
-    !data ||
-    data.length===0
+    year === now.getFullYear() &&
+    month === now.getMonth()
   ){
 
-    box.innerHTML =
-      "<p style='margin-top:15px;color:#888'>"+
-      "Abhi koi holiday add nahi hai."+
-      "</p>";
+    lastDay =
+    now.getDate();
 
-    return;
   }
 
 
-  let html =
-    "<div class='table-wrap'><table>"+
-
-    "<tr>"+
-    "<th>Date</th>"+
-    "<th>Holiday</th>"+
-    "<th>Action</th>"+
-    "</tr>";
+  const actualEnd =
+  new Date(
+    year,
+    month,
+    lastDay
+  );
 
 
-  data.forEach(function(row){
+  const [
+    employeeResult,
+    attendanceResult,
+    holidayResult,
+    leaveResult
+  ] =
+  await Promise.all([
 
-    html +=
-      "<tr>"+
+    supabaseClient
+    .from("employees")
+    .select("*")
+    .order("employee_id"),
 
-      "<td>"+
-      row.holiday_date+
-      "</td>"+
+    supabaseClient
+    .from("attendance")
+    .select("*")
+    .gte(
+      "attendance_date",
+      localDate(monthStart)
+    )
+    .lte(
+      "attendance_date",
+      localDate(actualEnd)
+    ),
 
-      "<td>"+
-      row.holiday_name+
-      "</td>"+
+    supabaseClient
+    .from("holidays")
+    .select("*")
+    .gte(
+      "holiday_date",
+      localDate(monthStart)
+    )
+    .lte(
+      "holiday_date",
+      localDate(actualEnd)
+    ),
 
-      "<td>"+
+    supabaseClient
+    .from("leave_requests")
+    .select("*")
+    .eq(
+      "status",
+      "APPROVED"
+    )
+    .lte(
+      "from_date",
+      localDate(actualEnd)
+    )
+    .gte(
+      "to_date",
+      localDate(monthStart)
+    )
 
-      "<button class='danger' onclick=\"deleteHoliday('"+
-      row.id+
-      "')\">"+
-      "Delete"+
-      "</button>"+
-
-      "</td>"+
-
-      "</tr>";
-
-  });
-
-
-  html +=
-    "</table></div>";
-
-
-  box.innerHTML =
-    html;
-
-}
-
-
-/* DELETE HOLIDAY */
-
-async function deleteHoliday(id){
-
-  if(!confirm(
-    "Is holiday ko delete karna hai?"
-  )) return;
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("holidays")
-      .delete()
-      .eq("id",id);
-
-
-  if(error){
-
-    alert(error.message);
-
-    return;
-  }
+  ]);
 
 
-  loadHolidayList();
+  if(
+    employeeResult.error ||
+    attendanceResult.error ||
+    holidayResult.error ||
+    leaveResult.error
+  ){
 
-}
-
-
-/* MONTHLY SUMMARY */
-
-async function loadMonthlySummary(){
-
-  const selectedDate =
-    document.getElementById(
-      "summaryMonth"
-    ).value;
-
-
-  const box =
-    document.getElementById(
-      "monthlySummary"
+    alert(
+      (
+        employeeResult.error ||
+        attendanceResult.error ||
+        holidayResult.error ||
+        leaveResult.error
+      ).message
     );
 
-
-  if(!selectedDate){
-
-    box.innerHTML =
-      "<div class='status error'>"+
-      "Pehle calendar se date select karo."+
-      "</div>";
-
     return;
+
   }
 
 
-  box.innerHTML =
-    "Loading...";
+  const employees =
+  employeeResult.data || [];
+
+  const attendance =
+  attendanceResult.data || [];
+
+  const holidays =
+  holidayResult.data || [];
+
+  const leaves =
+  leaveResult.data || [];
 
 
-  /*
-    Selected date se year/month nikala ja raha hai.
-    Example:
-    2026-09-08
-    Summary = September 2026
-  */
-
-  const parts =
-    selectedDate
-      .split("-")
-      .map(Number);
+  const holidaySet =
+  new Set(
+    holidays.map(
+      x =>
+      x.holiday_date
+    )
+  );
 
 
-  const year =
-    parts[0];
+  const results =
+  employees.map(
+    employee => {
+
+      let workingDays=0;
+      let present=0;
+      let half=0;
+      let leave=0;
+      let absent=0;
 
 
-  const monthNumber =
-    parts[1];
-
-
-  const startDate =
-    year+
-    "-"+
-    String(monthNumber)
-      .padStart(2,"0")+
-    "-01";
-
-
-  const lastDay =
-    new Date(
-      year,
-      monthNumber,
-      0
-    ).getDate();
-
-
-  const endDate =
-    year+
-    "-"+
-    String(monthNumber)
-      .padStart(2,"0")+
-    "-"+
-    String(lastDay)
-      .padStart(2,"0");
-
-
-  /* EMPLOYEES */
-
-  const {
-    data:employees,
-    error:empError
-  } =
-    await supabaseClient
-      .from("employees")
-      .select(
-        "employee_id,name,post"
-      )
-      .order(
-        "employee_id"
-      );
-
-
-  if(empError){
-
-    box.innerHTML =
-      "<div class='status error'>"+
-      empError.message+
-      "</div>";
-
-    return;
-  }
-
-
-  /* ATTENDANCE */
-
-  const {
-    data:attendance,
-    error:attError
-  } =
-    await supabaseClient
-      .from("attendance")
-      .select("*")
-      .gte(
-        "attendance_date",
-        startDate
-      )
-      .lte(
-        "attendance_date",
-        endDate
-      );
-
-
-  if(attError){
-
-    box.innerHTML =
-      "<div class='status error'>"+
-      attError.message+
-      "</div>";
-
-    return;
-  }
-
-
-  /* HOLIDAYS */
-
-  const {
-    data:holidays,
-    error:holidayError
-  } =
-    await supabaseClient
-      .from("holidays")
-      .select("*")
-      .gte(
-        "holiday_date",
-        startDate
-      )
-      .lte(
-        "holiday_date",
-        endDate
-      )
-      .order(
-        "holiday_date"
-      );
-
-
-  if(holidayError){
-
-    box.innerHTML =
-      "<div class='status error'>"+
-      holidayError.message+
-      "</div>";
-
-    return;
-  }
-
-
-  /* HOLIDAY SET */
-
-  const holidayDates =
-    new Set();
-
-
-  (holidays || [])
-    .forEach(function(h){
-
-      holidayDates.add(
-        h.holiday_date
-      );
-
-    });
-
-
-  /* RESULT */
-
-  let result = {};
-
-
-  employees.forEach(function(emp){
-
-    result[
-      emp.employee_id
-    ] = {
-
-      name:
-        emp.name,
-
-      post:
-        emp.post || "Not Set",
-
-      days:{}
-
-    };
-
-  });
-
-
-  /* ATTENDANCE DATA */
-
-  (attendance || [])
-    .forEach(function(row){
-
-      if(
-        !result[
-          row.employee_id
-        ]
+      for(
+        let day=1;
+        day<=lastDay;
+        day++
       ){
-
-        return;
-
-      }
-
-
-      const day =
-        row.attendance_date;
-
-
-      if(
-        !result[
-          row.employee_id
-        ].days[day]
-      ){
-
-        result[
-          row.employee_id
-        ].days[day] = {
-
-          IN:false,
-          OUT:false
-
-        };
-
-      }
-
-
-      if(
-        row.attendance_type === "IN"
-      ){
-
-        result[
-          row.employee_id
-        ]
-        .days[day]
-        .IN = true;
-
-      }
-
-
-      if(
-        row.attendance_type === "OUT"
-      ){
-
-        result[
-          row.employee_id
-        ]
-        .days[day]
-        .OUT = true;
-
-      }
-
-    });
-
-
-  /* WORKING DAYS */
-
-  let workingDays = 0;
-
-  let sundayDays = 0;
-
-  let holidayWorkingExcluded = 0;
-
-
-  for(
-    let d=1;
-    d<=lastDay;
-    d++
-  ){
-
-    const dateObj =
-      new Date(
-        year,
-        monthNumber-1,
-        d
-      );
-
-
-    const dayOfWeek =
-      dateObj.getDay();
-
-
-    const dateString =
-      year+
-      "-"+
-      String(monthNumber)
-        .padStart(2,"0")+
-      "-"+
-      String(d)
-        .padStart(2,"0");
-
-
-    /* SUNDAY */
-
-    if(dayOfWeek === 0){
-
-      sundayDays++;
-
-      continue;
-
-    }
-
-
-    /* HOLIDAY */
-
-    if(
-      holidayDates.has(
-        dateString
-      )
-    ){
-
-      holidayWorkingExcluded++;
-
-      continue;
-
-    }
-
-
-    workingDays++;
-
-  }
-
-
-  /* TABLE */
-
-  let html =
-    "<div class='table-wrap'><table>"+
-
-    "<tr>"+
-    "<th>Employee</th>"+
-    "<th>Post</th>"+
-    "<th>Present</th>"+
-    "<th>Leave</th>"+
-    "<th>Holiday</th>"+
-    "<th>Working</th>"+
-    "</tr>";
-
-
-  employees.forEach(function(emp){
-
-    let presentDays = 0;
-
-
-    const days =
-      result[
-        emp.employee_id
-      ].days;
-
-
-    Object.keys(days)
-      .forEach(function(day){
 
         if(
-          days[day].IN &&
-          days[day].OUT
+          isSunday(
+            year,
+            month,
+            day
+          )
         ){
 
-          presentDays++;
+          continue;
 
         }
 
-      });
+
+        const dateString =
+        `${year}-${
+          String(month+1).padStart(2,"0")
+        }-${
+          String(day).padStart(2,"0")
+        }`;
 
 
-    const leaveDays =
-      Math.max(
-        0,
-        workingDays -
-        presentDays
+        if(
+          holidaySet.has(
+            dateString
+          )
+        ){
+
+          continue;
+
+        }
+
+
+        workingDays++;
+
+
+        const dayAttendance =
+        attendance.filter(
+          x =>
+          x.employee_id ===
+          employee.employee_id &&
+          x.attendance_date ===
+          dateString
+        );
+
+
+        const onLeave =
+        leaves.some(
+          x =>
+          x.employee_id ===
+          employee.employee_id &&
+          dateString >=
+          x.from_date &&
+          dateString <=
+          x.to_date
+        );
+
+
+        if(onLeave){
+
+          leave++;
+
+        }
+        else if(
+          dayAttendance.some(
+            x =>
+            x.attendance_type ===
+            "HALF_DAY"
+          )
+        ){
+
+          half++;
+
+        }
+        else if(
+          dayAttendance.some(
+            x =>
+            x.attendance_type ===
+            "IN"
+          )
+        ){
+
+          present++;
+
+        }
+        else{
+
+          absent++;
+
+        }
+
+      }
+
+
+      const salary =
+      Number(
+        employee.monthly_salary || 0
       );
 
 
-    const holidayDays =
-      holidays
-      ? holidays.length
+      const dailySalary =
+      workingDays
+      ? salary / workingDays
       : 0;
 
 
-    html +=
-      "<tr>"+
-
-      "<td>"+
-      "<b>"+
-      emp.employee_id+
-      "</b>"+
-      "<br>"+
-      escapeHtml(
-        emp.name
-      )+
-      "</td>"+
-
-      "<td>"+
-      "<b>"+
-      escapeHtml(
-        emp.post ||
-        "Not Set"
-      )+
-      "</b>"+
-      "</td>"+
-
-      "<td>"+
-      "<span class='badge badge-in'>"+
-      presentDays+
-      " Days"+
-      "</span>"+
-      "</td>"+
-
-      "<td>"+
-      "<span class='badge badge-leave'>"+
-      leaveDays+
-      " Days"+
-      "</span>"+
-      "</td>"+
-
-      "<td>"+
-      "<span class='badge badge-holiday'>"+
-      holidayDays+
-      " Days"+
-      "</span>"+
-      "</td>"+
-
-      "<td>"+
-      "<span class='badge badge-working'>"+
-      workingDays+
-      " Days"+
-      "</span>"+
-      "</td>"+
-
-      "</tr>";
-
-  });
+      const payable =
+      Math.max(
+        0,
+        (
+          present +
+          half * 0.5 +
+          leave
+        ) * dailySalary
+      );
 
 
-  html +=
-    "</table></div>";
+      return {
+
+        employee,
+
+        workingDays,
+
+        present,
+
+        half,
+
+        leave,
+
+        absent,
+
+        payable
+
+      };
+
+    }
+  );
 
 
-  /* HOLIDAY DETAILS */
+  document.getElementById(
+    "salaryTable"
+  ).innerHTML =
 
-  let holidayHtml = "";
+  results
+  .map(
+    row => `
 
+      <tr>
 
-  if(
-    holidays &&
-    holidays.length > 0
-  ){
+        <td>
+          ${escapeHtml(
+            row.employee.employee_id
+          )}
+        </td>
 
-    holidayHtml =
-      "<div class='holiday-box'>"+
+        <td>
+          ${escapeHtml(
+            row.employee.name
+          )}
+        </td>
 
-      "<h3>"+
-      "🎉 Is Month ke Holidays"+
-      "</h3>";
+        <td>
+          ₹${Number(
+            row.employee.monthly_salary || 0
+          ).toLocaleString("en-IN")}
+        </td>
 
+        <td>
+          ${row.workingDays}
+        </td>
 
-    holidays.forEach(function(h){
+        <td>
+          ${row.present}
+        </td>
 
-      const holidayDate =
-        new Date(
-          h.holiday_date+
-          "T00:00:00"
-        );
+        <td>
+          ${row.half}
+        </td>
 
+        <td>
+          ${row.leave}
+        </td>
 
-      const formattedDate =
-        holidayDate.toLocaleDateString(
-          "en-IN",
-          {
-            day:"2-digit",
-            month:"long",
-            year:"numeric"
-          }
-        );
+        <td>
+          ${row.absent}
+        </td>
 
+        <td>
+          <b>
+            ₹${Math.round(
+              row.payable
+            ).toLocaleString("en-IN")}
+          </b>
+        </td>
 
-      holidayHtml +=
-        "<div class='holiday-item'>"+
-        "🎉 <b>"+
-        formattedDate+
-        "</b> — "+
-        escapeHtml(
-          h.holiday_name
-        )+
-        "</div>";
+      </tr>
 
-    });
+    `
+  )
+  .join("")
 
+  ||
 
-    holidayHtml +=
-      "</div>";
-
-  }else{
-
-    holidayHtml =
-      "<div class='holiday-box'>"+
-      "<h3>🎉 Is Month ke Holidays</h3>"+
-      "<p style='color:#888'>"+
-      "Is month me koi added holiday nahi hai."+
-      "</p>"+
-      "</div>";
-
-  }
-
-
-  /* SUMMARY INFO */
-
-  const monthName =
-    new Date(
-      year,
-      monthNumber-1,
-      1
-    ).toLocaleDateString(
-      "en-IN",
-      {
-        month:"long",
-        year:"numeric"
-      }
-    );
-
-
-  box.innerHTML =
-
-    "<div class='summary-info'>"+
-
-    "📅 <b>"+
-    monthName+
-    "</b><br><br>"+
-
-    "🟢 Working Days: <b>"+
-    workingDays+
-    "</b>"+
-    " &nbsp; | &nbsp; "+
-
-    "🔴 Sundays: <b>"+
-    sundayDays+
-    "</b>"+
-    " &nbsp; | &nbsp; "+
-
-    "🎉 Holidays: <b>"+
-    holidayWorkingExcluded+
-    "</b>"+
-
-    "</div>"+
-
-    html+
-
-    holidayHtml;
+  `
+    <tr>
+      <td colspan="9" class="empty-msg">
+        No employees
+      </td>
+    </tr>
+  `;
 
 }
 
 
-/* DEFAULT DATE */
+/* =========================
+   START
+========================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   function(){
 
-    const today =
-      getLocalDate();
-
-
-    const reportDate =
-      document.getElementById(
-        "reportDate"
-      );
-
-
-    const summaryDate =
-      document.getElementById(
-        "summaryMonth"
-      );
-
-
-    if(reportDate){
-
-      reportDate.value =
-        today;
-
-    }
-
-
-    if(summaryDate){
-
-      summaryDate.value =
-        today;
-
-    }
+    changeLoginType();
 
   }
 );
