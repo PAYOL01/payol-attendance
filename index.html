@@ -1,1009 +1,422 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#8b0000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Payol Attendance">
+<link rel="manifest" href="manifest.json">
 <title>Payol Attendance</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
---red:#e00000;
---red2:#ff3131;
---bg:#080808;
---card:#141414;
---card2:#101010;
---border:#292929;
---text:#fff;
---muted:#999;
---green:#16a34a;
---orange:#c47700;
---blue:#1769d2;
+ --red:#a40000;
+ --red2:#6d0000;
+ --bg:#080808;
+ --card:#151515;
+ --card2:#1d1d1d;
+ --line:#303030;
+ --text:#fff;
+ --muted:#aaa;
 }
-
 body{
-font-family:Arial,Helvetica,sans-serif;
-background:
-radial-gradient(circle at top right,rgba(224,0,0,.12),transparent 35%),
-var(--bg);
-color:var(--text);
-min-height:100vh;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+ background:linear-gradient(160deg,#080808,#180606 55%,#080808);
+ color:var(--text);
+ min-height:100vh;
+ padding-bottom:20px;
 }
-
-button,input,select,textarea{
-font-family:inherit;
+button,input,select,textarea{font:inherit}
+.header{
+ position:sticky;top:0;z-index:50;
+ padding:16px 15px;
+ text-align:center;
+ background:linear-gradient(135deg,#570000,#b00000);
+ box-shadow:0 5px 25px #0008;
 }
-
-button{
-cursor:pointer;
-}
-
-.hidden{
-display:none!important;
-}
-
-.container{
-width:100%;
-max-width:1150px;
-margin:auto;
-padding:18px;
-}
-
-header{
-background:rgba(12,12,12,.94);
-backdrop-filter:blur(12px);
-border-bottom:1px solid #292929;
-padding:13px 18px;
-position:sticky;
-top:0;
-z-index:100;
-}
-
-.header-inner{
-max-width:1150px;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:15px;
-}
-
-.logo{
-font-size:23px;
-font-weight:800;
-letter-spacing:-.5px;
-}
-
-.logo span{
-color:var(--red);
-}
-
-.logo-sub{
-font-size:10px;
-color:#777;
-display:block;
-margin-top:2px;
-font-weight:normal;
-letter-spacing:1px;
-}
-
-.logout{
-background:#b90000;
-border:1px solid #ef2929;
-color:#fff;
-padding:10px 16px;
-border-radius:10px;
-font-weight:bold;
-}
-
-.logout:hover{
-background:#e00000;
-}
-
+.header h1{font-size:21px;letter-spacing:1px}
+.header p{font-size:11px;color:#ffd5d5;margin-top:3px}
+.container{max-width:1100px;margin:auto;padding:12px}
 .card{
-background:linear-gradient(145deg,#171717,#111);
-border:1px solid var(--border);
-border-radius:18px;
-padding:20px;
-margin-bottom:16px;
-box-shadow:0 10px 30px rgba(0,0,0,.25);
+ background:linear-gradient(145deg,#191919,#111);
+ border:1px solid #303030;
+ border-radius:18px;
+ padding:16px;
+ margin-bottom:14px;
+ box-shadow:0 8px 25px #0007;
 }
-
-h1,h2,h3{
-margin-bottom:12px;
+.login{max-width:430px;margin:45px auto}
+.logo{
+ width:78px;height:78px;border-radius:24px;
+ background:linear-gradient(145deg,#fff,#eee);
+ color:#8d0000;
+ display:grid;place-items:center;
+ font-weight:900;font-size:15px;
+ margin:0 auto 15px;
+ box-shadow:0 8px 25px #0009;
 }
-
-h2{
-font-size:20px;
-}
-
-h3{
-font-size:16px;
-}
-
+h2{font-size:19px}
+h3{font-size:16px}
 label{
-display:block;
-font-size:12px;
-color:#aaa;
-margin-bottom:7px;
-font-weight:bold;
+ display:block;font-size:12px;
+ color:#bbb;margin:12px 0 5px
 }
-
 input,select,textarea{
-width:100%;
-background:#0b0b0b;
-border:1px solid #363636;
-color:#fff;
-padding:12px 13px;
-border-radius:10px;
-outline:none;
-margin-bottom:13px;
+ width:100%;padding:12px 13px;
+ background:#0d0d0d;color:#fff;
+ border:1px solid #3a3a3a;
+ border-radius:11px;
+ outline:none;
 }
-
-input:focus,
-select:focus,
-textarea:focus{
-border-color:var(--red);
-box-shadow:0 0 0 2px rgba(224,0,0,.12);
+input:focus,select:focus,textarea:focus{
+ border-color:#c00000;
+ box-shadow:0 0 0 2px #c0000025;
 }
-
-textarea{
-min-height:90px;
-resize:vertical;
+textarea{min-height:90px;resize:vertical}
+button{
+ border:0;border-radius:11px;
+ padding:12px 15px;color:#fff;
+ font-weight:800;cursor:pointer;
+ background:linear-gradient(135deg,#b00000,#790000);
+ transition:.2s;
 }
-
-.btn{
-border:0;
-border-radius:10px;
-padding:12px 17px;
-font-weight:bold;
-color:#fff;
-background:linear-gradient(135deg,#d00000,#a90000);
-box-shadow:0 5px 15px rgba(224,0,0,.15);
+button:active{transform:scale(.97)}
+.green{background:linear-gradient(135deg,#159557,#09663a)}
+.orange{background:linear-gradient(135deg,#e28a00,#a95600)}
+.blue{background:linear-gradient(135deg,#247bd9,#12509a)}
+.red{background:linear-gradient(135deg,#b00000,#720000)}
+.gray{background:#383838}
+.hidden{display:none!important}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.row button{flex:1;min-width:130px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.section{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;margin-bottom:13px
 }
-
-.btn:hover{
-transform:translateY(-1px);
-opacity:.94;
-}
-
-.btn.gray{background:#333;}
-.btn.green{background:linear-gradient(135deg,#19a955,#10753a);}
-.btn.orange{background:linear-gradient(135deg,#d88900,#9a5e00);}
-.btn.blue{background:linear-gradient(135deg,#2675dd,#144d9c);}
-
-.btn.small{
-padding:8px 11px;
-font-size:12px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:14px;
-}
-
-.grid3{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:12px;
-}
-
+.section button{width:auto}
 .stats{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:11px;
-margin-bottom:16px;
+ display:grid;grid-template-columns:repeat(5,1fr);
+ gap:9px;margin-bottom:14px
 }
-
 .stat{
-background:linear-gradient(145deg,#151515,#0e0e0e);
-border:1px solid #2b2b2b;
-border-radius:14px;
-padding:17px 8px;
-text-align:center;
-transition:.2s;
+ background:linear-gradient(145deg,#1c1c1c,#101010);
+ border:1px solid #333;
+ border-radius:15px;text-align:center;
+ padding:14px 7px;
 }
-
-.stat:hover{
-border-color:#444;
-transform:translateY(-2px);
-}
-
-.stat b{
-font-size:25px;
-display:block;
-margin-bottom:5px;
-}
-
-.stat span{
-font-size:11px;
-color:#999;
-}
-
-.login-box{
-max-width:440px;
-margin:65px auto;
-}
-
-.login-logo{
-text-align:center;
-font-size:34px;
-font-weight:900;
-margin-bottom:8px;
-}
-
-.login-logo span{
-color:var(--red);
-}
-
-.login-sub{
-text-align:center;
-color:#777;
-font-size:12px;
-margin-bottom:25px;
-letter-spacing:1px;
-}
-
-.tabs{
-display:flex;
-gap:8px;
-margin-bottom:20px;
-}
-
-.tab{
-flex:1;
-padding:12px;
-border:1px solid #333;
-background:#171717;
-color:#999;
-border-radius:10px;
-font-weight:bold;
-}
-
-.tab.active{
-background:linear-gradient(135deg,#d90000,#a80000);
-color:#fff;
-border-color:#d00000;
-}
-
+.stat b{display:block;font-size:24px}
+.stat span{font-size:11px;color:#aaa}
 .notice{
-background:#211010;
-border:1px solid #4a1b1b;
-padding:11px;
-border-radius:10px;
-color:#ccc;
-font-size:12px;
-margin-bottom:13px;
+ font-size:11px;color:#999;line-height:1.5;
+ margin-top:10px
 }
-
-.dashboard-head{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:15px;
+.msg{
+ display:none;padding:11px;border-radius:10px;
+ margin-top:10px;background:#222;font-size:13px
 }
-
-.profile{
-display:flex;
-align-items:center;
-gap:14px;
-}
-
-.avatar{
-width:55px;
-height:55px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-background:linear-gradient(135deg,#e00000,#780000);
-font-size:23px;
-font-weight:bold;
-border:2px solid #421010;
-}
-
-.profile-name{
-font-size:20px;
-font-weight:800;
-}
-
-.profile-meta{
-color:#999;
-font-size:12px;
-margin-top:5px;
-line-height:1.6;
-}
-
-.action-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-}
-
-.action{
-padding:23px 12px;
-border-radius:15px;
-border:1px solid #303030;
-background:#0d0d0d;
-text-align:center;
-}
-
-.action-icon{
-font-size:28px;
-margin-bottom:8px;
-}
-
-.action-title{
-font-size:16px;
-font-weight:bold;
-}
-
-.action-desc{
-font-size:11px;
-color:#777;
-margin-top:5px;
-}
-
-.action button{
-width:100%;
-margin-top:13px;
-}
-
-.location{
-font-size:12px;
-color:#999;
-margin-top:8px;
-}
-
-.success{color:#4ade80;}
-.error{color:#ff6b6b;}
-.warning{color:#ffc857;}
-
-.table-wrap{
-overflow-x:auto;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-font-size:13px;
-}
-
+.msg.show{display:block}
+.ok{border:1px solid #198754;background:#092719}
+.err{border:1px solid #a00000;background:#290909}
+.table{overflow:auto}
+table{width:100%;border-collapse:collapse}
 th,td{
-padding:11px 8px;
-border-bottom:1px solid #2b2b2b;
-text-align:left;
-white-space:nowrap;
+ border-bottom:1px solid #303030;
+ padding:10px 8px;
+ text-align:left;font-size:12px;
+ white-space:nowrap
 }
-
-th{
-color:#888;
-font-weight:bold;
-font-size:11px;
-text-transform:uppercase;
-}
-
+th{color:#ffb1b1}
 .badge{
-display:inline-block;
-padding:5px 8px;
-border-radius:7px;
-font-size:10px;
-font-weight:bold;
+ display:inline-block;padding:5px 9px;
+ border-radius:20px;font-size:10px;font-weight:bold
+}
+.present{background:#145b35}
+.half{background:#69470b}
+.leave{background:#174879}
+.absent{background:#601717}
+.holiday{background:#52256d}
+.sunday{background:#444}
+.pending{background:#69500b}
+.approved{background:#145b35}
+.rejected{background:#601717}
+
+/* APP HOME */
+.profile{
+ display:flex;align-items:center;gap:12px;
+}
+.avatar{
+ width:48px;height:48px;border-radius:15px;
+ background:linear-gradient(145deg,#b00000,#610000);
+ display:grid;place-items:center;
+ font-weight:900;font-size:18px;
+}
+.profile small{color:#999}
+
+/* ATTENDANCE */
+.attendance-box{
+ text-align:center;
+ padding:8px 0 4px;
+}
+.attendance-buttons{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin-top:14px;
+}
+.attendance-buttons button{
+ min-height:70px;
+ font-size:14px;
+}
+.attendance-buttons span{
+ display:block;font-size:25px;margin-bottom:4px
 }
 
-.badge.present{
-background:#155d35;
-color:#8affb7;
-}
-
-.badge.half{
-background:#6b4b00;
-color:#ffd76a;
-}
-
-.badge.leave{
-background:#174e76;
-color:#86cfff;
-}
-
-.badge.holiday{
-background:#54216c;
-color:#e6aaff;
-}
-
-.badge.sunday{
-background:#5a2020;
-color:#ff9b9b;
-}
-
-.badge.absent{
-background:#333;
-color:#bbb;
-}
-
+/* CALENDAR */
 .calendar-title{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:8px;
-margin-bottom:14px;
+ display:flex;justify-content:space-between;
+ align-items:center;gap:8px;margin-bottom:12px
 }
-
 .month-btn{
-width:44px;
-height:42px;
-font-size:25px;
-border:0;
-border-radius:10px;
-background:#2d2d2d;
-color:#fff;
+ width:48px;height:42px;padding:0;
+ font-size:22px
 }
-
 .month-label{
-flex:1;
-text-align:center;
-font-size:18px;
-font-weight:bold;
+ flex:1;text-align:center;
+ font-size:16px;font-weight:bold
 }
-
 .calendar{
-display:grid;
-grid-template-columns:repeat(7,1fr);
-gap:5px;
+ display:grid;
+ grid-template-columns:repeat(7,1fr);
+ gap:5px;
 }
-
 .calhead{
-text-align:center;
-font-size:10px;
-color:#777;
-padding:8px 2px;
-font-weight:bold;
+ text-align:center;color:#999;
+ font-size:10px;padding:4px 0
 }
-
 .day{
-min-height:78px;
-background:#0d0d0d;
-border:1px solid #282828;
-border-radius:9px;
-padding:7px 3px;
-text-align:center;
-display:flex;
-flex-direction:column;
-gap:5px;
+ min-height:68px;
+ background:#101010;
+ border:1px solid #292929;
+ border-radius:10px;
+ padding:6px 4px;
+ text-align:center;
 }
-
-.day b{
-font-size:14px;
-}
-
-.day small{
-font-size:9px;
-}
-
-.day.empty{
-background:transparent;
-border:0;
-}
-
+.day b{font-size:12px}
+.day small{display:block;margin-top:7px}
 .day.today{
-border:2px solid var(--red);
-background:#240909;
+ border:2px solid #d00000;
+ background:#210707;
 }
-
+.day.empty{
+ background:transparent;border:0
+}
 .calendar-legend{
-display:flex;
-gap:6px;
-flex-wrap:wrap;
-margin-top:14px;
+ display:flex;gap:5px;flex-wrap:wrap;
+ margin-top:12px
 }
 
-.section-title{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-margin-bottom:13px;
+/* INSTALL */
+.install-box{
+ background:linear-gradient(135deg,#3a0000,#160000);
+ border:1px solid #7b0000;
+ border-radius:15px;
+ padding:13px;
+ margin-bottom:14px;
+ display:none;
 }
+.install-box.show{display:block}
+.install-box p{font-size:12px;color:#ddd;margin-bottom:9px}
 
-.section-title h2{
-margin-bottom:0;
-}
-
-.section-icon{
-font-size:22px;
-}
-
-.employee-row{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:12px;
-background:#0d0d0d;
-border:1px solid #2b2b2b;
-padding:13px;
-border-radius:12px;
-margin-bottom:8px;
-}
-
-.employee-main{
-display:flex;
-align-items:center;
-gap:11px;
-min-width:0;
-}
-
-.mini-avatar{
-width:39px;
-height:39px;
-border-radius:50%;
-background:#2a0b0b;
-border:1px solid #531515;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-color:#ff7070;
-flex-shrink:0;
-}
-
-.employee-row small{
-color:#888;
-font-size:11px;
-line-height:1.7;
-}
-
-.post{
-color:#ff6b6b!important;
-font-weight:bold;
-}
-
-.flex{
-display:flex;
-gap:8px;
-align-items:center;
-flex-wrap:wrap;
-}
-
-.text-center{
-text-align:center;
-}
-
-.mt{margin-top:12px;}
-.mb{margin-bottom:12px;}
-
-hr{
-border:0;
-border-top:1px solid #292929;
-margin:17px 0;
-}
-
-.empty{
-color:#777;
-text-align:center;
-padding:22px;
-font-size:13px;
-}
-
+/* ADMIN */
 .admin-title{
-font-size:25px;
-font-weight:800;
+ background:linear-gradient(135deg,#250000,#170000);
+ border:1px solid #4c1717;
 }
-
-.admin-sub{
-color:#777;
-font-size:12px;
-margin-top:4px;
-}
-
-.section-tag{
-font-size:10px;
-padding:5px 8px;
-background:#251010;
-color:#ff7272;
-border:1px solid #4a1717;
-border-radius:7px;
-font-weight:bold;
-}
-
-@media(max-width:800px){
-.stats{
-grid-template-columns:repeat(3,1fr);
-}
-
-.grid3{
-grid-template-columns:1fr 1fr;
-}
-}
-
-@media(max-width:600px){
-.container{
-padding:10px;
-}
-
-.grid,
-.grid3{
-grid-template-columns:1fr;
-}
-
-.stats{
-grid-template-columns:repeat(2,1fr);
-}
-
-.card{
-padding:15px;
-border-radius:15px;
-}
-
-.profile-name{
-font-size:18px;
-}
-
-.dashboard-head{
-align-items:flex-start;
-}
-
-.action-grid{
-grid-template-columns:1fr 1fr;
-}
-
-.calendar{
-gap:3px;
-}
-
-.day{
-min-height:64px;
-padding:5px 2px;
-}
-
-.day b{
-font-size:12px;
-}
-
-.month-label{
-font-size:16px;
-}
-
-.admin-title{
-font-size:21px;
-}
-}
-
-@media(max-width:430px){
-.logo{
-font-size:18px;
-}
-
-.logo-sub{
-display:none;
-}
-
-.logout{
-padding:8px 11px;
-font-size:12px;
-}
-
-.action{
-padding:17px 7px;
-}
-
-.action-icon{
-font-size:23px;
-}
-
-.action-title{
-font-size:14px;
-}
-
-.day{
-min-height:59px;
-}
-
-.day small{
-font-size:8px;
-}
-
-.stat{
-padding:14px 5px;
-}
-
-.stat b{
-font-size:22px;
-}
+@media(max-width:700px){
+ .container{padding:8px}
+ .grid,.grid3{grid-template-columns:1fr}
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .stats .stat:last-child{grid-column:span 2}
+ .section button{padding:9px 12px}
+ .day{min-height:62px}
+ th,td{font-size:11px}
 }
 </style>
 </head>
 
 <body>
 
-<header id="mainHeader" class="hidden">
-<div class="header-inner">
-
-<div class="logo">
-Payol <span>Attendance</span>
-<span class="logo-sub">SMART ATTENDANCE MANAGEMENT</span>
+<div class="header">
+<h1>PAYOL ATTENDANCE</h1>
+<p>Smart GPS Attendance System</p>
 </div>
-
-<button class="logout" onclick="logout()">Logout</button>
-
-</div>
-</header>
-
-<div class="container">
 
 <!-- LOGIN -->
+<div id="loginPage" class="container">
 
-<div id="loginPage" class="login-box">
+<div class="card login">
 
-<div class="login-logo">
-Payol <span>Attendance</span>
-</div>
+<div class="logo">PAYOL</div>
 
-<div class="login-sub">
-SMART EMPLOYEE ATTENDANCE SYSTEM
-</div>
+<h2 style="text-align:center;margin-bottom:15px">
+Welcome 👋
+</h2>
 
-<div class="card">
+<div id="loginMsg" class="msg"></div>
 
-<div class="tabs">
-
-<button id="employeeTab"
-class="tab active"
-onclick="showLogin('employee')">
-Employee Login
-</button>
-
-<button id="adminTab"
-class="tab"
-onclick="showLogin('admin')">
-Admin Login
-</button>
-
-</div>
+<label>Login Type</label>
+<select id="loginType" onchange="changeLogin()">
+<option value="employee">Employee</option>
+<option value="admin">Admin</option>
+</select>
 
 <div id="employeeLogin">
 
 <label>Employee ID</label>
-<input id="employeeId"
-placeholder="Enter Employee ID"
-autocomplete="username">
+<input id="employeeId" placeholder="EMP001" autocomplete="username">
 
 <label>Password</label>
-<input id="employeePassword"
-type="password"
-placeholder="Enter Password"
-autocomplete="current-password">
-
-<button class="btn"
-style="width:100%"
-onclick="employeeLogin()">
-Login to Attendance
-</button>
+<input id="employeePassword" type="password" autocomplete="current-password">
 
 </div>
 
 <div id="adminLogin" class="hidden">
 
 <label>Admin Username</label>
-<input id="adminUsername"
-placeholder="Enter admin username">
+<input id="adminUser">
 
 <label>Admin Password</label>
-<input id="adminPassword"
-type="password"
-placeholder="Enter admin password">
-
-<button class="btn"
-style="width:100%"
-onclick="adminLogin()">
-Login as Admin
-</button>
+<input id="adminPassword" type="password">
 
 </div>
 
-<div id="loginMessage" class="mt"></div>
+<button style="width:100%;margin-top:16px" onclick="login()">
+LOGIN
+</button>
+
+<p class="notice" style="text-align:center">
+📍 Attendance ke liye GPS/Location ON rakhein.
+</p>
 
 </div>
 </div>
 
 
 <!-- EMPLOYEE -->
+<div id="employeePage" class="container hidden">
 
-<div id="employeePage" class="hidden">
+<div id="installBox" class="install-box">
+<p>📲 Payol Attendance ko phone me app ki tarah install karein.</p>
+<button class="blue" onclick="installApp()" id="installBtn">
+INSTALL APP
+</button>
+</div>
 
 <div class="card">
-
-<div class="dashboard-head">
-
+<div class="section">
 <div class="profile">
-
-<div id="employeeAvatar" class="avatar">
-E
-</div>
-
+<div class="avatar" id="avatar">P</div>
 <div>
-
-<div id="employeeWelcome" class="profile-name">
-Welcome
+<h2 id="empName">Employee</h2>
+<small id="empDetails"></small>
+</div>
+</div>
+<button class="gray" onclick="logout()">Logout</button>
+</div>
 </div>
 
-<div id="employeeInfo" class="profile-meta">
-Employee information
-</div>
+<div id="employeeStats" class="stats"></div>
+
+<!-- ATTENDANCE -->
+<div class="card attendance-box">
+
+<h2>📍 Today's Attendance</h2>
+
+<div class="attendance-buttons">
+
+<button class="green" onclick="attendance('IN')">
+<span>🟢</span>
+MARK IN
+</button>
+
+<button class="orange" onclick="attendance('OUT')">
+<span>🟠</span>
+MARK OUT
+</button>
 
 </div>
 
-</div>
-
-<span class="section-tag">EMPLOYEE</span>
-
-</div>
-
-</div>
-
-
-<div class="stats">
-
-<div class="stat">
-<b id="presentCount">0</b>
-<span>Present</span>
-</div>
-
-<div class="stat">
-<b id="halfCount">0</b>
-<span>Half Day</span>
-</div>
-
-<div class="stat">
-<b id="leaveCount">0</b>
-<span>Leave</span>
-</div>
-
-<div class="stat">
-<b id="absentCount">0</b>
-<span>Absent</span>
-</div>
-
-<div class="stat">
-<b id="payableCount">0</b>
-<span>Payable Days</span>
-</div>
+<div id="attendanceMsg" class="msg"></div>
 
 </div>
 
 
-<!-- TODAY -->
-
+<!-- LEAVE -->
 <div class="card">
 
-<div class="section-title">
-<h2>Today's Attendance</h2>
-<span class="section-icon">📍</span>
-</div>
+<h2>📝 Apply Leave</h2>
 
-<div class="action-grid">
+<label>Leave Date</label>
+<input type="date" id="leaveDate">
 
-<div class="action">
+<label>Reason</label>
+<textarea id="leaveReason"
+placeholder="Personal reason, medical problem etc."></textarea>
 
-<div class="action-icon">🟢</div>
-<div class="action-title">Mark IN</div>
-<div class="action-desc">Start your work day</div>
-
-<button class="btn green"
-onclick="markAttendance('IN')">
-Mark IN
+<button class="blue" style="width:100%;margin-top:10px"
+onclick="applyLeave()">
+SUBMIT LEAVE REQUEST
 </button>
 
+<div id="leaveMsg" class="msg"></div>
+
+<h3 style="margin-top:18px">My Leave Requests</h3>
+
+<div class="table" style="margin-top:8px">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="myLeaves"></tbody>
+</table>
 </div>
-
-<div class="action">
-
-<div class="action-icon">🟠</div>
-<div class="action-title">Mark OUT</div>
-<div class="action-desc">End your work day</div>
-
-<button class="btn orange"
-onclick="markAttendance('OUT')">
-Mark OUT
-</button>
-
-</div>
-
-</div>
-
-<div id="attendanceMessage" class="mt"></div>
-
-<div id="todayAttendance" class="location"></div>
 
 </div>
 
 
 <!-- CALENDAR -->
-
 <div class="card">
 
 <div class="calendar-title">
-
-<button class="month-btn"
-onclick="changeEmployeeMonth(-1)">
-‹
-</button>
-
-<div id="employeeMonthLabel"
-class="month-label">
-Monthly Calendar
+<button class="month-btn gray" onclick="changeEmployeeMonth(-1)">‹</button>
+<div class="month-label" id="employeeMonthLabel"></div>
+<button class="month-btn gray" onclick="changeEmployeeMonth(1)">›</button>
 </div>
 
-<button class="month-btn"
-onclick="changeEmployeeMonth(1)">
-›
-</button>
-
-</div>
-
-<input
-type="month"
-id="employeeMonth"
+<input type="month" id="employeeMonth"
 style="position:absolute;opacity:0;pointer-events:none">
 
 <div id="calendar" class="calendar"></div>
 
 <div class="calendar-legend">
-
 <span class="badge present">Present</span>
 <span class="badge half">Half Day</span>
 <span class="badge leave">Leave</span>
 <span class="badge holiday">Holiday</span>
 <span class="badge sunday">Sunday</span>
 <span class="badge absent">Absent</span>
-
 </div>
-
-</div>
-
-
-<!-- LEAVE -->
-
-<div class="card">
-
-<div class="section-title">
-<h2>Apply Leave</h2>
-<span class="section-icon">🏖️</span>
-</div>
-
-<label>Leave Date</label>
-
-<input
-type="date"
-id="leaveDate"
-onclick="if(this.showPicker)this.showPicker()">
-
-<label>Reason</label>
-
-<textarea
-id="leaveReason"
-placeholder="Enter leave reason"></textarea>
-
-<button class="btn blue"
-onclick="applyLeave()">
-Submit Leave Request
-</button>
-
-<div id="leaveMessage" class="mt"></div>
-
-<hr>
-
-<h3>My Leave Requests</h3>
-
-<div id="myLeaves"></div>
 
 </div>
 
@@ -1011,273 +424,218 @@ Submit Leave Request
 
 
 <!-- ADMIN -->
+<div id="adminPage" class="container hidden">
 
-<div id="adminPage" class="hidden">
+<div class="card admin-title">
+<div class="section">
+<div>
+<h2>👨‍💼 Admin Dashboard</h2>
+<p class="notice">Payol Attendance Management</p>
+</div>
+<button class="gray" onclick="logout()">Logout</button>
+</div>
+</div>
 
+
+<!-- OFFICE GPS -->
 <div class="card">
 
-<div class="admin-title">
-Admin Dashboard
-</div>
-
-<div class="admin-sub">
-Payol Attendance Management System
-</div>
-
-</div>
-
-
-<!-- OFFICE -->
-
-<div class="card">
-
-<div class="section-title">
 <h2>📍 Office Location</h2>
-<span class="section-tag">GPS SETTINGS</span>
-</div>
 
 <div class="grid">
 
 <div>
 <label>Latitude</label>
-<input id="officeLat" type="number" step="any">
+<input id="officeLat">
 </div>
 
 <div>
 <label>Longitude</label>
-<input id="officeLng" type="number" step="any">
+<input id="officeLng">
 </div>
 
 </div>
 
-<label>Attendance Radius (Meters)</label>
+<div class="row" style="margin-top:8px">
+<button class="green" onclick="currentGPS()">📍 USE CURRENT GPS</button>
+<button class="blue" onclick="saveOffice()">SAVE LOCATION</button>
+</div>
 
-<input
-id="officeRadius"
-type="number"
-value="100">
+<p class="notice">Attendance radius: <b>100 meter</b></p>
 
-<button class="btn"
-onclick="saveOfficeSettings()">
-Save Office Settings
-</button>
-
-<div id="officeMessage" class="mt"></div>
+<div id="officeMsg" class="msg"></div>
 
 </div>
 
 
-<!-- EMPLOYEES -->
-
+<!-- EMPLOYEE MANAGEMENT -->
 <div class="card">
 
-<div class="section-title">
 <h2>👥 Employee Management</h2>
-<span class="section-tag">STAFF</span>
-</div>
 
-<div class="grid">
+<div class="grid3">
 
 <div>
 <label>Employee ID</label>
-<input id="newEmployeeId"
-placeholder="Employee ID">
+<input id="newId" placeholder="EMP001">
 </div>
 
 <div>
-<label>Employee Name</label>
-<input id="newEmployeeName"
-placeholder="Full Employee Name">
+<label>Name</label>
+<input id="newName" placeholder="Employee Name">
 </div>
 
 <div>
-<label>Post / Designation</label>
-<input id="newEmployeePost"
-placeholder="e.g. Manager, Accountant, Sales Executive">
+<label>Post</label>
+<input id="newPost" placeholder="Post">
 </div>
 
-<div>
+</div>
+
 <label>Password</label>
-<input id="newEmployeePassword"
-placeholder="Login Password">
+<input id="newPassword" placeholder="Password">
+
+<button class="green" style="margin-top:10px"
+onclick="addEmployee()">+ ADD EMPLOYEE</button>
+
+<div id="employeeMsg" class="msg"></div>
+
+<div class="table" style="margin-top:10px">
+<table>
+<thead>
+<tr><th>ID</th><th>Name</th><th>Post</th><th>Action</th></tr>
+</thead>
+<tbody id="employees"></tbody>
+</table>
 </div>
-
-<div>
-<label>Monthly Salary</label>
-<input id="newEmployeeSalary"
-type="number"
-placeholder="Monthly Salary">
-</div>
-
-</div>
-
-<button class="btn green"
-onclick="addEmployee()">
-+ Add Employee
-</button>
-
-<div id="employeeAdminMessage" class="mt"></div>
-
-<hr>
-
-<div id="employeeList"></div>
 
 </div>
 
 
 <!-- HOLIDAY -->
-
 <div class="card">
 
-<div class="section-title">
-<h2>📅 Holiday Calendar</h2>
-<span class="section-tag">HOLIDAYS</span>
-</div>
+<h2>🎉 Holiday Calendar</h2>
 
 <div class="grid">
 
 <div>
-
-<label>Holiday Date</label>
-
-<input
-type="date"
-id="holidayDate"
-onclick="if(this.showPicker)this.showPicker()">
-
+<label>Date</label>
+<input type="date" id="holidayDate">
 </div>
 
 <div>
-
 <label>Holiday Name</label>
-
-<input
-id="holidayName"
-placeholder="e.g. Independence Day">
-
+<input id="holidayName" placeholder="Chhath Puja">
 </div>
 
 </div>
 
-<button class="btn blue"
-onclick="addHoliday()">
-+ Add Holiday
-</button>
+<button class="blue" style="margin-top:10px"
+onclick="addHoliday()">+ ADD HOLIDAY</button>
 
-<div id="holidayMessage" class="mt"></div>
+<div id="holidayMsg" class="msg"></div>
 
-<hr>
-
-<div id="holidayList"></div>
-
-</div>
-
-
-<!-- LEAVE MANAGEMENT -->
-
-<div class="card">
-
-<div class="section-title">
-<h2>🏖️ Leave Requests</h2>
-<span class="section-tag">APPROVAL</span>
-</div>
-
-<div id="adminLeaveList"></div>
-
-</div>
-
-
-<!-- SALARY -->
-
-<div class="card">
-
-<div class="section-title">
-<h2>💰 Monthly Salary Summary</h2>
-<span class="section-tag">PAYROLL</span>
-</div>
-
-<label>Salary Month</label>
-
-<input
-type="month"
-id="salaryMonth"
-onclick="if(this.showPicker)this.showPicker()">
-
-<button class="btn"
-onclick="loadSalarySummary()">
-Show Salary Summary
-</button>
-
-<div class="table-wrap mt">
-
+<div class="table" style="margin-top:10px">
 <table>
-
 <thead>
-
-<tr>
-<th>Employee</th>
-<th>Post</th>
-<th>Present</th>
-<th>Half</th>
-<th>Leave</th>
-<th>Payable</th>
-<th>Salary</th>
-</tr>
-
+<tr><th>Date</th><th>Holiday</th><th>Action</th></tr>
 </thead>
-
-<tbody id="salaryTable"></tbody>
-
+<tbody id="holidays"></tbody>
 </table>
-
 </div>
 
 </div>
 
 
-<!-- DAILY REPORT -->
-
+<!-- LEAVE -->
 <div class="card">
 
-<div class="section-title">
-<h2>📊 Daily Attendance Report</h2>
-<span class="section-tag">REPORT</span>
-</div>
+<h2>📋 Leave Requests</h2>
 
-<label>Report Date</label>
-
-<input
-type="date"
-id="reportDate"
-onclick="if(this.showPicker)this.showPicker()">
-
-<button class="btn blue"
-onclick="loadDailyReport()">
-Show Daily Report
-</button>
-
-<div class="table-wrap mt">
-
+<div class="table" style="margin-top:8px">
 <table>
-
 <thead>
-
 <tr>
 <th>Employee</th>
-<th>Post</th>
+<th>Date</th>
+<th>Reason</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="leaveRequests"></tbody>
+</table>
+</div>
+
+</div>
+
+
+<!-- MONTHLY -->
+<div class="card">
+
+<h2>💰 Monthly Salary Attendance</h2>
+
+<div class="grid3">
+
+<div>
+<label>Month</label>
+<input type="month" id="summaryMonth">
+</div>
+
+<div>
+<label>Employee</label>
+<select id="summaryEmployee"></select>
+</div>
+
+<div style="display:flex;align-items:end">
+<button class="blue" style="width:100%"
+onclick="monthlySummary()">SHOW SUMMARY</button>
+</div>
+
+</div>
+
+<p class="notice">
+Present = 1 day • Half Day = 0.5 day<br>
+Payable Days = Present + Half Day × 0.5
+</p>
+
+<div id="summary" style="margin-top:12px"></div>
+
+</div>
+
+
+<!-- DAILY -->
+<div class="card">
+
+<h2>📊 Daily Report</h2>
+
+<div class="grid">
+
+<div>
+<label>Date</label>
+<input type="date" id="reportDate">
+</div>
+
+<div style="display:flex;align-items:end">
+<button class="blue" style="width:100%"
+onclick="dailyReport()">SHOW REPORT</button>
+</div>
+
+</div>
+
+<div class="table" style="margin-top:10px">
+<table>
+<thead>
+<tr>
+<th>Employee</th>
 <th>IN</th>
 <th>OUT</th>
 <th>Status</th>
 </tr>
-
 </thead>
-
-<tbody id="dailyTable"></tbody>
-
+<tbody id="daily"></tbody>
 </table>
-
-</div>
-
 </div>
 
 </div>
@@ -1287,73 +645,89 @@ Show Daily Report
 
 <script>
 
+/* ================================
+ SUPABASE
+================================ */
+
 const SUPABASE_URL =
 "https://nkbbcygtuaejcuquwhpi.supabase.co";
 
+/* YAHAN APNI SUPABASE PUBLISHABLE KEY PASTE KAREIN */
 const SUPABASE_KEY =
 "sb_publishable_wac3Xs5ba2V6slW990JvHQ_-4bsLKtS";
 
 const db =
-supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
+supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const ADMIN_USER="Baijnathpayol";
+const ADMIN_PASS="123456789";
 
 let employee=null;
-let adminLogged=false;
-let employeeCalendarDate=new Date();
+let employeeList=[];
+let holidayList=[];
+let deferredPrompt=null;
 
-function $(id){
-return document.getElementById(id);
-}
+
+/* ================================
+ COMMON
+================================ */
+
+function $(id){return document.getElementById(id)}
 
 function today(){
-
 let d=new Date();
-
 return d.getFullYear()+"-"+
 String(d.getMonth()+1).padStart(2,"0")+"-"+
 String(d.getDate()).padStart(2,"0");
-
 }
 
-function month(){
+function month(){return today().slice(0,7)}
 
-let d=new Date();
-
-return d.getFullYear()+"-"+
-String(d.getMonth()+1).padStart(2,"0");
-
+function message(id,text,ok=false){
+$(id).textContent=text;
+$(id).className="msg show "+(ok?"ok":"err");
 }
 
-function showLogin(type){
-
-$("employeeLogin").classList.toggle(
-"hidden",type!=="employee");
-
-$("adminLogin").classList.toggle(
-"hidden",type!=="admin");
-
-$("employeeTab").classList.toggle(
-"active",type==="employee");
-
-$("adminTab").classList.toggle(
-"active",type==="admin");
-
-$("loginMessage").innerHTML="";
-
+function escapeHTML(x){
+return String(x??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 }
 
-async function employeeLogin(){
+
+/* ================================
+ LOGIN
+================================ */
+
+function changeLogin(){
+let admin=$("loginType").value==="admin";
+$("employeeLogin").classList.toggle("hidden",admin);
+$("adminLogin").classList.toggle("hidden",!admin);
+}
+
+async function login(){
+
+if($("loginType").value==="admin"){
+
+if(
+$("adminUser").value===ADMIN_USER &&
+$("adminPassword").value===ADMIN_PASS
+){
+showAdmin();
+}else{
+message("loginMsg","Admin username/password galat.");
+}
+return;
+}
 
 let id=$("employeeId").value.trim();
-let password=$("employeePassword").value;
+let pass=$("employeePassword").value;
 
-if(!id||!password){
-
-$("loginMessage").innerHTML=
-'<div class="error">Employee ID and password required.</div>';
-
+if(!id||!pass){
+message("loginMsg","Employee ID aur password bharein.");
 return;
 }
 
@@ -1361,385 +735,440 @@ let {data,error}=await db
 .from("employees")
 .select("*")
 .eq("employee_id",id)
-.eq("password",password)
+.eq("password",pass)
 .maybeSingle();
 
 if(error){
-
-$("loginMessage").innerHTML=
-'<div class="error">'+escapeHtml(error.message)+"</div>";
-
+message("loginMsg",error.message);
 return;
 }
 
 if(!data){
-
-$("loginMessage").innerHTML=
-'<div class="error">Invalid Employee ID or Password.</div>';
-
+message("loginMsg","Employee ID ya password galat.");
 return;
 }
 
 employee=data;
-
-localStorage.setItem(
-"payol_employee_id",
-employee.employee_id);
-
-openEmployee();
-
+showEmployee();
 }
 
-async function adminLogin(){
-
-let username=$("adminUsername").value.trim();
-let password=$("adminPassword").value;
-
-if(
-username==="Baijnathpayol" &&
-password==="123456789"
-){
-
-adminLogged=true;
-
-localStorage.setItem(
-"payol_admin","1");
-
-openAdmin();
-
-}else{
-
-$("loginMessage").innerHTML=
-'<div class="error">Invalid admin login.</div>';
-
-}
-
-}
-
-function getInitial(name){
-
-return String(name||"E")
-.trim()
-.charAt(0)
-.toUpperCase();
-
-}
-
-function openEmployee(){
+function showEmployee(){
 
 $("loginPage").classList.add("hidden");
 $("adminPage").classList.add("hidden");
 $("employeePage").classList.remove("hidden");
-$("mainHeader").classList.remove("hidden");
 
-let name=
-employee.name||
-employee.employee_name||
-employee.employee_id;
+$("empName").textContent=employee.name;
+$("empDetails").textContent=
+employee.employee_id+" • "+(employee.post||"Employee");
 
-let post=
-employee.post||
-"Employee";
+$("avatar").textContent=
+(employee.name||"P").charAt(0).toUpperCase();
 
-$("employeeWelcome").textContent=
-name;
-
-$("employeeInfo").innerHTML=
-"Employee ID: "+
-escapeHtml(employee.employee_id)+
-" &nbsp; • &nbsp; <span class='post'>"+
-escapeHtml(post)+
-"</span>";
-
-$("employeeAvatar").textContent=
-getInitial(name);
-
-$("employeeMonth").value=month();
-
-employeeCalendarDate=new Date();
-
-loadEmployeeData();
-
+loadEmployee();
 }
 
-function openAdmin(){
+function showAdmin(){
 
 $("loginPage").classList.add("hidden");
 $("employeePage").classList.add("hidden");
 $("adminPage").classList.remove("hidden");
-$("mainHeader").classList.remove("hidden");
 
-$("salaryMonth").value=month();
-$("reportDate").value=today();
-
-loadOfficeSettings();
-loadEmployees();
-loadHolidays();
-loadAdminLeaves();
-
+loadAdmin();
 }
 
 function logout(){
-
 employee=null;
-adminLogged=false;
-
-localStorage.removeItem("payol_employee_id");
-localStorage.removeItem("payol_admin");
-
-$("mainHeader").classList.add("hidden");
 $("employeePage").classList.add("hidden");
 $("adminPage").classList.add("hidden");
 $("loginPage").classList.remove("hidden");
-
 }
 
-async function loadEmployeeData(){
 
-await employeeCalendar();
-await loadMyLeaves();
-await loadTodayAttendance();
-await loadEmployeeStats();
+/* ================================
+ GPS
+================================ */
 
-}
+function getGPS(){
 
-async function getOfficeSettings(){
-
-let {data}=await db
-.from("office_settings")
-.select("*")
-.eq("id",1)
-.maybeSingle();
-
-return data;
-
-}
-
-function distanceMeters(
-lat1,lon1,lat2,lon2){
-
-const R=6371000;
-
-const p1=lat1*Math.PI/180;
-const p2=lat2*Math.PI/180;
-
-const dp=(lat2-lat1)*Math.PI/180;
-const dl=(lon2-lon1)*Math.PI/180;
-
-const a=
-Math.sin(dp/2)**2+
-Math.cos(p1)*
-Math.cos(p2)*
-Math.sin(dl/2)**2;
-
-const c=
-2*Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a));
-
-return R*c;
-
-}
-
-async function markAttendance(type){
-
-if(!employee)return;
-
-$("attendanceMessage").innerHTML=
-'<div class="warning">📍 Getting your current location...</div>';
+return new Promise((resolve,reject)=>{
 
 if(!navigator.geolocation){
-
-$("attendanceMessage").innerHTML=
-'<div class="error">GPS is not supported on this device.</div>';
-
-return;
-}
-
-let office=await getOfficeSettings();
-
-if(!office){
-
-$("attendanceMessage").innerHTML=
-'<div class="error">Office location is not configured.</div>';
-
+reject(new Error("GPS supported nahi hai."));
 return;
 }
 
 navigator.geolocation.getCurrentPosition(
-
-async position=>{
-
-let lat=position.coords.latitude;
-let lng=position.coords.longitude;
-
-let distance=distanceMeters(
-lat,
-lng,
-office.latitude,
-office.longitude);
-
-let radius=office.radius_meters||100;
-
-if(distance>radius){
-
-$("attendanceMessage").innerHTML=
-'<div class="error">You are '+Math.round(distance)+
-' meters away. Allowed radius: '+radius+' meters.</div>';
-
-return;
-}
-
-let date=today();
-let time=new Date().toTimeString().slice(0,8);
-
-let {data:existing}=await db
-.from("attendance")
-.select("*")
-.eq("employee_id",employee.employee_id)
-.eq("attendance_date",date)
-.order("id",{ascending:false})
-.limit(1);
-
-let row=existing&&existing[0];
-
-if(type==="IN" && row?.in_time){
-
-$("attendanceMessage").innerHTML=
-'<div class="warning">IN is already marked today.</div>';
-
-return;
-}
-
-if(type==="OUT" && !row?.in_time){
-
-$("attendanceMessage").innerHTML=
-'<div class="error">Please mark IN first.</div>';
-
-return;
-}
-
-let payload={
-employee_id:employee.employee_id,
-employee_name:
-employee.name||
-employee.employee_name,
-attendance_date:date,
-latitude:lat,
-longitude:lng
-};
-
-if(type==="IN"){
-payload.in_time=time;
-}else{
-payload.out_time=time;
-}
-
-let result;
-
-if(row){
-
-result=await db
-.from("attendance")
-.update(payload)
-.eq("id",row.id);
-
-}else{
-
-result=await db
-.from("attendance")
-.insert(payload);
-
-}
-
-if(result.error){
-
-$("attendanceMessage").innerHTML=
-'<div class="error">'+
-escapeHtml(result.error.message)+
-"</div>";
-
-return;
-}
-
-$("attendanceMessage").innerHTML=
-'<div class="success">✓ Attendance '+type+
-' marked successfully. Distance: '+
-Math.round(distance)+' meters.</div>';
-
-await loadEmployeeData();
-
-},
-
-error=>{
-
-$("attendanceMessage").innerHTML=
-'<div class="error">Location permission is required for attendance.</div>';
-
-},
-
+resolve,
+reject,
 {
 enableHighAccuracy:true,
 timeout:15000,
 maximumAge:0
 }
+);
 
+});
+}
+
+function distance(lat1,lon1,lat2,lon2){
+
+const R=6371000;
+const p=Math.PI/180;
+
+const a=
+0.5-
+Math.cos((lat2-lat1)*p)/2+
+Math.cos(lat1*p)*
+Math.cos(lat2*p)*
+(1-Math.cos((lon2-lon1)*p))/2;
+
+return 2*R*Math.asin(Math.sqrt(a));
+}
+
+
+/* ================================
+ ATTENDANCE
+================================ */
+
+async function attendance(type){
+
+try{
+
+let position=await getGPS();
+
+let lat=position.coords.latitude;
+let lng=position.coords.longitude;
+
+let {data:office,error:oerr}=await db
+.from("office_settings")
+.select("*")
+.eq("id",1)
+.maybeSingle();
+
+if(oerr)throw oerr;
+
+if(!office||
+office.latitude==null||
+office.longitude==null){
+
+throw new Error(
+"Admin panel se office location set karein."
 );
 
 }
 
-function status(inTime,outTime){
+let dist=distance(
+lat,lng,
+Number(office.latitude),
+Number(office.longitude)
+);
 
-if(!inTime||!outTime)
-return null;
+if(dist>100){
 
-let inMinutes=timeMinutes(inTime);
-let outMinutes=timeMinutes(outTime);
+throw new Error(
+"Office se "+Math.round(dist)+
+" meter door hain. 100 meter ke andar aayein."
+);
 
-if(inMinutes>=720)
-return "Half Day";
+}
 
-if(outMinutes<=840)
-return "Half Day";
+let date=today();
+
+let {data:old,error}=await db
+.from("attendance")
+.select("*")
+.eq("employee_id",employee.employee_id)
+.eq("attendance_date",date);
+
+if(error)throw error;
+
+if(type==="IN" &&
+old.some(x=>x.attendance_type==="IN"))
+throw new Error("Aaj ka IN already marked hai.");
+
+if(type==="OUT" &&
+!old.some(x=>x.attendance_type==="IN"))
+throw new Error("Pehle IN mark karein.");
+
+if(type==="OUT" &&
+old.some(x=>x.attendance_type==="OUT"))
+throw new Error("Aaj ka OUT already marked hai.");
+
+let {error:insertError}=await db
+.from("attendance")
+.insert({
+employee_id:employee.employee_id,
+employee_name:employee.name,
+attendance_type:type,
+latitude:lat,
+longitude:lng,
+distance_meters:dist,
+attendance_date:date
+});
+
+if(insertError)throw insertError;
+
+message(
+"attendanceMsg",
+type+" successfully marked.",
+true
+);
+
+loadEmployee();
+
+}catch(e){
+
+message(
+"attendanceMsg",
+e.message||"Attendance failed."
+);
+
+}
+
+}
+
+
+/* ================================
+ STATUS
+================================ */
+
+function groupAttendance(rows){
+
+let result={};
+
+rows.forEach(r=>{
+
+if(!result[r.attendance_date])
+result[r.attendance_date]={};
+
+if(
+r.attendance_type==="IN" &&
+!result[r.attendance_date].IN
+)
+result[r.attendance_date].IN=r;
+
+if(r.attendance_type==="OUT")
+result[r.attendance_date].OUT=r;
+
+});
+
+return result;
+}
+
+function status(IN,OUT){
+
+if(!IN||!OUT)return "Incomplete";
+
+let a=new Date(IN.created_at);
+let b=new Date(OUT.created_at);
+
+let inMinutes=a.getHours()*60+a.getMinutes();
+let outMinutes=b.getHours()*60+b.getMinutes();
+
+let hours=(b-a)/3600000;
+
+if(inMinutes>=720)return "Half Day";
+
+if(outMinutes<=120)return "Half Day";
 
 if(inMinutes<720 && outMinutes>=1080)
 return "Full Day";
 
-let diff=outMinutes-inMinutes;
-
-if(diff>=480)
-return "Full Day";
-
-return "Half Day";
-
+return hours>=8?"Full Day":"Half Day";
 }
 
-function timeMinutes(t){
 
-let parts=t.split(":").map(Number);
+/* ================================
+ EMPLOYEE
+================================ */
 
-return parts[0]*60+parts[1];
+async function loadEmployee(){
 
+let {data:att}=await db
+.from("attendance")
+.select("*")
+.eq("employee_id",employee.employee_id);
+
+let {data:leaves}=await db
+.from("leave_requests")
+.select("*")
+.eq("employee_id",employee.employee_id)
+.order("leave_date",{ascending:false});
+
+let {data:holidays}=await db
+.from("holidays")
+.select("*");
+
+let s=calculate(
+att||[],leaves||[],holidays||[],month()
+);
+
+$("employeeStats").innerHTML=`
+<div class="stat"><b>${s.present}</b><span>Present</span></div>
+<div class="stat"><b>${s.half}</b><span>Half Day</span></div>
+<div class="stat"><b>${s.leave}</b><span>Leave</span></div>
+<div class="stat"><b>${s.absent}</b><span>Absent</span></div>
+<div class="stat"><b>${s.payable.toFixed(1)}</b><span>Payable Days</span></div>
+`;
+
+$("myLeaves").innerHTML=
+(leaves||[]).map(x=>`
+<tr>
+<td>${escapeHTML(x.leave_date)}</td>
+<td>${escapeHTML(x.reason)}</td>
+<td>
+<span class="badge ${String(x.status).toLowerCase()}">
+${escapeHTML(x.status)}
+</span>
+</td>
+</tr>
+`).join("")||
+"<tr><td colspan='3'>No leave request.</td></tr>";
+
+employeeCalendar();
 }
 
-function groupAttendance(rows){
 
-let g={};
+/* ================================
+ LEAVE
+================================ */
 
-rows.forEach(x=>{
+async function applyLeave(){
 
-if(!g[x.attendance_date])
-g[x.attendance_date]={};
+let date=$("leaveDate").value;
+let reason=$("leaveReason").value.trim();
 
-if(x.in_time)
-g[x.attendance_date].IN=x.in_time;
+if(!date||!reason){
+message("leaveMsg","Leave date aur reason bharein.");
+return;
+}
 
-if(x.out_time)
-g[x.attendance_date].OUT=x.out_time;
+let {data:old}=await db
+.from("leave_requests")
+.select("*")
+.eq("employee_id",employee.employee_id)
+.eq("leave_date",date)
+.maybeSingle();
 
+if(old){
+message("leaveMsg","Is date ki leave request already hai.");
+return;
+}
+
+let {error}=await db
+.from("leave_requests")
+.insert({
+employee_id:employee.employee_id,
+employee_name:employee.name,
+leave_date:date,
+reason:reason,
+status:"PENDING"
 });
 
-return g;
+if(error){
+message("leaveMsg",error.message);
+}else{
+
+$("leaveReason").value="";
+
+message(
+"leaveMsg",
+"Leave request submit ho gaya.",
+true
+);
+
+loadEmployee();
+}
+}
+
+
+/* ================================
+ CALCULATION
+================================ */
+
+function calculate(att,leaves,holidays,mon){
+
+let groups=groupAttendance(
+att.filter(x=>String(x.attendance_date).startsWith(mon))
+);
+
+let approved=new Set(
+leaves
+.filter(x=>
+x.status==="APPROVED" &&
+String(x.leave_date).startsWith(mon)
+)
+.map(x=>x.leave_date)
+);
+
+let holiday=new Set(
+holidays
+.filter(x=>String(x.holiday_date).startsWith(mon))
+.map(x=>x.holiday_date)
+);
+
+let [y,m]=mon.split("-").map(Number);
+let totalDays=new Date(y,m,0).getDate();
+
+let present=0,half=0,leave=0,absent=0;
+
+for(let d=1;d<=totalDays;d++){
+
+let ds=
+y+"-"+String(m).padStart(2,"0")+"-"+
+String(d).padStart(2,"0");
+
+let day=new Date(y,m-1,d).getDay();
+
+if(groups[ds]?.IN&&groups[ds]?.OUT){
+
+if(
+status(groups[ds].IN,groups[ds].OUT)
+==="Full Day"
+)present++;
+else half++;
+
+}else if(day===0||holiday.has(ds)){
+
+}else if(approved.has(ds)){
+
+leave++;
+
+}else{
+
+absent++;
+}
+}
+
+return{
+present,
+half,
+leave,
+absent,
+payable:present+half*.5
+};
+}
+
+
+/* ================================
+ CALENDAR
+================================ */
+
+let employeeCalendarDate=new Date();
+
+function changeEmployeeMonth(n){
+
+employeeCalendarDate.setMonth(
+employeeCalendarDate.getMonth()+n
+);
+
+let y=employeeCalendarDate.getFullYear();
+let m=String(employeeCalendarDate.getMonth()+1)
+.padStart(2,"0");
+
+$("employeeMonth").value=y+"-"+m;
+employeeCalendar();
 
 }
 
@@ -1751,21 +1180,17 @@ let mon=$("employeeMonth").value||month();
 
 let [y,m]=mon.split("-").map(Number);
 
-employeeCalendarDate=new Date(y,m-1,1);
+employeeCalendarDate=
+new Date(y,m-1,1);
 
 $("employeeMonthLabel").textContent=
 employeeCalendarDate.toLocaleDateString(
 "en-IN",
-{
-month:"long",
-year:"numeric"
-});
+{month:"long",year:"numeric"}
+);
 
-let total=
-new Date(y,m,0).getDate();
-
-let start=
-new Date(y,m-1,1).getDay();
+let total=new Date(y,m,0).getDate();
+let start=new Date(y,m-1,1).getDay();
 
 let {data:att}=await db
 .from("attendance")
@@ -1774,7 +1199,8 @@ let {data:att}=await db
 .gte("attendance_date",mon+"-01")
 .lte(
 "attendance_date",
-mon+"-"+String(total).padStart(2,"0"));
+mon+"-"+String(total).padStart(2,"0")
+);
 
 let {data:leave}=await db
 .from("leave_requests")
@@ -1788,13 +1214,11 @@ let {data:hol}=await db
 
 let g=groupAttendance(att||[]);
 
-let ls=new Set(
-(leave||[]).map(x=>x.leave_date));
+let ls=new Set((leave||[]).map(x=>x.leave_date));
 
 let hs=new Map(
-(hol||[]).map(x=>[
-x.holiday_date,
-x.name]));
+(hol||[]).map(x=>[x.holiday_date,x.name])
+);
 
 let html="";
 
@@ -1803,38 +1227,26 @@ let html="";
 html+=`<div class="calhead">${x}</div>`;
 });
 
-for(let i=0;i<start;i++){
+for(let i=0;i<start;i++)
 html+=`<div class="day empty"></div>`;
-}
 
 for(let d=1;d<=total;d++){
 
 let ds=
-y+"-"+
-String(m).padStart(2,"0")+"-"+
+y+"-"+String(m).padStart(2,"0")+"-"+
 String(d).padStart(2,"0");
 
-let dow=
-new Date(y,m-1,d).getDay();
+let dow=new Date(y,m-1,d).getDay();
 
 let text="Absent";
 let cls="absent";
 
-if(g[ds]?.IN && g[ds]?.OUT){
+if(g[ds]?.IN&&g[ds]?.OUT){
 
-let st=status(
-g[ds].IN,
-g[ds].OUT);
+let st=status(g[ds].IN,g[ds].OUT);
 
-text=
-st==="Full Day"
-?"Present"
-:"Half Day";
-
-cls=
-st==="Full Day"
-?"present"
-:"half";
+text=st==="Full Day"?"Present":"Half Day";
+cls=st==="Full Day"?"present":"half";
 
 }else if(ls.has(ds)){
 
@@ -1843,7 +1255,7 @@ cls="leave";
 
 }else if(hs.has(ds)){
 
-text=hs.get(ds)||"Holiday";
+text="Holiday";
 cls="holiday";
 
 }else if(dow===0){
@@ -1854,298 +1266,175 @@ cls="sunday";
 }
 
 html+=`
-
 <div class="day ${ds===today()?"today":""}">
 <b>${d}</b>
 <small>
-<span class="badge ${cls}">
-${escapeHtml(text)}
-</span>
+<span class="badge ${cls}">${text}</span>
 </small>
-</div>
-
-`;
-
+</div>`;
 }
 
 $("calendar").innerHTML=html;
-
 }
 
-function changeEmployeeMonth(n){
 
-employeeCalendarDate.setMonth(
-employeeCalendarDate.getMonth()+n);
+/* ================================
+ ADMIN
+================================ */
 
-let y=employeeCalendarDate.getFullYear();
+async function loadAdmin(){
 
-let m=
-String(employeeCalendarDate.getMonth()+1)
-.padStart(2,"0");
+$("summaryMonth").value=month();
+$("reportDate").value=today();
+$("holidayDate").value=today();
 
-$("employeeMonth").value=y+"-"+m;
-
-employeeCalendar();
-
-}
-
-async function loadTodayAttendance(){
-
-let {data}=await db
-.from("attendance")
+let {data:emps}=await db
+.from("employees")
 .select("*")
-.eq("employee_id",employee.employee_id)
-.eq("attendance_date",today())
-.order("id",{ascending:false})
-.limit(1);
+.order("employee_id");
 
-let row=data&&data[0];
-
-if(!row){
-
-$("todayAttendance").textContent=
-"No attendance marked today.";
-
-return;
-}
-
-$("todayAttendance").innerHTML=
-"Today's record → IN: "+
-(row.in_time||"--")+
-" &nbsp; | &nbsp; OUT: "+
-(row.out_time||"--");
-
-}
-
-async function loadEmployeeStats(){
-
-let mon=month();
-
-let total=
-new Date(
-Number(mon.split("-")[0]),
-Number(mon.split("-")[1]),
-0
-).getDate();
-
-let {data:att}=await db
-.from("attendance")
+let {data:hol}=await db
+.from("holidays")
 .select("*")
-.eq("employee_id",employee.employee_id)
-.gte("attendance_date",mon+"-01")
-.lte(
-"attendance_date",
-mon+"-"+String(total).padStart(2,"0"));
+.order("holiday_date");
 
-let {data:leave}=await db
-.from("leave_requests")
+employeeList=emps||[];
+holidayList=hol||[];
+
+renderEmployees();
+renderHolidays();
+renderSummaryEmployees();
+loadLeaves();
+
+let office=await db
+.from("office_settings")
 .select("*")
-.eq("employee_id",employee.employee_id)
-.eq("status","APPROVED");
+.eq("id",1)
+.maybeSingle();
 
-let g=groupAttendance(att||[]);
+if(office.data){
 
-let present=0;
-let half=0;
-
-Object.values(g).forEach(x=>{
-
-if(x.IN&&x.OUT){
-
-if(status(x.IN,x.OUT)==="Full Day")
-present++;
-else
-half++;
-
+$("officeLat").value=office.data.latitude??"";
+$("officeLng").value=office.data.longitude??"";
 }
 
-});
-
-let leaveDays=new Set(
-(leave||[]).map(x=>x.leave_date));
-
-let leaveCount=0;
-
-leaveDays.forEach(d=>{
-if(d.startsWith(mon))
-leaveCount++;
-});
-
-let workingDays=0;
-
-for(let d=1;d<=total;d++){
-
-let dt=
-new Date(
-Number(mon.split("-")[0]),
-Number(mon.split("-")[1])-1,
-d);
-
-if(dt.getDay()!==0)
-workingDays++;
-
+dailyReport();
 }
 
-let absent=
-Math.max(
-0,
-workingDays-present-half-leaveCount);
+function renderEmployees(){
 
-let payable=
-present+
-half*.5+
-leaveCount;
-
-$("presentCount").textContent=present;
-$("halfCount").textContent=half;
-$("leaveCount").textContent=leaveCount;
-$("absentCount").textContent=absent;
-$("payableCount").textContent=payable;
-
+$("employees").innerHTML=
+employeeList.map(e=>`
+<tr>
+<td>${escapeHTML(e.employee_id)}</td>
+<td>${escapeHTML(e.name)}</td>
+<td>${escapeHTML(e.post||"")}</td>
+<td>
+<button class="red"
+onclick="deleteEmployee('${escapeHTML(e.employee_id)}')">
+Delete
+</button>
+</td>
+</tr>
+`).join("")||
+"<tr><td colspan='4'>No employees.</td></tr>";
 }
 
-async function applyLeave(){
+async function addEmployee(){
 
-if(!employee)return;
+let id=$("newId").value.trim();
+let name=$("newName").value.trim();
+let post=$("newPost").value.trim();
+let password=$("newPassword").value;
 
-let date=$("leaveDate").value;
-let reason=$("leaveReason").value.trim();
+if(!id||!name||!password){
 
-if(!date||!reason){
-
-$("leaveMessage").innerHTML=
-'<div class="error">Date and reason are required.</div>';
+message(
+"employeeMsg",
+"Employee ID, Name aur Password required."
+);
 
 return;
 }
 
 let {error}=await db
-.from("leave_requests")
+.from("employees")
 .insert({
-
-employee_id:employee.employee_id,
-employee_name:
-employee.name||
-employee.employee_name,
-leave_date:date,
-reason:reason,
-status:"PENDING"
-
+employee_id:id,
+name:name,
+post:post,
+password:password
 });
 
 if(error){
 
-$("leaveMessage").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
+message("employeeMsg",error.message);
 
-return;
+}else{
+
+$("newId").value="";
+$("newName").value="";
+$("newPost").value="";
+$("newPassword").value="";
+
+message(
+"employeeMsg",
+"Employee added.",
+true
+);
+
+loadAdmin();
+}
 }
 
-$("leaveDate").value="";
-$("leaveReason").value="";
+async function deleteEmployee(id){
 
-$("leaveMessage").innerHTML=
-'<div class="success">✓ Leave request submitted successfully.</div>';
+if(!confirm("Employee delete karein?"))return;
 
-loadMyLeaves();
+let {error}=await db
+.from("employees")
+.delete()
+.eq("employee_id",id);
 
-}
-
-async function loadMyLeaves(){
-
-let {data,error}=await db
-.from("leave_requests")
-.select("*")
-.eq("employee_id",employee.employee_id)
-.order("leave_date",{ascending:false});
-
-if(error){
-
-$("myLeaves").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
-
-return;
-}
-
-if(!data||!data.length){
-
-$("myLeaves").innerHTML=
-'<div class="empty">No leave requests.</div>';
-
-return;
-}
-
-let html="";
-
-data.forEach(x=>{
-
-let cls=
-x.status==="APPROVED"
-?"present":
-x.status==="REJECTED"
-?"absent":
-"half";
-
-html+=`
-
-<div class="employee-row">
-
-<div>
-
-<b>${escapeHtml(x.leave_date)}</b>
-
-<br>
-
-<small>${escapeHtml(x.reason)}</small>
-
-</div>
-
-<span class="badge ${cls}">
-${escapeHtml(x.status)}
-</span>
-
-</div>
-
-`;
-
-});
-
-$("myLeaves").innerHTML=html;
-
+if(error)alert(error.message);
+else loadAdmin();
 }
 
 
-/* ADMIN */
+/* OFFICE */
 
-async function loadOfficeSettings(){
+async function currentGPS(){
 
-let data=await getOfficeSettings();
+try{
 
-if(!data)return;
+let p=await getGPS();
 
-$("officeLat").value=data.latitude||"";
-$("officeLng").value=data.longitude||"";
-$("officeRadius").value=data.radius_meters||100;
+$("officeLat").value=p.coords.latitude;
+$("officeLng").value=p.coords.longitude;
 
+message(
+"officeMsg",
+"GPS mil gaya. Ab SAVE LOCATION dabayein.",
+true
+);
+
+}catch(e){
+
+message("officeMsg",e.message);
+}
 }
 
-async function saveOfficeSettings(){
+async function saveOffice(){
 
-let latitude=parseFloat($("officeLat").value);
-let longitude=parseFloat($("officeLng").value);
-let radius=parseInt($("officeRadius").value)||100;
+let lat=Number($("officeLat").value);
+let lng=Number($("officeLng").value);
 
-if(
-isNaN(latitude)||
-isNaN(longitude)
-){
+if(!Number.isFinite(lat)||!Number.isFinite(lng)){
 
-$("officeMessage").innerHTML=
-'<div class="error">Latitude and Longitude required.</div>';
+message(
+"officeMsg",
+"Valid GPS coordinates bharein."
+);
 
 return;
 }
@@ -2153,180 +1442,45 @@ return;
 let {error}=await db
 .from("office_settings")
 .upsert({
-
 id:1,
-latitude:latitude,
-longitude:longitude,
-radius_meters:radius
-
+latitude:lat,
+longitude:lng,
+radius_meters:100
 });
 
 if(error){
 
-$("officeMessage").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
+message("officeMsg",error.message);
 
-return;
+}else{
+
+message(
+"officeMsg",
+"Office location save ho gaya.",
+true
+);
+}
 }
 
-$("officeMessage").innerHTML=
-'<div class="success">✓ Office location saved successfully.</div>';
 
-}
+/* HOLIDAY */
 
-async function addEmployee(){
+function renderHolidays(){
 
-let id=$("newEmployeeId").value.trim();
-let name=$("newEmployeeName").value.trim();
-let post=$("newEmployeePost").value.trim();
-let password=$("newEmployeePassword").value;
-let salary=parseFloat($("newEmployeeSalary").value)||0;
-
-if(!id||!name||!post||!password){
-
-$("employeeAdminMessage").innerHTML=
-'<div class="error">Employee ID, name, post and password are required.</div>';
-
-return;
-}
-
-let {error}=await db
-.from("employees")
-.insert({
-
-employee_id:id,
-name:name,
-post:post,
-password:password,
-salary:salary
-
-});
-
-if(error){
-
-$("employeeAdminMessage").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
-
-return;
-}
-
-$("newEmployeeId").value="";
-$("newEmployeeName").value="";
-$("newEmployeePost").value="";
-$("newEmployeePassword").value="";
-$("newEmployeeSalary").value="";
-
-$("employeeAdminMessage").innerHTML=
-'<div class="success">✓ Employee added successfully.</div>';
-
-loadEmployees();
-
-}
-
-async function loadEmployees(){
-
-let {data,error}=await db
-.from("employees")
-.select("*")
-.order("employee_id");
-
-if(error){
-
-$("employeeList").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
-
-return;
-}
-
-if(!data||!data.length){
-
-$("employeeList").innerHTML=
-'<div class="empty">No employees found.</div>';
-
-return;
-}
-
-let html="";
-
-data.forEach(x=>{
-
-let name=
-x.name||
-x.employee_name||
-x.employee_id;
-
-let post=
-x.post||
-"Employee";
-
-html+=`
-
-<div class="employee-row">
-
-<div class="employee-main">
-
-<div class="mini-avatar">
-${escapeHtml(getInitial(name))}
-</div>
-
-<div>
-
-<b>${escapeHtml(name)}</b>
-
-<br>
-
-<small>
-ID: ${escapeHtml(x.employee_id)}
-<br>
-<span class="post">${escapeHtml(post)}</span>
-&nbsp; • &nbsp;
-Salary: ₹${Number(x.salary||0).toLocaleString("en-IN")}
-</small>
-
-</div>
-
-</div>
-
-<button
-class="btn small"
-onclick="deleteEmployee('${escapeJs(x.employee_id)}')">
+$("holidays").innerHTML=
+holidayList.map(h=>`
+<tr>
+<td>${escapeHTML(h.holiday_date)}</td>
+<td>${escapeHTML(h.name)}</td>
+<td>
+<button class="red"
+onclick="deleteHoliday('${escapeHTML(h.id)}')">
 Delete
 </button>
-
-</div>
-
-`;
-
-});
-
-$("employeeList").innerHTML=html;
-
-}
-
-async function deleteEmployee(id){
-
-if(!confirm("Delete this employee?"))
-return;
-
-let {error}=await db
-.from("employees")
-.delete()
-.eq("employee_id",id);
-
-if(error){
-
-alert(error.message);
-return;
-}
-
-loadEmployees();
-
+</td>
+</tr>
+`).join("")||
+"<tr><td colspan='3'>No holidays.</td></tr>";
 }
 
 async function addHoliday(){
@@ -2336,8 +1490,10 @@ let name=$("holidayName").value.trim();
 
 if(!date||!name){
 
-$("holidayMessage").innerHTML=
-'<div class="error">Date and holiday name required.</div>';
+message(
+"holidayMsg",
+"Date aur holiday name bharein."
+);
 
 return;
 }
@@ -2345,235 +1501,137 @@ return;
 let {error}=await db
 .from("holidays")
 .insert({
-
 holiday_date:date,
 name:name
-
 });
 
 if(error){
 
-$("holidayMessage").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
+message("holidayMsg",error.message);
 
-return;
-}
+}else{
 
-$("holidayDate").value="";
 $("holidayName").value="";
 
-$("holidayMessage").innerHTML=
-'<div class="success">✓ Holiday added successfully.</div>';
+message(
+"holidayMsg",
+"Holiday added.",
+true
+);
 
-loadHolidays();
-
+loadAdmin();
 }
-
-async function loadHolidays(){
-
-let {data,error}=await db
-.from("holidays")
-.select("*")
-.order("holiday_date");
-
-if(error){
-
-$("holidayList").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
-
-return;
-}
-
-if(!data||!data.length){
-
-$("holidayList").innerHTML=
-'<div class="empty">No holidays added.</div>';
-
-return;
-}
-
-let html="";
-
-data.forEach(x=>{
-
-html+=`
-
-<div class="employee-row">
-
-<div>
-
-<b>${escapeHtml(x.name)}</b>
-
-<br>
-
-<small>${escapeHtml(x.holiday_date)}</small>
-
-</div>
-
-<button
-class="btn small"
-onclick="deleteHoliday(${x.id})">
-Delete
-</button>
-
-</div>
-
-`;
-
-});
-
-$("holidayList").innerHTML=html;
-
 }
 
 async function deleteHoliday(id){
 
-if(!confirm("Delete this holiday?"))
-return;
+if(!confirm("Holiday delete karein?"))return;
 
 let {error}=await db
 .from("holidays")
 .delete()
 .eq("id",id);
 
-if(error){
-
-alert(error.message);
-return;
+if(error)alert(error.message);
+else loadAdmin();
 }
 
-loadHolidays();
 
-}
+/* LEAVES */
 
-async function loadAdminLeaves(){
+async function loadLeaves(){
 
 let {data,error}=await db
 .from("leave_requests")
 .select("*")
-.order("created_at",{ascending:false});
+.order("leave_date",{ascending:false});
 
 if(error){
 
-$("adminLeaveList").innerHTML=
-'<div class="error">'+
-escapeHtml(error.message)+
-"</div>";
+$("leaveRequests").innerHTML=
+"<tr><td colspan='5'>"+
+escapeHTML(error.message)+
+"</td></tr>";
 
 return;
 }
 
-if(!data||!data.length){
-
-$("adminLeaveList").innerHTML=
-'<div class="empty">No leave requests.</div>';
-
-return;
-}
-
-let html="";
-
-data.forEach(x=>{
-
-html+=`
-
-<div class="employee-row">
-
-<div>
-
-<b>${escapeHtml(x.employee_name||x.employee_id)}</b>
-
+$("leaveRequests").innerHTML=
+(data||[]).map(x=>`
+<tr>
+<td>
+${escapeHTML(x.employee_name)}
 <br>
+<small>${escapeHTML(x.employee_id)}</small>
+</td>
 
-<small>
-${escapeHtml(x.leave_date)} — 
-${escapeHtml(x.reason)}
-</small>
+<td>${escapeHTML(x.leave_date)}</td>
 
-<br>
+<td>${escapeHTML(x.reason)}</td>
 
-<span class="badge ${
-x.status==="APPROVED"
-?"present":
-x.status==="REJECTED"
-?"absent":
-"half"}">
-${escapeHtml(x.status)}
+<td>
+<span class="badge ${String(x.status).toLowerCase()}">
+${escapeHTML(x.status)}
 </span>
+</td>
 
-</div>
-
-<div class="flex">
-
+<td>
 ${
 x.status==="PENDING"
 ?
 `
-
-<button
-class="btn small green"
-onclick="updateLeave(${x.id},'APPROVED')">
+<button class="green"
+onclick="leaveStatus('${x.id}','APPROVED')">
 Approve
 </button>
 
-<button
-class="btn small"
-onclick="updateLeave(${x.id},'REJECTED')">
+<button class="red"
+onclick="leaveStatus('${x.id}','REJECTED')">
 Reject
 </button>
-
 `
-:""
+:"-"
+}
+</td>
+</tr>
+`).join("")||
+"<tr><td colspan='5'>No leave requests.</td></tr>";
 }
 
-</div>
-
-</div>
-
-`;
-
-});
-
-$("adminLeaveList").innerHTML=html;
-
-}
-
-async function updateLeave(id,statusValue){
+async function leaveStatus(id,status){
 
 let {error}=await db
 .from("leave_requests")
-.update({
-status:statusValue
-})
+.update({status:status})
 .eq("id",id);
 
-if(error){
-
-alert(error.message);
-return;
+if(error)alert(error.message);
+else loadAdmin();
 }
 
-loadAdminLeaves();
 
+/* SUMMARY */
+
+function renderSummaryEmployees(){
+
+$("summaryEmployee").innerHTML=
+`<option value="">All Employees</option>`+
+employeeList.map(e=>
+`<option value="${escapeHTML(e.employee_id)}">
+${escapeHTML(e.employee_id)} - ${escapeHTML(e.name)}
+</option>`
+).join("");
 }
 
-async function loadSalarySummary(){
+async function monthlySummary(){
 
-let mon=$("salaryMonth").value||month();
+let mon=$("summaryMonth").value;
+let selected=$("summaryEmployee").value;
+
+if(!mon)return;
 
 let [y,m]=mon.split("-").map(Number);
-
-let total=
-new Date(y,m,0).getDate();
-
-let {data:employees}=await db
-.from("employees")
-.select("*")
-.order("employee_id");
+let total=new Date(y,m,0).getDate();
 
 let {data:att}=await db
 .from("attendance")
@@ -2581,7 +1639,8 @@ let {data:att}=await db
 .gte("attendance_date",mon+"-01")
 .lte(
 "attendance_date",
-mon+"-"+String(total).padStart(2,"0"));
+mon+"-"+String(total).padStart(2,"0")
+);
 
 let {data:leaves}=await db
 .from("leave_requests")
@@ -2590,254 +1649,200 @@ let {data:leaves}=await db
 .gte("leave_date",mon+"-01")
 .lte(
 "leave_date",
-mon+"-"+String(total).padStart(2,"0"));
+mon+"-"+String(total).padStart(2,"0")
+);
 
-let groups={};
-
-(att||[]).forEach(x=>{
-
-if(!groups[x.employee_id])
-groups[x.employee_id]={};
-
-groups[x.employee_id][x.attendance_date]=x;
-
-});
-
-let leaveGroups={};
-
-(leaves||[]).forEach(x=>{
-
-if(!leaveGroups[x.employee_id])
-leaveGroups[x.employee_id]=new Set();
-
-leaveGroups[x.employee_id].add(x.leave_date);
-
-});
-
-let html="";
-
-(employees||[]).forEach(emp=>{
-
-let g=groups[emp.employee_id]||{};
-
-let present=0;
-let half=0;
-
-Object.values(g).forEach(x=>{
-
-if(x.in_time&&x.out_time){
-
-if(status(x.in_time,x.out_time)==="Full Day")
-present++;
-else
-half++;
-
-}
-
-});
-
-let leave=leaveGroups[emp.employee_id]
-?leaveGroups[emp.employee_id].size
-:0;
-
-let payable=
-present+
-half*.5+
-leave;
-
-let salary=
-Number(emp.salary||0);
-
-let daily=
-salary/
-new Date(y,m,0).getDate();
-
-let payableSalary=
-daily*payable;
-
-html+=`
-
-<tr>
-
-<td>
-${escapeHtml(
-emp.name||
-emp.employee_name||
-emp.employee_id)}
-</td>
-
-<td>
-<span class="post">
-${escapeHtml(emp.post||"Employee")}
-</span>
-</td>
-
-<td>${present}</td>
-
-<td>${half}</td>
-
-<td>${leave}</td>
-
-<td>${payable.toFixed(1)}</td>
-
-<td>
-₹${payableSalary.toLocaleString("en-IN",{
-maximumFractionDigits:0
-})}
-</td>
-
-</tr>
-
-`;
-
-});
-
-$("salaryTable").innerHTML=
-html||
-'<tr><td colspan="7">No data</td></tr>';
-
-}
-
-async function loadDailyReport(){
-
-let date=$("reportDate").value||today();
-
-let {data:employees}=await db
-.from("employees")
+let {data:hol}=await db
+.from("holidays")
 .select("*")
-.order("employee_id");
+.gte("holiday_date",mon+"-01")
+.lte(
+"holiday_date",
+mon+"-"+String(total).padStart(2,"0")
+);
 
-let {data:att}=await db
+let emps=selected
+?employeeList.filter(e=>e.employee_id===selected)
+:employeeList;
+
+let rows=emps.map(e=>{
+
+let s=calculate(
+(att||[]).filter(x=>x.employee_id===e.employee_id),
+(leaves||[]).filter(x=>x.employee_id===e.employee_id),
+hol||[],
+mon
+);
+
+return {...e,...s};
+});
+
+$("summary").innerHTML=`
+<div class="table">
+<table>
+<thead>
+<tr>
+<th>Employee</th>
+<th>Present</th>
+<th>Half</th>
+<th>Leave</th>
+<th>Absent</th>
+<th>Payable</th>
+</tr>
+</thead>
+<tbody>
+${rows.map(r=>`
+<tr>
+<td>
+${escapeHTML(r.name)}
+<br>
+<small>${escapeHTML(r.employee_id)}</small>
+</td>
+<td>${r.present}</td>
+<td>${r.half}</td>
+<td>${r.leave}</td>
+<td>${r.absent}</td>
+<td><b>${r.payable.toFixed(1)}</b></td>
+</tr>
+`).join("")}
+</tbody>
+</table>
+</div>`;
+}
+
+
+/* DAILY REPORT */
+
+async function dailyReport(){
+
+let date=$("reportDate").value;
+
+let {data:att,error}=await db
 .from("attendance")
 .select("*")
 .eq("attendance_date",date);
 
-let map={};
+if(error){
 
-(att||[]).forEach(x=>{
-map[x.employee_id]=x;
-});
+$("daily").innerHTML=
+"<tr><td colspan='4'>"+
+escapeHTML(error.message)+
+"</td></tr>";
 
-let html="";
+return;
+}
 
-(employees||[]).forEach(emp=>{
+let groups=groupAttendance(att||[]);
 
-let x=map[emp.employee_id];
+$("daily").innerHTML=
+employeeList.map(e=>{
+
+let x=groups[e.employee_id]||{};
 
 let st=
-x?.in_time&&x?.out_time
-?status(x.in_time,x.out_time)
+x.IN&&x.OUT
+?status(x.IN,x.OUT)
+:x.IN
+?"IN only"
 :"Absent";
 
 let cls=
 st==="Full Day"
-?"present":
+?"present"
+:
 st==="Half Day"
-?"half":
-"absent";
+?"half"
+:
+st==="Absent"
+?"absent"
+:"pending";
 
-html+=`
-
+return`
 <tr>
-
 <td>
-${escapeHtml(
-emp.name||
-emp.employee_name||
-emp.employee_id)}
+${escapeHTML(e.name)}
+<br>
+<small>${escapeHTML(e.employee_id)}</small>
 </td>
 
 <td>
-<span class="post">
-${escapeHtml(emp.post||"Employee")}
-</span>
+${x.IN
+?new Date(x.IN.created_at)
+.toLocaleTimeString("en-IN",
+{hour:"2-digit",minute:"2-digit",hour12:true})
+:"-"}
 </td>
-
-<td>${x?.in_time||"--"}</td>
-
-<td>${x?.out_time||"--"}</td>
 
 <td>
-
-<span class="badge ${cls}">
-${st==="Full Day"?"Present":st}
-</span>
-
+${x.OUT
+?new Date(x.OUT.created_at)
+.toLocaleTimeString("en-IN",
+{hour:"2-digit",minute:"2-digit",hour12:true})
+:"-"}
 </td>
 
-</tr>
+<td>
+<span class="badge ${cls}">${st}</span>
+</td>
+</tr>`;
+}).join("");
+}
 
-`;
+
+/* ================================
+ PWA INSTALL
+================================ */
+
+window.addEventListener("beforeinstallprompt",e=>{
+
+e.preventDefault();
+deferredPrompt=e;
+
+$("installBox").classList.add("show");
 
 });
 
-$("dailyTable").innerHTML=
-html||
-'<tr><td colspan="5">No data</td></tr>';
+async function installApp(){
 
-}
+if(!deferredPrompt){
 
-function escapeHtml(str){
+alert(
+"Install option browser/device ke menu me 'Add to Home Screen' se milega."
+);
 
-return String(str??"")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-function escapeJs(str){
-
-return String(str??"")
-.replace(/\\/g,"\\\\")
-.replace(/'/g,"\\'");
-
-}
-
-
-/* AUTO LOGIN */
-
-async function autoLogin(){
-
-let empId=
-localStorage.getItem("payol_employee_id");
-
-let adm=
-localStorage.getItem("payol_admin");
-
-if(adm==="1"){
-
-adminLogged=true;
-openAdmin();
 return;
-
 }
 
-if(empId){
+deferredPrompt.prompt();
 
-let {data}=await db
-.from("employees")
-.select("*")
-.eq("employee_id",empId)
-.maybeSingle();
+await deferredPrompt.userChoice;
 
-if(data){
+deferredPrompt=null;
 
-employee=data;
-openEmployee();
-return;
-
+$("installBox").classList.remove("show");
 }
 
-}
+window.addEventListener("appinstalled",()=>{
+$("installBox").classList.remove("show");
+});
 
+
+/* ================================
+ START
+================================ */
+
+$("leaveDate").value=today();
+$("holidayDate").value=today();
+$("reportDate").value=today();
+$("summaryMonth").value=month();
 $("employeeMonth").value=month();
 
+if("serviceWorker" in navigator){
+window.addEventListener("load",()=>{
+navigator.serviceWorker.register("sw.js")
+.catch(err=>console.log("SW:",err));
+});
 }
-
-autoLogin();
 
 </script>
 
