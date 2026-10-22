@@ -2611,8 +2611,6 @@ async function applyLeave(){
   .from("leave_requests")
   .insert({
 
-    id:generateUUID(),
-
     employee_id:
     currentEmployee.employee_id,
 
@@ -2966,14 +2964,14 @@ async function loadAdminEmployees(){
 
           <button
             class="secondary"
-            onclick="editEmployee('${escapeHtml(employee.id)}')"
+            onclick="editEmployee('${escapeHtml(employee.employee_id)}')"
           >
             Edit
           </button>
 
           <button
             class="danger"
-            onclick="deleteEmployee('${escapeHtml(employee.id)}','${escapeHtml(employee.employee_id)}')"
+            onclick="deleteEmployee('${escapeHtml(employee.employee_id)}','${escapeHtml(employee.employee_id)}')"
           >
             Delete
           </button>
@@ -3057,7 +3055,7 @@ async function addEmployee(){
   } =
   await supabaseClient
   .from("employees")
-  .select("id")
+  .select("employee_id")
   .eq(
     "employee_id",
     employeeId
@@ -3097,8 +3095,6 @@ async function addEmployee(){
   await supabaseClient
   .from("employees")
   .insert({
-
-    id:generateUUID(),
 
     employee_id:
     employeeId,
@@ -3167,7 +3163,7 @@ async function addEmployee(){
    EDIT EMPLOYEE
 ========================= */
 
-async function editEmployee(id){
+async function editEmployee(employeeId){
 
   const {
     data,
@@ -3176,7 +3172,7 @@ async function editEmployee(id){
   await supabaseClient
   .from("employees")
   .select("*")
-  .eq("id",id)
+  .eq("employee_id",employeeId)
   .maybeSingle();
 
 
@@ -3246,8 +3242,8 @@ async function editEmployee(id){
 
   })
   .eq(
-    "id",
-    id
+    "employee_id",
+    employeeId
   );
 
 
@@ -3276,13 +3272,13 @@ async function editEmployee(id){
 ========================= */
 
 async function deleteEmployee(
-  id,
-  employeeId
+  employeeId,
+  displayEmployeeId
 ){
 
   if(
     !confirm(
-      `Delete ${employeeId}?`
+      `Delete ${displayEmployeeId}?`
     )
   ){
 
@@ -3298,8 +3294,8 @@ async function deleteEmployee(
   .from("employees")
   .delete()
   .eq(
-    "id",
-    id
+    "employee_id",
+    employeeId
   );
 
 
