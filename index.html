@@ -1976,6 +1976,21 @@ async function markAttendance(type){
     }
 
 
+    // Same employee can mark OUT only once per day.
+    if(
+      type === "OUT" &&
+      rows.some(
+        x => x.attendance_type === "OUT"
+      )
+    ){
+
+      throw new Error(
+        "Mark Out ho gaya hai. Aaj dobara Mark Out nahi kar sakte."
+      );
+
+    }
+
+
     const {
       error
     } =
