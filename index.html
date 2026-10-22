@@ -645,6 +645,26 @@ td{
     display:none;
   }
 }
+
+/* Custom popup calendar for date fields */
+.date-popup-trigger{display:inline-flex;align-items:center;justify-content:center;min-width:46px;border:1px solid #444;border-radius:10px;background:#242424;color:#fff;font-size:20px;cursor:pointer;flex-shrink:0}
+.date-field-row{display:flex;gap:7px;align-items:stretch;width:100%}
+.date-field-row input[type="date"]{flex:1;min-width:0;appearance:auto;-webkit-appearance:auto;cursor:pointer}
+.calendar-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px}
+.calendar-popup{width:min(360px,100%);background:#151515;border:1px solid #444;border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.7);color:#fff}
+.calendar-popup-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.calendar-popup-head strong{font-size:17px}
+.calendar-popup-head button,.calendar-popup-actions button{background:#292929;color:#fff;border:1px solid #444;border-radius:9px;padding:9px 12px}
+.calendar-popup-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.calendar-popup-days span{font-size:11px;color:#999;text-align:center;padding:5px 0}
+.calendar-popup-days button{padding:10px 0;min-width:0;border-radius:9px;background:#222;border:1px solid #333;color:#fff}
+.calendar-popup-days button.selected{background:#e50914;border-color:#ff3340}
+.calendar-popup-days button.today{outline:1px solid #ff3340}
+.calendar-popup-days button:disabled{opacity:.25}
+.calendar-popup-actions{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
+.calendar-popup-actions .pick-today{background:#9f0008}
+@media(max-width:420px){.calendar-popup{padding:12px}.calendar-popup-days{gap:4px}.calendar-popup-days button{padding:9px 0}}
+
 </style>
 </head>
 
@@ -4718,6 +4738,91 @@ document.addEventListener(
 
   }
 );
+
+
+/* CUSTOM POPUP DATE PICKER */
+(function setupPopupDatePicker(){
+  let activeInput = null;
+  let shownMonth = new Date(); shownMonth.setDate(1);
+  const pad2 = n => String(n).padStart(2,'0');
+  const toISO = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  const parseISO = v => {
+    if(!v) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+    return m ? new Date(Number(m[1]),Number(m[2])-1,Number(m[3])) : null;
+  };
+  function closePicker(){
+    const old = document.getElementById('customCalendarPopup');
+    if(old) old.remove();
+    activeInput = null;
+  }
+  function renderPicker(){
+    let old = document.getElementById('customCalendarPopup');
+    if(old) old.remove();
+    const overlay = document.createElement('div');
+    overlay.id='customCalendarPopup';
+    overlay.className='calendar-popup-overlay';
+    overlay.addEventListener('click',e=>{if(e.target===overlay)closePicker();});
+    const panel=document.createElement('div'); panel.className='calendar-popup';
+    const head=document.createElement('div'); head.className='calendar-popup-head';
+    const prev=document.createElement('button'); prev.type='button'; prev.textContent='‹'; prev.setAttribute('aria-label','Previous month');
+    prev.onclick=()=>{shownMonth=new Date(shownMonth.getFullYear(),shownMonth.getMonth()-1,1);renderPicker();};
+    const title=document.createElement('strong'); title.textContent=shownMonth.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+    const next=document.createElement('button'); next.type='button'; next.textContent='›'; next.setAttribute('aria-label','Next month');
+    next.onclick=()=>{shownMonth=new Date(shownMonth.getFullYear(),shownMonth.getMonth()+1,1);renderPicker();};
+    head.append(prev,title,next); panel.append(head);
+    const grid=document.createElement('div');grid.className='calendar-popup-days';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(x=>{const el=document.createElement('span');el.textContent=x;grid.append(el);});
+    const first=new Date(shownMonth.getFullYear(),shownMonth.getMonth(),1);
+    const count=new Date(shownMonth.getFullYear(),shownMonth.getMonth()+1,0).getDate();
+    for(let i=0;i<first.getDay();i++) grid.append(document.createElement('span'));
+    const current=activeInput ? parseISO(activeInput.value) : null;
+    const today=toISO(new Date());
+    for(let day=1;day<=count;day++){
+      const d=new Date(shownMonth.getFullYear(),shownMonth.getMonth(),day), iso=toISO(d);
+      const b=document.createElement('button'); b.type='button';b.textContent=String(day);
+      if(iso===today)b.classList.add('today');
+      if(current && iso===toISO(current))b.classList.add('selected');
+      b.onclick=()=>{
+        if(activeInput){
+          activeInput.value=iso;
+          activeInput.dispatchEvent(new Event('input',{bubbles:true}));
+          activeInput.dispatchEvent(new Event('change',{bubbles:true}));
+        }
+        closePicker();
+      };
+      grid.append(b);
+    }
+    panel.append(grid);
+    const actions=document.createElement('div');actions.className='calendar-popup-actions';
+    const clear=document.createElement('button');clear.type='button';clear.textContent='Clear';
+    clear.onclick=()=>{if(activeInput){activeInput.value='';activeInput.dispatchEvent(new Event('input',{bubbles:true}));activeInput.dispatchEvent(new Event('change',{bubbles:true}));}closePicker();};
+    const todayBtn=document.createElement('button');todayBtn.type='button';todayBtn.className='pick-today';todayBtn.textContent='Today';
+    todayBtn.onclick=()=>{if(activeInput){activeInput.value=toISO(new Date());activeInput.dispatchEvent(new Event('input',{bubbles:true}));activeInput.dispatchEvent(new Event('change',{bubbles:true}));}closePicker();};
+    actions.append(clear,todayBtn);panel.append(actions);overlay.append(panel);document.body.append(overlay);
+  }
+  function openPicker(input){
+    activeInput=input;
+    const selected=parseISO(input.value);
+    shownMonth=selected ? new Date(selected.getFullYear(),selected.getMonth(),1) : new Date(new Date().getFullYear(),new Date().getMonth(),1);
+    renderPicker();
+  }
+  function enhanceDateInputs(){
+    document.querySelectorAll('input[type="date"]').forEach(input=>{
+      if(input.dataset.popupCalendarReady) return;
+      input.dataset.popupCalendarReady='1';
+      const row=document.createElement('div');row.className='date-field-row';
+      input.parentNode.insertBefore(row,input);row.append(input);
+      const btn=document.createElement('button');btn.type='button';btn.className='date-popup-trigger';btn.innerHTML='📅';btn.title='Open calendar';btn.setAttribute('aria-label','Open calendar');
+      btn.addEventListener('click',()=>openPicker(input));
+      row.append(btn);
+      input.addEventListener('click',e=>{e.preventDefault();openPicker(input);});
+      input.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPicker(input);}});
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',enhanceDateInputs);
+  else enhanceDateInputs();
+})();
 
 </script>
 
