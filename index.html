@@ -2392,6 +2392,15 @@ async function renderEmployeeCalendar(){
   ]);
 
 
+  if(holidayResult.error){
+    console.error("Employee holiday fetch error:", holidayResult.error);
+    const cal = document.getElementById("employeeCalendar");
+    if(cal){
+      cal.innerHTML = `<div class="status error" style="grid-column:1/-1">Holiday load nahi hui: ${escapeHtml(holidayResult.error.message)}. Supabase holidays SELECT policy check karein.</div>`;
+    }
+    return;
+  }
+
   const attendance =
   attendanceResult.data || [];
 
@@ -3472,68 +3481,48 @@ async function saveOfficeLocation(){
 ========================= */
 
 async function addHoliday(){
+  const dateInput = document.getElementById("holidayDate");
+  const nameInput = document.getElementById("holidayName");
+  const date = String(dateInput.value || "").trim();
+  const name = String(nameInput.value || "").trim();
 
-  const date =
-  document.getElementById(
-    "holidayDate"
-  ).value;
-
-
-  const name =
-  document.getElementById(
-    "holidayName"
-  ).value.trim();
-
-
-  if(!date || !name){
-
-    alert(
-      "Date aur Holiday Name dijiye."
-    );
-
+  // Prevent an empty/invalid value from ever being sent to a PostgreSQL DATE column.
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){
+    alert("Pehle 📅 calendar se sahi holiday date select karein.");
+    dateInput.focus();
     return;
-
+  }
+  const parsedDate = new Date(date + "T00:00:00");
+  if(Number.isNaN(parsedDate.getTime()) || localDate(parsedDate) !== date){
+    alert("Holiday ki date sahi nahi hai. Calendar se dobara select karein.");
+    dateInput.focus();
+    return;
+  }
+  if(!name){
+    alert("Holiday Name bhariye.");
+    nameInput.focus();
+    return;
   }
 
-
-  const {
-    error
-  } =
-  await supabaseClient
-  .from("holidays")
-  .insert({
-
-    id:generateUUID(),
-
-    holiday_date:date,
-
-    holiday_name:name
-
-  });
-
+  const { error } = await supabaseClient
+    .from("holidays")
+    .insert({
+      id: generateUUID(),
+      holiday_date: date,
+      holiday_name: name
+    });
 
   if(error){
-
-    alert(
-      error.message
-    );
-
+    alert("Holiday save failed: " + error.message);
+    console.error("Holiday insert error:", error);
     return;
-
   }
 
-
-  document.getElementById(
-    "holidayName"
-  ).value="";
-
-
+  nameInput.value = "";
   await loadHolidayList();
-
   await loadAdminCounts();
-
   await renderAdminCalendar();
-
+  alert("Holiday save ho gayi. Employee calendar refresh karne par dikhegi.");
 }
 
 
